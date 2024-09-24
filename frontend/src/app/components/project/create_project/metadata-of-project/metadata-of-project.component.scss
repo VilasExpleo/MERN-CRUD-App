@@ -1,0 +1,114 @@
+.heading p {
+    color: #174a84;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.left-bottom-btn {
+    float: right;
+}
+
+.next {
+    display: inline;
+}
+.folder-section input {
+    width: 80%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #304cd9;
+}
+.folder-section select {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #304cd9;
+}
+
+.folder-section button {
+    background: #304cd9;
+    color: #fff;
+    width: 15%;
+    height: 40px;
+    margin-left: 39px;
+    border-radius: 5px;
+    border: none;
+}
+.folder-section {
+    margin-bottom: 20px;
+}
+.input-label p {
+    color: #6c757d;
+    margin-top: 20px;
+}
+.input-label span {
+    color: red;
+}
+.screenshot-section {
+    display: inline;
+}
+.screenshot {
+    position: relative;
+    width: 700px;
+    height: 330px;
+    border-radius: 5px;
+    border: 1px solid #304cd9;
+}
+
+.screenshot-btn {
+    display: inline;
+    float: right;
+    margin-top: 286px;
+}
+.screenshot-btn button {
+    background: #304cd9;
+    color: #fff;
+    width: 161px;
+    height: 40px;
+    margin-left: 39px;
+    border-radius: 5px;
+    border: none;
+}
+
+input.ng-touched.ng-invalid {
+    border: 1px solid red;
+}
+
+.next-btn {
+    display: inline;
+}
+
+.note p {
+    font-size: 12px;
+}
+.note span {
+    color: red;
+}
+.no-button {
+    display: inline;
+}
+.yes-button {
+    display: inline;
+}
+
+:host {
+    .primengUpload {
+        .p-button.p-button-icon-only {
+            display: none;
+        }
+    }
+    .folder-section {
+        .p-dropdown {
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: 1px solid #304cd9;
+        }
+    }
+}
+
+.p-field-radiobutton {
+    display: inline;
+    padding: 5px;
+    line-height: 22px;
+}

@@ -1,0 +1,176 @@
+<div class="container basefile-container">
+    <!-- Heading Grid -->
+    <div class="grid pt-4">
+        <div class="col-8">
+            <p class="main-heading">
+                You can map the languages from the project xml to the available system languages that you want to use.
+                The automatic mapping functionality will map the languages by matching the language names from project
+                xml with system languages.
+            </p>
+        </div>
+        <div class="col-4 automatic-mapping">
+            <button
+                pButton
+                type="button"
+                label="Automatic Mapping"
+                (click)="automaticMapping(languageSettingForm.value)"
+                class="p-button-primary"
+            ></button>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="lg:col-5 md:col-12 sm:col-12">
+            <div class="languageFromApplication">
+                <p class="text-base font-medium">Languages available in the application</p>
+                <table class="lang-xml">
+                    <tbody>
+                        <tr>
+                            <td class="btn-small">
+                                <div class="">
+                                    <p-tree
+                                        [value]="languagesFromApplication"
+                                        [draggableNodes]="true"
+                                        [droppableNodes]="true"
+                                        draggableScope="server2"
+                                        droppableScope="server1"
+                                        [validateDrop]="true"
+                                        (onNodeDrop)="onNodeDropBack($event)"
+                                        [filter]="true"
+                                        filterMode="strict"
+                                    >
+                                    </p-tree>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="lg:col-7 md:col-12 sm:col-12">
+            <div class="grid pb-4">
+                <div class="lg:col-6 langFromXml">
+                    <p class="text-base font-medium">Languages available in the XML</p>
+                </div>
+                <div class="lg:col-6 dragDropLang">
+                    <p class="text-base font-medium">User can drag and drop language</p>
+                </div>
+            </div>
+            <div class="languagesFromXML grid">
+                <div class="lg:col-3 md:col-12 sm:col-12 p-0">
+                    <table>
+                        <tbody>
+                            <tr *ngFor="let lang of langFromXML; let i = index">
+                                <td>
+                                    <div class="langFromPtree pt-2">
+                                        {{ lang.Name }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="lg:col-9 md:col-12 sm:col-12 p-0">
+                    <p-tree
+                        [value]="mappedLangs"
+                        [draggableNodes]="true"
+                        [droppableNodes]="true"
+                        [validateDrop]="true"
+                        selectable="false"
+                        droppableScope="server2"
+                        draggableScope="server1"
+                        (onNodeDrop)="onNodeDrop($event)"
+                        #mappedLangTree
+                    ></p-tree>
+                </div>
+            </div>
+            <div class="text-base font-medium" *ngIf="!isMapDone">
+                All languages must be mapped to proceed to the next step.<span class="text-red-500">*</span>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<!-- Dropdown -->
+<div class="pt-5">
+    <form [formGroup]="languageSettingForm">
+        <div class="grid input-container">
+            <div class="col-6">
+                <p>Editor’s Translation Language<span>*</span></p>
+                <p-dropdown
+                    placeholder="Select a editor’s language"
+                    [options]="langFromXML"
+                    formControlName="translationLanguage"
+                    optionLabel="Name"
+                    appendTo="body"
+                    [filter]="true"
+                    filterBy="Name"
+                >
+                </p-dropdown>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Cancle Popup -->
+<div class="pt-3 pb-5 left-bottom-btn">
+    <p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+        <ng-template pTemplate="footer">
+            <div class="yes-button">
+                <button
+                    class="p-button-danger"
+                    type="button"
+                    pButton
+                    label="Yes"
+                    icon="pi pi-check"
+                    (click)="cd.accept()"
+                ></button>
+            </div>
+            <div class="no-button">
+                <button
+                    class="p-button-secondary"
+                    type="button"
+                    pButton
+                    label="No"
+                    icon="pi pi-times"
+                    (click)="cd.reject()"
+                ></button>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+    <span class="back-btn">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-3 btn-small"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="prevPage(languageSettingForm.value)"
+        ></button>
+    </span>
+    <button
+        pButton
+        pRipple
+        (click)="showConfirm()"
+        pButton
+        type="button"
+        icon="pi pi-times"
+        iconPos="left"
+        label="Cancel"
+        class="p-button-warning mr-3"
+    ></button>
+    <div class="next-btn">
+        <button
+            pButton
+            type="button"
+            label="Next"
+            class="p-button-primary"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            (click)="submitLanguageSettingsForm(languageSettingForm.value)"
+            [disabled]="!isMapDone || languageSettingForm.invalid"
+        ></button>
+    </div>
+</div>

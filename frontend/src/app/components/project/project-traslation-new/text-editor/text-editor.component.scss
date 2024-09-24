@@ -1,0 +1,89 @@
+:host {
+    ::ng-deep {
+        .pBarWidthRed {
+            .p-progressbar .p-progressbar-value {
+                background: red;
+            }
+        }
+        .pBarWidthYellow {
+            .p-progressbar .p-progressbar-value {
+                background: orange;
+            }
+        }
+        .pBarFraction {
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+
+            .pBarFractionYellow {
+                color: #ffcc00;
+            }
+
+            .pBarFractionRed {
+                color: red;
+            }
+        }
+        .p-panel .p-panel-content {
+            padding: 0px;
+        }
+        .p-panel .p-panel-header {
+            height: 3rem;
+            padding: 0rem !important;
+            background-color: #dee2e6;
+        }
+    }
+}
+.translation-lang {
+    color: #304cd9;
+    font-weight: 600;
+}
+.save-disable {
+    pointer-events: none !important;
+}
+
+.resolvedTextheight {
+    height: 40px;
+    overflow: auto;
+    resize: none;
+    box-sizing: border-box;
+    width: 99%;
+    background: #ffffff;
+    border: 1px solid #a5c9ff;
+    box-shadow: 0px 0px 4px rgba(131, 181, 255, 0.18);
+    border-radius: 5px;
+    margin: 2px;
+}
+.resolvedTextheightfull {
+    height: 100px;
+    overflow: auto;
+    resize: none;
+    box-sizing: border-box;
+    width: 99%;
+    background: #ffffff;
+    border: 1px solid #a5c9ff;
+    box-shadow: 0px 0px 4px rgba(131, 181, 255, 0.18);
+    border-radius: 5px;
+    margin: 2px;
+}
+.metatext {
+    height: 100px;
+    overflow: auto;
+    resize: none;
+    box-sizing: border-box;
+    width: 99%;
+    background: #ffffff;
+    color: #c7c8c9;
+    border: 1px solid #c7c8c9;
+    box-shadow: 0px 0px 4px rgba(131, 181, 255, 0.18);
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+}
+.top-33 {
+    top: 33%;
+}
+.warnmasg {
+    font-size: 16px;
+}
+.warnmasg p {
+    margin: 10px 0px;
+}

@@ -1,0 +1,105 @@
+<p-panel>
+    <ng-template pTemplate="header">{{ page?.pageTitle ?? 'Page Name' }}</ng-template>
+    <form [formGroup]="helpPageForm">
+        <div class="p-inputgroup mb-2">
+            <p-dropdown
+                [disabled]="!isPageEditable"
+                [options]="templates"
+                optionLabel="templateName"
+                optionValue="templateId"
+                placeholder="Select From Template"
+                class="border-noround-right"
+                [(ngModel)]="selectedValue"
+                [ngModelOptions]="{ standalone: true }"
+                (onChange)="onTemplateSelect($event.value)"
+            >
+                <ng-template let-template pTemplate="item">
+                    <div class="flex justify-content-between align-items-center">
+                        <span>{{ template.templateName }}</span>
+                        <p-button
+                            icon="pi pi-trash"
+                            styleClass="p-button-danger p-button-rounded p-button-text"
+                            class="z-5"
+                            (onClick)="$event.stopPropagation(); deleteTemplate(template.templateId)"
+                        ></p-button>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <p-button
+                (onClick)="updateTemplate()"
+                icon="icon-update-template text-2xl"
+                [disabled]="!isFormattedContentChangedAndInitialValueChanged()"
+                styleClass="p-button-warning -ml-1 border-noround-left"
+            ></p-button>
+        </div>
+        <p class="text-2xl font-semibold">Main Content</p>
+        <p-editor
+            [readonly]="!isPageEditable"
+            formControlName="formattedContent"
+            [style]="{ height: '165px' }"
+        ></p-editor>
+        <div class="mt-2">
+            <div class="grid">
+                <div class="col-3">
+                    <div class="p-inputgroup mb-2">
+                        <input [readonly]="!isPageEditable" pInputText type="text" placeholder="Tag" #tags />
+                        <p-button
+                            [disabled]="!isPageEditable"
+                            styleClass="-ml-1 border-noround-left"
+                            (onClick)="addTag(tags.value)"
+                            icon="pi pi-plus"
+                        ></p-button>
+                    </div>
+                </div>
+                <div class="col-5 mb-2">
+                    <p-multiSelect
+                        appendTo="body"
+                        [style]="{ width: '100%' }"
+                        [disabled]="!isPageEditable"
+                        [options]="links"
+                        optionLabel="linkName"
+                        optionValue="id"
+                        formControlName="links"
+                        placeholder="Link"
+                        display="chip"
+                    ></p-multiSelect>
+                </div>
+                <div class="col-4">
+                    <div class="p-inputgroup mb-2">
+                        <input
+                            [readonly]="!isPageEditable"
+                            pInputText
+                            type="text"
+                            placeholder="Enter Template Name..."
+                            #template
+                        />
+                        <p-button
+                            [disabled]="template.value.length===0"
+                            styleClass="-ml-1 border-noround-left"
+                            icon="icon-save-new-template text-2xl"
+                            (onClick)="saveTemplate(template.value)"
+                        ></p-button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-2 overflow-auto">
+                <p-chip
+                    *ngFor="let tag of getTags(); let i = index"
+                    [label]="tag"
+                    (onRemove)="deleteTag(i)"
+                    [removable]="isPageEditable"
+                ></p-chip>
+            </div>
+        </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <div style="text-align: right" class="mt-2">
+            <p-button
+                [disabled]="!isFormattedContentChangedAndInitialValueChanged() || !isPageEditable"
+                (onClick)="onSubmit()"
+                icon="pi pi-check-square"
+                label="Publish"
+            ></p-button>
+        </div>
+    </ng-template>
+</p-panel>

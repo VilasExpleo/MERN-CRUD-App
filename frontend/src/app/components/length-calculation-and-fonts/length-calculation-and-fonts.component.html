@@ -1,0 +1,12 @@
+<div class="main-dashborad">
+    <p-tabView [(activeIndex)]="activeIndex" (activeIndexChange)="onLoad($event)">
+        <p-tabPanel header="Length Calculation">
+            <app-length-calculations></app-length-calculations>
+        </p-tabPanel>
+        <p-tabPanel header="Fonts"> <app-fonts></app-fonts> </p-tabPanel>
+        <p-tabPanel header="Testbed">
+            <app-test-bed *ngIf="activeIndex === 2"></app-test-bed>
+        </p-tabPanel>
+    </p-tabView>
+    <p-toast></p-toast>
+</div>

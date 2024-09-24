@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<include schemaLocation="Language.xsd" />
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="LabelManager">
+		<annotation>
+			<documentation>
+				The LabelManager is the managing component of all
+				labels of a project. It holds the list of LabelGroups which in turn
+				contain the labels.
+
+				Many other elements of a translation-project,
+				like text- and group-nodes and translations can use labels. They use
+				label-references for this purpose.
+
+				Labels offer an extensible
+				mechanism to classify the elements of a translation-project. Besides
+				this the system uses labels internally too, e.g. to mark texts which
+				have been modified by a certain mass-operation.
+
+				It should be
+				generally possible to search and filter labels. For these purposes
+				the attributes of labels should be used.
+			</documentation>
+		</annotation>
+
+		<sequence>
+			<element name="LabelGroup" type="hmi:LabelGroup" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>The list of LabelGroups.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="LabelBase" abstract="true">
+		<annotation>
+			<documentation>
+				Abstract baseclass for labels.
+			</documentation>
+		</annotation>
+
+		<attribute name="Id" type="hmi:LabelId" use="required">
+			<annotation>
+				<documentation>
+					The ID must be unique. Labels are referenced by their
+					ID.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Name" type="string" use="required">
+			<annotation>
+				<documentation>The name of a label.</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Description" type="string" use="optional">
+			<annotation>
+				<documentation>A description for a label.</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Symbol" type="hmi:Symbol" use="optional">
+			<annotation>
+				<documentation>
+					Labels can have a symbol. The symbol should be
+					visible in the GUI.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Color" type="hmi:Color" use="optional">
+			<annotation>
+				<documentation>
+					Labels can have a color. E.g. bookmarks with
+					different colors are possible.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Date" type="dateTime" use="optional">
+			<annotation>
+				<documentation>
+					Labels can bear a date. This can be used to express
+					expiration or a checkpoint.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Languages" type="hmi:LanguageList" use="optional">
+			<annotation>
+				<documentation>
+					The list of languages this 'Label' is intended for.
+					If no languages are given the 'Label' is intended for all
+					languages. By using this functionality the supplier can define a
+					restriction which is active on a certain set of languages, without
+					have access to the translations.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="AttachTo" type="hmi:AttachToList" use="optional">
+			<annotation>
+				<documentation>
+					A list of elements where the label can be attached.
+					If no list is
+					given then the label can be attached to all (possible)
+					elements.
+				</documentation>
+			</annotation>
+		</attribute>
+
+	</complexType>
+
+	<complexType name="StandardLabel">
+		<annotation>
+			<documentation>A restricted label has all attributes and
+				possibilities of a LabelBase.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="hmi:LabelBase">
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="LabelWithRestriction">
+		<annotation>
+			<documentation>A restricted label has all attributes and
+				possibilities of a LabelBase. Besides this restrictions can be
+				defined. A restriction constraints the translation, e.g. only
+				uppercase translations are allowed.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="hmi:LabelBase">
+
+				<attribute name="RestrictionType" type="hmi:RestrictionType"
+					use="required">
+					<annotation>
+						<documentation>The type of restriction is specified here (see
+							RestrictionType).
+						</documentation>
+					</annotation>
+				</attribute>
+
+				<attribute name="RestrictionPattern" type="string" use="optional">
+					<annotation>
+						<documentation>If the type of restriction is set to 'PatternMatch'
+							then the associated pattern is specified here.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="LabelGroup">
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="Label" type="hmi:StandardLabel">
+				<annotation>
+					<documentation>Standard labels can be inserted into LabelGroups.
+					</documentation>
+				</annotation>
+			</element>
+			<element name="LabelWithRestriction" type="hmi:LabelWithRestriction">
+				<annotation>
+					<documentation>Labels with restrictions can be inserted into
+						LabelGroups
+					</documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="Name" type="string" use="required">
+			<annotation>
+				<documentation>A group of labels must have a unique name.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+	<simpleType name="SymbolPredefined">
+		<annotation>
+			<documentation>Predefined symbols for labels.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="NoSymbol">
+				<annotation>
+					<documentation>No symbol is used.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Information">
+				<annotation>
+					<documentation>Information-symbol.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Warning">
+				<annotation>
+					<documentation>Warning-symbol.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Error">
+				<annotation>
+					<documentation>Error-symbol.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Bugfix">
+				<annotation>
+					<documentation>Bugfix-symbol.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Todo">
+				<annotation>
+					<documentation>Symbol representing todos.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Bookmark">
+				<annotation>
+					<documentation>Symbol representing bookmarks.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Restriction">
+				<annotation>
+					<documentation>Symbol representing restrictions</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="Date">
+				<annotation>
+					<documentation>Symbol for labels with an expiration- or check-date.
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="SymbolUserdefined">
+		<annotation>
+			<documentation>
+				User-defined symbols should be possible too. The
+				symbol should be referenced by an ID.
+			</documentation>
+		</annotation>
+		<restriction base="long" />
+	</simpleType>
+
+	<simpleType name="Symbol">
+		<annotation>
+			<documentation>
+				A symbol can have one of the predefined types in
+				'SymbolPredefined' or a user-defined type in 'SymbolUserdefined'.
+			</documentation>
+		</annotation>
+		<union memberTypes="hmi:SymbolPredefined hmi:SymbolUserdefined" />
+	</simpleType>
+
+	<simpleType name="LabelList">
+		<annotation>
+			<documentation>A simple list of label IDs.
+			</documentation>
+		</annotation>
+		<list itemType="hmi:LabelId"></list>
+	</simpleType>
+
+	<simpleType name="Color">
+		<annotation>
+			<documentation>
+				Colors must be represented as hexadecimal RGB triples.
+				For instance, the RGB value "#800080" represents purple.
+			</documentation>
+		</annotation>
+		<restriction base="token">
+			<pattern value="#[\dA-F]{6}" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="RestrictionType">
+		<annotation>
+			<documentation>Translations can be restricted. The restriction must
+				be checked when the state of the translation should be set to
+				'done'.
+			</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="ToUppercase">
+				<annotation>
+					<documentation>The translation must be uppercase.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="ToLowercase">
+				<annotation>
+					<documentation>The translation must be lowercase.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="PatternMatch">
+				<annotation>
+					<documentation>The translation must match a
+						pattern/regular-expression which can be specified.
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="AttachTo">
+		<annotation>
+			<documentation>Labels can be attached to other elements which are
+				given here.
+			</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="TextNode">
+				<annotation>
+					<documentation>The label can be attached to a text node.
+					</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="GroupNode">
+				<annotation>
+					<documentation>The label can be attached to a group node.
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="AttachToList">
+		<annotation>
+			<documentation>A simple list of elements where a label can be
+				attached.
+			</documentation>
+		</annotation>
+		<list itemType="hmi:AttachTo"></list>
+	</simpleType>
+
+	<simpleType name="LabelId">
+		<annotation>
+			<documentation>Labels have this ID-type. IDs must be unique
+				throughout the project.
+			</documentation>
+		</annotation>
+		<restriction base="long"></restriction>
+	</simpleType>
+
+</schema>

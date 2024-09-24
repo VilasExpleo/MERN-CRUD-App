@@ -1,0 +1,26 @@
+<p-confirmDialog
+    #confirmDialog
+    [style]="{ width: '40vw' }"
+    [baseZIndex]="10000"
+    class="cancel-dialog"
+    [closable]="true"
+>
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end">
+            <p-button
+                [styleClass]="rejectProperties.class"
+                type="button"
+                [label]="rejectProperties.label"
+                [icon]="rejectProperties.icon"
+                (onClick)="confirmDialog.reject()"
+            ></p-button>
+            <p-button
+                [styleClass]="acceptProperties.class"
+                type="button"
+                [label]="acceptProperties.label"
+                [icon]="acceptProperties.icon"
+                (onClick)="confirmDialog.accept()"
+            ></p-button>
+        </div>
+    </ng-template>
+</p-confirmDialog>

@@ -1,0 +1,22 @@
+.layout-wrapper {
+    height: 100% !important;
+}
+
+.layout-main-container {
+    height: 100% !important;
+}
+.layout-main {
+    height: 83vh !important;
+    top: 6vh;
+}
+@media only screen and (min-height: 1080px) {
+    .layout-main {
+        height: 85vh !important;
+        top: 6vh;
+    }
+}
+
+.layout-header {
+    height: 6vh;
+    z-index: 99999;
+}

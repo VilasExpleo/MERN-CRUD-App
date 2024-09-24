@@ -1,0 +1,9 @@
+<div class="row toolbar" #menu *ngIf="!hideStcHeader">
+    <div class="operationmenu">
+        <div class="menuStructure">
+            <a pTooltip="Language Selection" tooltipPosition="bottom" (click)="displayLanguageConfigDialog()">
+                <img [src]="baseURL + '/cog.svg'" class="cog" alt="cog" />
+            </a>
+        </div>
+    </div>
+</div>

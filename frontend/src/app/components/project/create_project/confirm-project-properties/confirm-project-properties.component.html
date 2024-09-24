@@ -1,0 +1,141 @@
+<div class="main-container">
+    <div *ngIf="isSpinner" class="spinner">
+        <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+    </div>
+
+    <div class="confirm-msg">
+        <p-messages [(value)]="msgs1" [enableService]="false" [closable]="false"> </p-messages>
+    </div>
+
+    <div class="complete-img pt-3">
+        <img src="../../../../../../assets/images/svg/confirm.svg" alt="confirm" />
+    </div>
+
+    <!-- schedule code start -->
+    <div class="schedule">
+        <p-dialog
+            [(visible)]="displayScheduleProject"
+            [style]="{ width: '500px', height: '300px' }"
+            [closable]="false"
+            [baseZIndex]="10000"
+            [modal]="true"
+        >
+            <div class="schedule">
+                <p-messages [(value)]="msgs" severity="success" [closable]="true"></p-messages>
+
+                <header class="schedule-header">{{ payload?.projectName }}</header>
+                <h4 style="color: black; font-size: 14px">
+                    Select the date and time to schedule your project creation
+                </h4>
+                <div class="p-field p-col-12 p-md-4">
+                    <label for="time"><strong>Date/time</strong></label>
+                    <div class="container">
+                        <p-calendar
+                            dateFormat="dd.mm.yy"
+                            placeholder="Date/time"
+                            appendTo="body"
+                            [readonlyInput]="true"
+                            [showTime]="true"
+                            inputId="time"
+                            hourFormat="24"
+                            (onSelect)="getScheduleTime($event)"
+                            [minDate]="minDateValue"
+                        ></p-calendar>
+                    </div>
+                </div>
+                <div class="button-schedule">
+                    <button
+                        pButton
+                        type="button"
+                        label="Schedule Project"
+                        icon="pi pi-calendar"
+                        class="p-button-raised"
+                        (click)="scheduleMassOperation()"
+                        [disabled]="disableSchedule === undefined"
+                    ></button>
+                    <button
+                        pButton
+                        type="button"
+                        label="Cancel"
+                        icon="pi pi-times"
+                        class="p-button-warning ml-2"
+                        (click)="closeSchedule()"
+                    ></button>
+                </div>
+            </div>
+            <ng-template pTemplate="footer"></ng-template>
+        </p-dialog>
+    </div>
+
+    <!-- schedule code end -->
+
+    <div class="pt-5 pb-5 left-bottom-btn">
+        <p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+            <ng-template pTemplate="footer">
+                <div class="yes-button">
+                    <button
+                        class="p-button-danger"
+                        type="button"
+                        pButton
+                        label="Yes"
+                        icon="pi pi-check"
+                        (click)="cd.accept()"
+                    ></button>
+                </div>
+                <div class="no-button">
+                    <button
+                        class="p-button-secondary"
+                        type="button"
+                        pButton
+                        label="No"
+                        icon="pi pi-times"
+                        (click)="cd.reject()"
+                    ></button>
+                </div>
+            </ng-template>
+        </p-confirmDialog>
+        <span>
+            <button
+                pButton
+                type="button"
+                label="Schedule Project"
+                icon="pi pi-calendar"
+                iconPos="left"
+                class="p-button-primary mr-3"
+                (click)="showScheduleProject()"
+            ></button>
+        </span>
+        <span class="back-btn">
+            <button
+                pButton
+                type="button"
+                label="Back"
+                class="p-button-primary mr-3 btn-small"
+                icon="pi pi-chevron-left"
+                iconPos="left"
+                (click)="prevPage()"
+            ></button>
+        </span>
+        <button
+            pButton
+            type="button"
+            label="Cancel"
+            (click)="showConfirm()"
+            icon="pi pi-times"
+            iconPos="left"
+            label="Cancel"
+            class="p-button-warning mr-3"
+        ></button>
+        <div class="next-btn">
+            <button
+                pButton
+                type="submit"
+                label="Create Project"
+                icon="pi pi-send"
+                iconPos="left"
+                class="p-button-primary"
+                (click)="uploadProjectCreationData()"
+            ></button>
+        </div>
+    </div>
+</div>

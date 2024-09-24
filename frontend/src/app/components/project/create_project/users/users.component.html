@@ -1,0 +1,92 @@
+<div class="users-settings container basefile-container">
+    <form [formGroup]="usersSettingForm">
+        <div class="grid">
+            <div class="col-3">
+                <p-dropdown
+                    [options]="projectManagers"
+                    formControlName="selectedManager"
+                    optionLabel="name"
+                    filterBy="name"
+                    placeholder="Select a project manager"
+                    [filter]="true"
+                    appendTo="body"
+                ></p-dropdown>
+            </div>
+            <div class="col-3">
+                <div class="p-inputgroup">
+                    <p-dropdown
+                        [options]="readOnlyUsers"
+                        formControlName="users"
+                        optionLabel="name"
+                        optionValue="id"
+                        filterBy="name"
+                        placeholder="Select read only user"
+                        [filter]="true"
+                        appendTo="body"
+                        [style]="{ 'border-bottom-right-radius': '0px', 'border-top-right-radius': '0px' }"
+                    ></p-dropdown>
+                    <button type="button" pButton icon="pi pi-plus" (click)="addUserAsReadOnly()" styleClass="p-button-warn"></button>
+                </div>
+                <p-listbox
+                    [options]="selectedReadOnlyUsers" 
+                    styleClass="mt-3"
+                    [emptyMessage]="'No read only user assigned'"
+                    [listStyle]="{ 'height': '250px' }"
+                >
+                    <ng-template let-user pTemplate="item">
+                        <div class="flex align-items-center justify-content-between w-full">
+                            <div>{{ user.name }}</div>
+                            <p-button
+                                icon="pi pi-trash"
+                                (onClick)="delete(user)"
+                                styleClass="p-button-danger p-button-sm z-5"
+                            ></p-button>
+                        </div>
+                    </ng-template>
+                </p-listbox>
+            </div>
+        </div>
+    </form>
+    <div class="pt-3 pb-5 left-bottom-btn">
+        <span class="back-btn">
+            <button
+                pButton
+                type="button"
+                label="Back"
+                class="p-button-primary mr-3 btn-small"
+                icon="pi pi-chevron-left"
+                iconPos="left"
+                (click)="goToPreviousTab()"
+            ></button>
+        </span>
+        <button
+            pButton
+            pRipple
+            (click)="showConfirm()"
+            type="button"
+            icon="pi pi-times"
+            iconPos="left"
+            label="Cancel"
+            class="p-button-warning mr-3"
+        ></button>
+        <div class="next-btn">
+            <button
+                pButton
+                type="button"
+                label="Next"
+                class="p-button-primary"
+                icon="pi pi-chevron-right"
+                iconPos="right"
+                (click)="submitUserForm()"
+                [disabled]="usersSettingForm.invalid"
+            ></button>
+        </div>
+    </div>
+</div>
+<app-confirmation
+    *ngIf="showConfirmation"
+    (acceptCallback)="onAccept()"
+    (rejectCallback)="onReject()"
+    [confirmationMessage]="confirmationMessage"
+    [confirmationHeader]="confirmationHeader"
+></app-confirmation>

@@ -1,0 +1,59 @@
+<div class="rowflex">
+    <form action="" [formGroup]="statisticsForm">
+        <div class="col-6 due-date">
+            <p class="pt-3">Due Date <span class="required">*</span></p>
+            <p-calendar
+                formControlName="deuDate"
+                appendTo="body"
+                inputId="icon"
+                [showIcon]="true"
+                [minDate]="minDateValue"
+                dateFormat="dd/mm/yy"
+            ></p-calendar>
+        </div>
+    </form>
+</div>
+<div class="rowflex">
+    <div class="col-12 mt-3">
+        <div *ngIf="loading" class="spinner chart-spinner">
+            <p-progressSpinner animationDuration="1s"> </p-progressSpinner>
+        </div>
+        <p-chart type="bar" [data]="statisticsData" height="500" [options]="statisticsOptions"> </p-chart>
+    </div>
+</div>
+<div class="mt-5 pb-3 left-bottom-btn">
+    <span class="back-btn">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-3 btn-small"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="prevPage(4)"
+        ></button>
+    </span>
+    <span class="help-btn">
+        <button
+            pButton
+            type="button"
+            label="Help"
+            class="p-button-help mr-3"
+            icon="pi pi-question"
+            iconPos="left"
+        ></button>
+    </span>
+
+    <span class="next-btn">
+        <button
+            pButton
+            type="button"
+            label="Next"
+            class="p-button-primary"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            (click)="submitStatisticsForm(6)"
+            [disabled]="!this.statisticsForm.valid"
+        ></button>
+    </span>
+</div>

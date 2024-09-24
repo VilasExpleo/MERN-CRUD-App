@@ -1,0 +1,8 @@
+<p-chip [icon]="label?.icon" [label]="label?.name" [style]="{ background: label?.color }"></p-chip>
+<p-chip
+    class="ml-2"
+    *ngIf="labels?.length > 1"
+    [label]="'+ ' + (labels?.length - 1)"
+    [pTooltip]="labelNames"
+    tooltipPosition="bottom"
+></p-chip>

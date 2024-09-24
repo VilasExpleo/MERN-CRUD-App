@@ -1,0 +1,12 @@
+.stcId {
+    text-decoration: underline;
+    color: #418bfb;
+    cursor: pointer;
+}
+.textWrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 7vw;
+    display: inline-block;
+}

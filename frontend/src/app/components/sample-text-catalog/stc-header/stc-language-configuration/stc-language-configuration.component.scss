@@ -1,0 +1,13 @@
+:host {
+    ::ng-deep .next-btn {
+        display: inline;
+        .p-button {
+            background: #304cd9;
+        }
+    }
+}
+.left-bottom-btn {
+    float: right;
+    right: 20px;
+    bottom: 0;
+}

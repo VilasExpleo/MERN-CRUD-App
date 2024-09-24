@@ -1,0 +1,162 @@
+<div class="rowflex">
+    <div class="col-12">
+        <p-toast></p-toast>
+        <div class="grid">
+            <div class="col-12">
+                <p-breadcrumb [model]="items"></p-breadcrumb>
+            </div>
+        </div>
+
+        <form [formGroup]="stcFormGP">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="input-container tabview">
+                        <app-ideal-text
+                            (checkIfAnyError)="checkIfAnyError()"
+                            [disabled]="disabled"
+                            [submitSTC]="submitSTC"
+                            formControlName="idelTextTabList"
+                        ></app-ideal-text>
+
+                        <div *ngIf="stcFromControls['idelTextTabList']?.invalid && submitSTC">
+                            <p-message
+                                severity="error"
+                                text="Ideal Text is required"
+                                *ngIf="stcFromControls['idelTextTabList'].value === null"
+                            ></p-message>
+                        </div>
+                        <div *ngIf="ifShortFormBlank && submitSTC">
+                            <p-message severity="error" text="All Shortforms are required"></p-message>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="input-container">
+                        <p>Description</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="lg:col-12 md:col-12 sm:col-12">
+                    <div class="input-container tabview">
+                        <app-description [submitSTC]="submitSTC" formControlName="descriptionTabList"></app-description>
+                        <div *ngIf="stcFromControls['descriptionTabList']?.invalid && submitSTC">
+                            <p-message
+                                severity="error"
+                                text="Description is required"
+                                *ngIf="stcFromControls['descriptionTabList'].value === null"
+                            ></p-message>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Brand</p>
+                        <input type="text" pInputText formControlName="brand" />
+                    </div>
+                </div>
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Sample Text ID</p>
+                        <input type="text" pInputText formControlName="sampleTextId" />
+                        <div>
+                            <p-message></p-message>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Gender</p>
+                        <p-dropdown
+                            (onChange)="onChangeGender()"
+                            [options]="genderOption"
+                            placeholder="Select Gender"
+                            formControlName="gender"
+                            optionLabel="gender"
+                        ></p-dropdown>
+                    </div>
+                </div>
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Numerous</p>
+                        <p-dropdown
+                            (onChange)="onChangeNumerous()"
+                            [options]="NumerousOption"
+                            placeholder="Select Numerous"
+                            formControlName="numerous"
+                            optionLabel="numerous"
+                        ></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Type <span>*</span></p>
+                        <p-dropdown
+                            (onChange)="onChangeType()"
+                            [options]="typeOption"
+                            placeholder="Select Type"
+                            formControlName="type"
+                            optionLabel="type"
+                        >
+                        </p-dropdown>
+
+                        <div *ngIf="stcFromControls['type'].invalid && submitSTC">
+                            <p-message
+                                severity="error"
+                                text="type is required"
+                                *ngIf="stcFormGP['type']?.errors && stcFormGP['type']?.errors['required']"
+                            ></p-message>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-6 md:col-12 sm:col-12">
+                    <div class="input-container">
+                        <p>Used In Project</p>
+                        <div class="p-inputgroup">
+                            <input type="text" pInputText formControlName="projectName" />
+                            <span class="p-inputgroup-addon" (click)="externalProjectReference()">{{
+                                stcFromControls['usedInProject'].value
+                            }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid details-button" *ngIf="stcFormActionName !== 'Details'">
+                <div class="input-container">
+                    <button
+                        pButton
+                        pRipple
+                        icon="pi pi-times"
+                        type="button"
+                        iconPos="left"
+                        label="Cancel"
+                        class="p-button-warning mr-3"
+                        (click)="cancelForm()"
+                    ></button>
+                    <button
+                        pButton
+                        (click)="stcSubmit()"
+                        icon="pi {{ stcFormIcon }}"
+                        iconPos="left"
+                        label="{{ stcFormActionName }}"
+                        iconPos="left"
+                        class="p-button p-button1"
+                        [disabled]="!stcFormGP.valid"
+                    ></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

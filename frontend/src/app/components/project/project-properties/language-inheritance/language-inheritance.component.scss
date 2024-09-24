@@ -1,0 +1,31 @@
+.btn-container {
+    float: right;
+}
+.header-para {
+    font-weight: 400;
+    font-size: 18px;
+    color: #434343;
+}
+:host {
+    ::ng-deep {
+        .tree-container {
+            .p-tree {
+                border: 1px solid #a5c9ff;
+                height: 45vh;
+                overflow-x: hidden;
+                overflow-y: scroll;
+            }
+        }
+    }
+}
+.no-button {
+    display: inline;
+}
+.yes-button {
+    display: inline;
+}
+.main-para {
+    font-weight: 400;
+    font-size: 18px;
+    color: #434343;
+}

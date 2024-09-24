@@ -1,0 +1,249 @@
+<div class="inner-container">
+    <p-toast></p-toast>
+    <p-fieldset legend="Save Filter Template">
+        <div class="grid save-template">
+            <div class="col-12">
+                <form action="" [formGroup]="chooseFilterConfigForm" class="inline">
+                    <p-dropdown
+                        [options]="configurationsName"
+                        formControlName="availableConfigName"
+                        optionLabel="template_name"
+                        (onChange)="getTemplateName($event)"
+                        placeholder="Select template"
+                    >
+                    </p-dropdown>
+                    <span class="select-filter-btn">
+                        <button
+                            pButton
+                            type="button"
+                            class="ml-2"
+                            (click)="submitChooseFilterConfigForm(chooseFilterConfigForm.value)"
+                            pTooltip="Use selected template"
+                        >
+                            <img src="../../../../../../assets/images/symbol/usefilter.svg" alt="usefilter" />
+                        </button>
+                        <button
+                            pButton
+                            type="button"
+                            class="ml-2"
+                            icon="pi pi-filter-slash"
+                            pTooltip="Clear filter"
+                            (click)="clearFilter()"
+                        ></button>
+                    </span>
+                    <button
+                        pButton
+                        pRipple
+                        icon="pi pi-trash"
+                        type="button"
+                        class="p-button-danger ml-2"
+                        pTooltip="Delete selected template"
+                        (click)="deleteFilterConfig()"
+                        [disabled]="isDeleteTemplateDisabled"
+                    ></button>
+                </form>
+                <form action="" [formGroup]="newFilterConfigForm" class="inline">
+                    <div class="inline filter-input pr-5">
+                        <input
+                            type="text"
+                            pInputText
+                            placeholder="Enter name for saving new filter"
+                            formControlName="newConfigName"
+                            (input)="getInputValue($event)"
+                        />
+                        <button
+                            pButton
+                            type="button"
+                            icon="pi pi-save"
+                            class="ml-2"
+                            pTooltip="Save template"
+                            [disabled]="isSaveTemplateDisable"
+                            (click)="submitNewFilterConfigForm(newFilterConfigForm.value)"
+                        ></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </p-fieldset>
+
+    <div class="col-12 tbl-container">
+        <p-table
+            [value]="filterTableData"
+            [columns]="cols"
+            [virtualRowHeight]="50"
+            [reorderableColumns]="true"
+            selectionMode="multiple"
+            scrollHeight="500px"
+            [virtualRowHeight]="50"
+            [lazy]="true"
+            [responsive]="true"
+            (onLazyLoad)="onLazyFilterTableData($event)"
+            [loading]="loading"
+            id="filterTable"
+            [scrollable]="true"
+            #filterTable
+        >
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                        {{ col.header }}
+                        <p-columnFilter
+                            [field]="col.field"
+                            display="menu"
+                            [showMatchModes]="false"
+                            [hideOnClear]="true"
+                            *ngIf="isColumnProofreadStatusOrReviewerStatus(col.field)"
+                        >
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-dropdown
+                                    [options]="orderStatus"
+                                    (onChange)="filter($event.value.id)"
+                                    placeholder="Status"
+                                    [ngModel]="value"
+                                >
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <p-chip
+                                                [label]="option.label"
+                                                icon="icon-pending"
+                                                [styleClass]="'text-node-status ' + option.label"
+                                            ></p-chip>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </ng-template>
+                        </p-columnFilter>
+
+                        <p-columnFilter
+                            [field]="col.field"
+                            display="menu"
+                            [showMatchModes]="false"
+                            [hideOnClear]="true"
+                            *ngIf="isColumnEditorLanguageStatus(col.field)"
+                        >
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-dropdown
+                                    [options]="stateStatus"
+                                    (onChange)="filter($event.value)"
+                                    placeholder="Status"
+                                    [ngModel]="value"
+                                >
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <p-chip
+                                                [label]="option.label"
+                                                icon="icon-pending"
+                                                [styleClass]="'text-node-status ' + option.label"
+                                            ></p-chip>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </ng-template>
+                        </p-columnFilter>
+
+                        <p-columnFilter
+                            [field]="col.field"
+                            display="menu"
+                            [showMatchModes]="false"
+                            [hideOnClear]="true"
+                            *ngIf="isColumnEditorLockStatus(col.field)"
+                        >
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-dropdown
+                                    [options]="lockedStatus"
+                                    (onChange)="filter($event.value)"
+                                    placeholder="Status"
+                                    [ngModel]="value"
+                                >
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            {{ option.label }}
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </ng-template>
+                        </p-columnFilter>
+                        <p-columnFilter
+                            [type]="col.type"
+                            [field]="col.field"
+                            [hideOnClear]="true"
+                            display="menu"
+                            *ngIf="isShowColumnFilter(col.field)"
+                        ></p-columnFilter>
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr style="height: 40px" [pSelectableRow]="rowData">
+                    <td *ngFor="let col of columns">
+                        <p-chip
+                            icon="icon-pending"
+                            [label]="textNodeStatus[rowData[col.state]] || defaultStatus"
+                            [styleClass]="'text-node-status ' + textNodeStatus[rowData[col.state]]"
+                            *ngIf="isColumnProofreadStatusOrReviewerStatus(col.field); else nonStatusBlocks"
+                        ></p-chip>
+                        <ng-template #nonStatusBlocks>
+                            <span
+                                [ngClass]="{
+                                    unworked: rowData[col.state] === 'Unworked',
+                                    done: rowData[col.state] === 'Done',
+                                    workInProgress: rowData[col.state] === 'Work in progress'
+                                }"
+                            >
+                                <img
+                                    src="{{ getStatus(rowData[col.state]) }}"
+                                    alt="{{ getStatus(rowData[col.state]) }}"
+                                />
+                                {{ rowData[col.field] || '-' }}
+                            </span>
+                        </ng-template>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="form pt-3">
+        <p-checkbox
+            [binary]="true"
+            inputId="binary"
+            [(ngModel)]="unfinishedNodes"
+            (onChange)="getCheckboxValue($event)"
+        ></p-checkbox>
+        <label for="binary" class="pl-3">Export only unfinished translations</label>
+    </div>
+</div>
+<div class="pt-3 pb-5 left-bottom-btn">
+    <span class="back-btn">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-3 btn-small"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="navigate(3)"
+        ></button>
+    </span>
+    <span class="help-btn">
+        <button
+            pButton
+            type="button"
+            label="Help"
+            class="p-button-help mr-3"
+            icon="pi pi-question"
+            iconPos="left"
+        ></button>
+    </span>
+    <span class="next-btn">
+        <button
+            pButton
+            type="button"
+            label="Next"
+            class="p-button-primary"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            (click)="navigate(5)"
+        ></button>
+    </span>
+</div>

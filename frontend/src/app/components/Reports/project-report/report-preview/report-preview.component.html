@@ -1,0 +1,28 @@
+<ng-container *ngIf="format === reportFormat.XLSX">
+    <p-table [columns]="tableHeaders" [value]="previewExcel">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">{{ col }}</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData>
+            <tr>
+                <td *ngFor="let col of rowData">
+                    {{ col }}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</ng-container>
+<ng-container *ngIf="format === reportFormat.XML">
+    <ng-container *ngFor="let xmlLine of preview; let i = index">
+        <p *ngIf="i > 0" class="p-3 text-xl font-italic">{{ xmlLine }}</p>
+    </ng-container>
+</ng-container>
+<ng-container *ngIf="format === reportFormat.TEXT">
+    <p class="text-center text-2xl p-8"><i class="pi pi-times text-xl"></i> {{ previewError }}</p>
+</ng-container>
+<ng-container *ngIf="format === reportFormat.HTML">
+    <div class="p-3" [innerHTML]="preview"></div>
+</ng-container>

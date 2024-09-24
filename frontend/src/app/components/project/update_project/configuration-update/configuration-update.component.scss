@@ -1,0 +1,77 @@
+.configure {
+    margin-top: 46px;
+}
+
+:host ::ng-deep{
+     .configure {
+        .p-chkbox {
+            margin: 16px;
+        }
+        .p-checkbox {
+            margin-right: 8px;
+        }
+    }
+     .next-btn {
+        .p-button {
+            background: #304cd9;
+        }
+    }
+    .back-btn .p-button {
+        background: #304cd9;
+    }
+
+    .cancel-btn {
+        .pi-exclamation-triangle:before {
+            color: #ffffff;
+        }
+    }
+     .no-button {
+        .p-button {
+            margin-top: 20px;
+        }
+        .p-button-label {
+            padding-left: 9px;
+        }
+    }
+     .cancel-dialog {
+        .pi-exclamation-triangle:before {
+            color: black;
+        }
+        .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+            color: black;
+            font-size: 14px;
+        }
+    }
+     .yes-button {
+        .p-button {
+            margin-top: 20px;
+        }
+        .p-button-label {
+            padding-left: 9px;
+        }
+    }
+}
+.check-list {
+    margin: 16px !important;
+}
+.left-bottom-btn {
+    float: right;
+}
+.next-btn {
+    display: inline;
+}
+.no-button {
+    display: inline;
+}
+.yes-button {
+    display: inline;
+}
+.main-heading {
+    color: #174a84;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.threshold-value {
+    margin-left: 20px;
+}

@@ -1,0 +1,41 @@
+<div class="col-12">
+    <p-calendar
+        appendTo="body"
+        [readonlyInput]="true"
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }"
+        [(ngModel)]="date"
+        view="year"
+        dateFormat="yy"
+        inputId="yearpicker"
+        [minDate]="minDateValue"
+        [stepMinute]="30"
+    ></p-calendar>
+</div>
+<div class="col-12">
+    <ng-container *ngFor="let scheduleDay of scheduleDays">
+        <button
+            (click)="selectWeek(scheduleDay)"
+            pButton
+            type="button"
+            label="{{ scheduleDay.day }}"
+            class="text-color-secondary col-4"
+            [class]="scheduleDay.isSelected ? 'p-button-outlined' : 'p-button-text'"
+        ></button>
+    </ng-container>
+</div>
+<div class="col-12">
+    <p-calendar
+        appendTo="body"
+        [readonlyInput]="true"
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }"
+        [(ngModel)]="date"
+        inputId="yearpicker"
+        [timeOnly]="true"
+        (onBlur)="onBlurMethod()"
+        [inline]="true"
+        (onSelect)="onBlurMethod()"
+        [stepMinute]="30"
+    ></p-calendar>
+</div>

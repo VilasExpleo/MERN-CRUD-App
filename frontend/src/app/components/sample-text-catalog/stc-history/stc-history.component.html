@@ -1,0 +1,125 @@
+<p-contextMenu appendTo="body" #cm [model]="columnConfigMenu"> </p-contextMenu>
+<p-table
+    [value]="stcHistoryData"
+    (onLazyLoad)="stcHistoryDataLazy($event)"
+    [lazy]="true"
+    [contextMenu]="cm"
+    [(contextMenuSelection)]="stcHistory"
+>
+    <ng-template pTemplate="header" let-columns>
+        <tr [pContextMenuRow]="stcHistory">
+            <th pSortableColumn="stc_id" pResizableColumn style="min-width: 180px">
+                Sample Text ID
+                <p-sortIcon field="stc_id"></p-sortIcon>
+                <p-columnFilter type="numeric" field="stc_id" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="updated_on" pResizableColumn style="min-width: 150px">
+                Timestamp
+                <p-sortIcon field="updated_on"></p-sortIcon>
+                <p-columnFilter type="date" field="updated_on" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="user_name" pResizableColumn style="min-width: 150px">
+                User
+                <p-sortIcon field="user_name"></p-sortIcon>
+                <p-columnFilter type="text" field="user_name" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="attribute_name" pResizableColumn style="min-width: 200px">
+                Changed Attributes
+                <p-sortIcon field="attribute_name"></p-sortIcon>
+                <p-columnFilter field="attribute_name" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getSTCAttributes()"
+                            (onChange)="filter($event.value)"
+                            placeholder="STC Attributes"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pSortableColumn="language_code" pResizableColumn style="min-width: 150px">
+                Language
+                <p-sortIcon field="language_code"></p-sortIcon>
+                <p-columnFilter type="text" field="language_code" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="old_value" pResizableColumn style="min-width: 180px">
+                Old Value
+                <p-sortIcon field="old_value"></p-sortIcon>
+                <p-columnFilter type="text" field="old_value" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="new_value" pResizableColumn style="min-width: 180px">
+                New Value
+                <p-sortIcon field="new_value"></p-sortIcon>
+                <p-columnFilter type="text" field="new_value" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pContextMenuRow]="stcHistory">
+            <td>
+                {{ rowData.stc_id }}
+            </td>
+            <td>
+                {{ rowData.updated_on | date : 'yyyy-MM-dd, hh:mm:ss a' }}
+            </td>
+            <td>
+                {{ rowData.user_name }}
+            </td>
+            <td>
+                {{ rowData.attribute_name }}
+            </td>
+            <td>
+                {{ rowData.language_code }}
+            </td>
+            <td>
+                <app-state-icon-button
+                    *ngIf="
+                        rowData.old_value === 'Done' ||
+                            rowData.old_value === 'Work in progress' ||
+                            rowData.new_value === 'Done' ||
+                            rowData.new_value === 'Work in progress';
+                        else oldValueNoStatus
+                    "
+                    [value]="rowData.old_value"
+                ></app-state-icon-button>
+                <ng-template #oldValueNoStatus>
+                    {{ rowData.old_value }}
+                </ng-template>
+            </td>
+            <td>
+                <app-state-icon-button
+                    *ngIf="
+                        rowData.old_value === 'Done' ||
+                        rowData.old_value === 'Work in progress' ||
+                        rowData.new_value === 'Done' ||
+                        rowData.new_value === 'Work in progress'
+                    "
+                    [value]="rowData.new_value"
+                ></app-state-icon-button>
+                <app-diffrence-element
+                    *ngIf="
+                        !(
+                            rowData.old_value === 'Done' ||
+                            rowData.old_value === 'Work in progress' ||
+                            rowData.new_value === 'Done' ||
+                            rowData.new_value === 'Work in progress'
+                        )
+                    "
+                    [oldValue]="rowData['old_value']"
+                    [newValue]="rowData['new_value']"
+                ></app-diffrence-element>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="stcHistoryData">No history found.</td>
+        </tr>
+    </ng-template>
+</p-table>

@@ -1,0 +1,566 @@
+<app-translation-status-bar
+    (openGrammarParserEvent)="openGrammarParserPanel()"
+    [isSpeechTextNode]="isSpeechTextNode()"
+    [showChildLanguages]="inheritanceLanguages"
+></app-translation-status-bar>
+<ng-container *ngIf="projectTranslationService.isMetaEditorVisible">
+    <i class="icon-meta-text1 mr-3" aria-hidden="true" style="color: #304cd9; float: right"></i>
+    <div>
+        <textarea [disabled]="true" class="metatext" readonly [placeholder]="sourceText"></textarea>
+    </div>
+</ng-container>
+<!-- new Rich Text Editor -->
+<ng-container *ngIf="!projectTranslationService.isMetaEditorVisible">
+    <div class="grid pl-2">
+        <div class="col-6" *ngIf="!(this.isProofreader || this.isReviewer)">
+            <div class="grid">
+                <div class="col-8">
+                    <p class="text-primary font-semibold">Source: {{ sourceLanguage }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6" *ngIf="!(this.isProofreader || this.isReviewer)">
+            <div class="grid mr-1">
+                <div class="col-1 flex align-items-center" *ngIf="!(this.isProofreader || this.isReviewer)">
+                    <div *ngIf="getState() === 'Unresolved Chars' || getState() === 'Unresolved font'; else errorIcon">
+                        <img [src]="unresolvedSymbols[getState()]" [alt]="getState()" />
+                    </div>
+                    <ng-template #errorIcon>
+                        <i
+                            [ngClass]="tableIcons[getState()]"
+                            [ngStyle]="{ color: statusIcon[getState()] }"
+                            aria-hidden="true"
+                        ></i>
+                    </ng-template>
+                </div>
+                <div class="col-5">
+                    <p class="text-primary font-semibold">Translate To: {{ foreginLangCode }}</p>
+                </div>
+                <div class="col-3">
+                    <p-tag
+                        *ngIf="mappingService.isUnmappedEnabled"
+                        value="{{ stcDetailsService.headerIdealText }}"
+                    ></p-tag>
+
+                    <i
+                        class="icon-mappng cursor-pointer vertical-align-middle pl-1"
+                        *ngIf="mappingService.isUnmappedEnabled"
+                        (click)="stcDetailsService.getStcDetails()"
+                        aria-hidden="true"
+                    ></i>
+                </div>
+
+                <div class="col-3" *ngIf="!(this.isProofreader || this.isReviewer)">
+                    <i
+                        *ngIf="mappingService.isUnmappedEnabled"
+                        style="color: #02a8cd; display: inline-block"
+                        class="pi pi-plus vertical-align-middle pl-1"
+                        [ngClass]="{
+                            'save-disable': projectTranslationService.isTextnodeLocked
+                        }"
+                        (click)="createShortForm()"
+                        aria-hidden="true"
+                    ></i>
+                    <i
+                        *ngIf="stcDetailsService.lockStatus === 'Locked'"
+                        style="color: #02a8cd; display: inline-block"
+                        class="pi pi-lock vertical-align-middle pl-1"
+                        aria-hidden="true"
+                    ></i>
+                    <i
+                        *ngIf="projectTranslationService.isSpeechEditorVisible"
+                        class="icon-group vertical-align-middle pl-1"
+                        style="color: #304cd9; display: inline-block"
+                        aria-hidden="true"
+                    ></i>
+                    <i
+                        *ngIf="projectTranslationService.isPromptEditorVisible"
+                        class="pi pi-volume-up vertical-align-middle pl-1"
+                        style="color: #304cd9; display: inline-block"
+                        aria-hidden="true"
+                    ></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 pl-2">
+            <p-panel>
+                <ng-template pTemplate="header">
+                    <p-tag
+                        [style]="{ background: '#495057' }"
+                        [value]="proofreaderSourceLanguage"
+                        *ngIf="this.isProofreader || this.isReviewer"
+                    ></p-tag>
+                </ng-template>
+                <app-rich-text-editor
+                    [text]="sourceText"
+                    [options]="projectTranslationService.readonlyEditorOptions"
+                    [isSpeechEditorVisible]="projectTranslationService.isSpeechEditorVisible"
+                    [isPromptEditorVisible]="projectTranslationService.isPromptEditorVisible"
+                    [isSourceText]="true"
+                ></app-rich-text-editor>
+            </p-panel>
+        </div>
+
+        <div class="col-6">
+            <p-panel>
+                <ng-template pTemplate="header">
+                    <div class="flex justify-content-between align-item-center w-full px-1">
+                        <p-button styleClass="p-button-rounded p-button-small" *ngIf="isTextNodeLanguage">
+                            <ng-container *ngIf="isInheritParentPropertiesToChildLanguages">
+                                {{ parentLanguage }} <i class="pi pi-arrow-right mx-2"></i>
+                            </ng-container>
+                            {{ foreginLangCode }}
+                        </p-button>
+                        <p-tag
+                            [style]="{ background: '#3B82F6' }"
+                            [value]="proofreaderLanguage"
+                            *ngIf="this.isProofreader || this.isReviewer"
+                        ></p-tag>
+                        <p-button
+                            icon="icon-symbol text-primary"
+                            class="ml-auto"
+                            styleClass="p-button-rounded p-button-text p-button-small"
+                            *ngIf="(this.isEditor || this.isTranslator) && isSymbolVisible()"
+                            (onClick)="showCharacters()"
+                        ></p-button>
+                    </div>
+                </ng-template>
+                <!-- TODO:: Developers needs to change language parameter to the correct one 
+                    if we really need it in some other features related to the RTE, 
+                    the target language can be any language and not  "'en-Us'" only! -->
+
+                <app-rich-text-editor
+                    #translationEditor
+                    [text]="translationText"
+                    [maxRows]="projectTranslationService.maxRow"
+                    [maxWidth]="projectTranslationService.maxWidth"
+                    [maxCharacters]="projectTranslationService.maxCharacters"
+                    [lineBreakMode]="projectTranslationService.lineBreakMode"
+                    [options]="projectTranslationService.activeEditorOptions"
+                    [linesWidth]="projectTranslationService.linesWidth"
+                    [unresolvedSymbols]="projectTranslationService.unresolvedSymbols"
+                    [selectedRow]="projectTranslationService.selectedRow"
+                    [isSourceText]="false"
+                    [isSpeechEditorVisible]="projectTranslationService.isSpeechEditorVisible"
+                    [isPromptEditorVisible]="projectTranslationService.isPromptEditorVisible"
+                    [errorNewlinePositions]="projectTranslationService.position"
+                    [unnamedRegex]="unnamedRegex"
+                    [namedRegex]="namedRegex"
+                    [spellCheckWords]="spellCheckWords"
+                    [placeholderIdentifiers]="placeholderIdentifiers"
+                    (clickSuggestionEvent)="handleSuggestionEvent($event)"
+                    (clickLinkEvent)="handlePlaceholderEvent($event)"
+                    (showUnresolvedSymbolsDialogEvent)="handleLinkToShowUnsupportedCharactersClicked($event)"
+                    (prevTranslationStateEvent)="storePrevTranslationTextState($event)"
+                ></app-rich-text-editor>
+            </p-panel>
+        </div>
+
+        <div class="col-6">
+            <button
+                pButton
+                label="Exception"
+                icon="pi pi-reply"
+                [disabled]="mappingService.isUnmappedEnabled"
+                [ngClass]="!projectTranslationService.isException ? 'p-button-outlined' : 'p-button-raised'"
+                (click)="updateExceptionStatus()"
+                *ngIf="projectTranslationService.languageParentId > 0"
+                [pTooltip]="
+                    projectTranslationService.isException && mappingService.isUnmappedEnabled
+                        ? 'An exception cannot be set to off as the node is mapped.'
+                        : null
+                "
+            ></button>
+        </div>
+
+        <div class="col-6"></div>
+        <div class="col-6">
+            <button
+                pButton
+                pRipple
+                label="Unmap"
+                type="button"
+                class="p-button-text"
+                pTooltip="Unmap textnode"
+                tooltipPosition="bottom"
+                *ngIf="mappingService.isUnmappedEnabled && projectTranslationService.role === 'editor'"
+                (click)="mappingService.unmapText()"
+            >
+                <img src="/assets/images/symbol/unmap.svg" alt="Unmap Symbol" />
+            </button>
+        </div>
+
+        <div class="col-6" *ngIf="!(this.isProofreader || this.isReviewer)">
+            <div class="grid">
+                <div class="col-4">
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-replay"
+                        class="p-button-text p-button-lg"
+                        pTooltip="Undo"
+                        (click)="projectTranslationService.undo()"
+                        tooltipPosition="bottom"
+                        [disabled]="projectTranslationService.activeEditorOptions.readonly"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-refresh"
+                        class="p-button-text p-button-lg"
+                        pTooltip="Redo"
+                        tooltipPosition="bottom"
+                        [disabled]="projectTranslationService.activeEditorOptions.readonly"
+                        (click)="projectTranslationService.redo()"
+                    ></button>
+                </div>
+                <div class="col-8 text-right">
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-text p-button-lg"
+                        icon="pi pi-save"
+                        style="color: #cd9a23"
+                        pTooltip="Set state work in progress"
+                        tooltipPosition="bottom"
+                        [disabled]="isWorkInProgressSaveDisable() && isPreviousTranslationMadeEmptyAndNotMapped()"
+                        (click)="projectTranslationService.changeState('Work in progress')"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-text p-button-lg"
+                        style="color: #cd9a23"
+                        icon="icon-save-next"
+                        [disabled]="isWorkInProgressSaveDisable() && isPreviousTranslationMadeEmptyAndNotMapped()"
+                        pTooltip="Set state work in progress and navigate to next node"
+                        tooltipPosition="bottom"
+                        (click)="projectTranslationService.changeState('Work in progress', 0, true)"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-text p-button-lg"
+                        icon="pi pi-save"
+                        pTooltip="Set state done"
+                        tooltipPosition="bottom"
+                        style="color: #1ea97c"
+                        [disabled]="isDoneSaveDisable() && isPreviousTranslationMadeEmptyAndNotMapped()"
+                        (click)="saveStatusDone('')"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-text p-button-lg"
+                        style="color: #1ea97c"
+                        icon="icon-save-next"
+                        pTooltip="Set state done and navigate to next node"
+                        tooltipPosition="bottom"
+                        [disabled]="isDoneSaveDisable() && isPreviousTranslationMadeEmptyAndNotMapped()"
+                        (click)="saveStatusDone('Next')"
+                    ></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- proofreader buttons start -->
+
+        <div class="col-6 flex justify-content-end" *ngIf="this.isProofreader || this.isReviewer">
+            <span class="pr-3 border-500 border-right-1 inline-flex">
+                <p-button
+                    icon="pi pi-replay"
+                    styleClass="p-button-secondary"
+                    pTooltip="Reset"
+                    tooltipPosition="bottom"
+                    (click)="reset()"
+                    [disabled]="!isStatusDone"
+                ></p-button>
+            </span>
+            <span class="p-buttonset mr-2 ml-3">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-thumbs-down"
+                    class="p-button-danger"
+                    pTooltip="Reject"
+                    tooltipPosition="bottom"
+                    (click)="overlayPanel.toggle($event)"
+                    [disabled]="!isStatusDone"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-angle-double-right"
+                    class="p-button-outlined p-button-danger"
+                    [disabled]="!isStatusDone"
+                ></button>
+            </span>
+            <span class="p-buttonset">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-thumbs-up"
+                    class="p-button-success"
+                    pTooltip="Approve"
+                    tooltipPosition="bottom"
+                    (click)="accept(3)"
+                    [disabled]="!isStatusDone"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-angle-double-right"
+                    class="p-button-outlined p-button-success"
+                    [disabled]="!isStatusDone"
+                ></button>
+            </span>
+        </div>
+        <!-- proofreader buttons end -->
+
+        <div class="col-12" *ngIf="projectTranslationService.isTextWarningVisible">
+            <p-messages severity="warn">
+                <ng-template pTemplate>
+                    <p>
+                        The text and state translation language is changed. If the additional languages should set to
+                        work in progress
+                        <span
+                            class="text-primary cursor-pointer"
+                            (click)="projectTranslationService.showEditorConfirmDialog()"
+                        >
+                            click here.</span
+                        >
+                    </p>
+                </ng-template>
+            </p-messages>
+        </div>
+        <div class="col-12">
+            <hr style="color: #a5c9ff" />
+        </div>
+    </div>
+
+    <div class="formgrid grid pl-2">
+        <div class="col-5 field col-offset-6" *ngIf="isSpeechAndPromptInEditorNotVisible()">
+            <p-progressBar
+                *ngIf="projectTranslationService.maxWidth !== null"
+                class="p-2"
+                [value]="projectTranslationService.progressBarWidth"
+                [ngClass]="{
+                    pBarWidthRed: projectTranslationService.progressBarWidth >= 100 || progressBarError,
+                    pBarWidthYellow:
+                        (projectTranslationService.progressBarWidth <= 100 &&
+                            projectTranslationService.progressBarWidth >= 90 &&
+                            !progressBarError) ||
+                        progressBarWarning
+                }"
+                id="widthprogress"
+            ></p-progressBar>
+        </div>
+        <div class="col-1" *ngIf="isSpeechAndPromptInEditorNotVisible()">
+            <span class="relative top-33" *ngIf="projectTranslationService.maxWidth !== null"
+                >{{ projectTranslationService.calculateWidthByLengthCalculation }}<span>/</span
+                >{{ projectTranslationService.maxWidth }}</span
+            >
+        </div>
+
+        <ng-container *ngIf="!(this.isProofreader || this.isReviewer)">
+            <div class="col-3 field col-offset-6">
+                <label for="id1">Changed By:</label>
+                <input
+                    title="{{ changedBy }}"
+                    type="text"
+                    id="id1"
+                    pInputText
+                    disabled
+                    [(ngModel)]="changedBy"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                />
+            </div>
+            <div class="col-3 field">
+                <label for="id1">Last Change:</label>
+                <input
+                    title="{{ lastChange }}"
+                    type="text"
+                    pInputText
+                    id="id1"
+                    disabled
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                    [(ngModel)]="lastChange"
+                />
+            </div>
+        </ng-container>
+        <div class="col-12 field" *ngIf="isStcVesrion?.['getstcversion']?.length > 0">
+            <p-messages severity="warn">
+                <ng-template pTemplate>
+                    <div class="ml-2 warnmasg">
+                        <i
+                            class="pi pi-exclamation-triangle mr-2"
+                            aria-hidden="true"
+                            style="color: #cd9a23; font-size: 24px"
+                        >
+                        </i>
+                        <strong>New Version Available</strong>
+                        <p>
+                            The displayed text has newer version that is currently connected to this text node. You can
+                            <a (click)="showVersionData()">click here</a> to preview before the new version is selected.
+                        </p>
+                    </div>
+                </ng-template>
+            </p-messages>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Editor Confirmation Dialog start -->
+<div class="">
+    <p-dialog
+        header="Revise all additional languages"
+        [(visible)]="projectTranslationService.displayEditorConfirmDialog"
+        [modal]="true"
+        [baseZIndex]="10000"
+        [draggable]="false"
+        [resizable]="false"
+        [closable]="false"
+    >
+        <p>
+            The text and state translation language is changed. <br />
+            If the additional languages should set to work in progress, Click Ok
+        </p>
+
+        <ng-template pTemplate="footer">
+            <p-button
+                icon="pi pi-thumbs-up"
+                label="Ok"
+                class="p-button-text"
+                (click)="projectTranslationService.onConfirmByEditor()"
+            ></p-button>
+            <button
+                pButton
+                type="button"
+                icon="pi pi-times"
+                label="Cancel"
+                class="p-button-warning"
+                (click)="projectTranslationService.onRejectByEditor()"
+            ></button>
+        </ng-template>
+    </p-dialog>
+    <p-dialog
+        header="STC Version"
+        [visible]="showStcVHistory"
+        [modal]="true"
+        [baseZIndex]="10000"
+        class=""
+        [closable]="false"
+        [resizable]="false"
+        [style]="{ width: '40vw' }"
+    >
+        <p-table
+            [value]="isStcVesrion?.['getstcversion']"
+            dataKey="id"
+            selectionMode="single"
+            [(selection)]="selectstcVHistory"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Version</th>
+                    <th>Changed Attribute</th>
+                    <th>Old Value</th>
+                    <th>New Value</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-isStcVesrion let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="isStcVesrion" (click)="onRowClick(isStcVesrion)">
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>{{ isStcVesrion.attribute_name }}</td>
+                    <td>{{ isStcVesrion.old_value }}</td>
+                    <td>
+                        <app-diffrence-element
+                            [oldValue]="isStcVesrion['old_value']"
+                            [newValue]="isStcVesrion['new_value']"
+                        ></app-diffrence-element>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-thumbs-up" label="Ok" class="p-button-text" (click)="mapNewVersion()"></p-button>
+            <button
+                pButton
+                type="button"
+                icon="pi pi-times"
+                label="Cancel"
+                class="p-button-warning"
+                (click)="showStcVHistory = false"
+            ></button>
+            <button
+                pButton
+                type="button"
+                label="Help"
+                class="p-button-help mr-2"
+                icon="pi pi-question"
+                iconPos="left"
+            ></button>
+        </ng-template>
+    </p-dialog>
+    <p-dialog
+        header="Unresolved Char Error List"
+        [(visible)]="this.showUnsupportedCharactersDialogue"
+        [modal]="true"
+        [baseZIndex]="10000"
+        [draggable]="false"
+        [resizable]="false"
+        [closable]="false"
+        [style]="{ width: '40vw' }"
+    >
+        <div>
+            <i class="pi pi-exclamation-triangle mr-2" aria-hidden="true" style="color: #cd9a23"></i>
+            <span *ngFor="let char of this.unsupportedSymbols"> {{ char }} </span>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button
+                icon="pi pi-times"
+                label="Close"
+                class="p-button-text"
+                (click)="this.showUnsupportedCharactersDialogue = false"
+            ></p-button>
+        </ng-template>
+    </p-dialog>
+</div>
+<!-- Editor Confirmation Dialog end -->
+
+<p-confirmDialog #cd [style]="{ width: '40vw' }" [closable]="false">
+    <ng-template pTemplate="footer">
+        <button
+            type="button"
+            class="p-button-danger"
+            pButton
+            icon="pi pi-check"
+            label="Yes"
+            (click)="cd.accept()"
+        ></button>
+        <button
+            type="button"
+            class="p-button-secondary"
+            pButton
+            icon="pi pi-times"
+            label="No"
+            (click)="cd.reject()"
+        ></button>
+    </ng-template>
+</p-confirmDialog>
+
+<p-toast></p-toast>
+<p-overlayPanel #overlayPanel>
+    <app-overlay-panel [overlayPanel]="overlayPanel" (setComment)="setComment($event)"></app-overlay-panel>
+</p-overlayPanel>
+
+<!-- placeholder details dialog -->
+<app-placeholder-detail-dialog [(placeholderDialogModel)]="placeholderDetails"></app-placeholder-detail-dialog>

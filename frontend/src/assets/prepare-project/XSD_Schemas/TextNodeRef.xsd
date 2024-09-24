@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<include schemaLocation="Variant.xsd" />
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="TextNodeRef">
+		<annotation>
+			<documentation>An element for uniquely referencing a text node.
+			</documentation>
+		</annotation>
+
+		<attribute name="Id" type="hmi:TextNodeId" use="required">
+			<annotation>
+				<documentation>The ID is the main attribute for referencing a text
+					node.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="VariantId" type="hmi:VariantId" use="optional"
+			default="-1">
+			<annotation>
+				<documentation>Besides the ID an ID of a variant can be used
+					additionally. If no variant-ID is given the default variant of the
+					project is used.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="TextNodeRefList">
+		<annotation>
+			<documentation>A container element for references of text nodes.
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="TextNodeRef" type="hmi:TextNodeRef" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>The element.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="DdbRow">
+		<sequence>
+			<element name="TextNodeRef" type="hmi:TextNodeRef" minOccurs="1" maxOccurs="2" />
+		</sequence>
+	</complexType>
+
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+	<simpleType name="TextNodeId">
+		<annotation>
+			<documentation>text nodes have this ID-type. IDs must be unique
+				throughout the project.
+			</documentation>
+		</annotation>
+		<restriction base="string"></restriction>
+	</simpleType>
+
+</schema>

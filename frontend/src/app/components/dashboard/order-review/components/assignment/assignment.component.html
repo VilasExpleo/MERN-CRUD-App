@@ -1,0 +1,54 @@
+<div *ngIf="isLoading" class="flex justify-content-center">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p class="mt-5 mb-4">{{ assignReviewerText }}</p>
+<ng-container *ngIf="!isLoading">
+    <p-table *ngIf="model" [value]="model?.targetLanguages" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th id="project-languages">{{ assignLanguagesText }}</th>
+                <th id="reviewer">{{ reviewerText }}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-selectedLanguages>
+            <tr>
+                <td>{{ selectedLanguages?.languageCode }}</td>
+                <td>
+                    <p-dropdown
+                        [options]="model.reviewers"
+                        [(ngModel)]="selectedLanguages.reviewer"
+                        optionLabel="name"
+                        filterBy="name"
+                        [filter]="true"
+                        appendTo="body"
+                        [styleClass]="'w-6'"
+                        placeholder="Select Reviewer"
+                    ></p-dropdown>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div class="col-12">
+        <div class="pb-3 flex justify-content-end">
+            <button
+                pButton
+                type="button"
+                label="Back"
+                class="p-button-primary mr-1"
+                icon="pi pi-chevron-left"
+                iconPos="left"
+                (click)="navigate(0)"
+            ></button>
+            <button
+                pButton
+                type="button"
+                label="Next"
+                class="p-button-primary"
+                icon="pi pi-chevron-right"
+                iconPos="right"
+                [disabled]="!isAnyReviewerAssigned(model?.targetLanguages)"
+                (click)="navigate(2)"
+            ></button>
+        </div>
+    </div>
+</ng-container>

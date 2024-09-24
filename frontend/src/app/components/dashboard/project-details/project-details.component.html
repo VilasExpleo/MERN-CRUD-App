@@ -1,0 +1,332 @@
+<div *ngIf="viewDetails">
+    <div class="title-tr-details" *ngIf="viewSelectedProject?.length > 0">
+        Name of the Project: {{ viewSelectedProject?.title }} Version:
+        {{ viewSelectedProject?.version_no | split : '.' }}
+    </div>
+    <div class="grid hmilpanelwidth">
+        <div class="col-12 xl:col-12">
+            <div>
+                <div class="viewpanel">
+                    <div *ngIf="loadingViewDetails" class="spinnerviewpanel">
+                        <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+                    </div>
+                    <div class="viewdetails" *ngIf="viewDetails">
+                        <div *ngIf="forViewStatusScheduled">
+                            <div class="projectprogressbar">
+                                <p style="font-size: 1.2rem">
+                                    <strong> {{ projectTitle }} </strong> has been scheduled for
+                                    <span>{{ tzNames }} </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!forViewStatusOkOrUpdateAvailable && !forViewStatusScheduled">
+                            <div *ngIf="!loadingViewDetails">
+                                <div
+                                    [ngClass]="
+                                        loadingViewDetails ? 'projectProgresBarSuccess' : ' projectProgresBarError'
+                                    "
+                                >
+                                    <div class="projectprogressbar">
+                                        <p
+                                            *ngIf="
+                                                progressbar[selectedPid + 'messageType'] === 'ProjectCreateProgress' ||
+                                                progressbar[selectedPid + 'messageType'] === 'project creation' ||
+                                                progressbar[selectedPid + 'messageType'] === 'Project Creation'
+                                            "
+                                        >
+                                            Details of project creation for project
+                                            <strong>{{ projectTitle }}</strong>
+                                        </p>
+                                        <p
+                                            *ngIf="
+                                                progressbar[selectedPid + 'messageType'] === 'project update' ||
+                                                progressbar[selectedPid + 'messageType'] === 'ProjectUpdateProgress' ||
+                                                progressbar[selectedPid + 'messageType'] === 'Project Update'
+                                            "
+                                        >
+                                            Details of project update for project
+                                        </p>
+
+                                        <p-progressBar [value]="progressbar[selectedPid + 'progress']"></p-progressBar>
+                                    </div>
+
+                                    <div class="abortblock" *ngIf="progressbar[selectedPid + 'progress'] !== 100">
+                                        <button
+                                            pButton
+                                            (click)="abortOperationData(selectedPid)"
+                                            type="button"
+                                            class="p-button-outlined abortoperation"
+                                            label="Abort Operation"
+                                        ></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="project-status" *ngIf="messages.length > 0">
+                                        <p>Global Information</p>
+                                        <div class="status-msg" *ngFor="let message of messages; let i = index">
+                                            <div *ngIf="message">
+                                                <i class="pi pi-check-square" aria-hidden="true"></i>{{ message }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="grid">
+                                        <div
+                                            *ngIf="
+                                                progressbar[selectedPid + 'report']?.length !== 0 &&
+                                                progressbar[selectedPid + 'progress'] > 0
+                                            "
+                                            class="col-12 text-base px-3"
+                                        >
+                                            <p class="text-primary">Messages</p>
+                                        </div>
+                                        <!-- TODO -->
+                                        <!-- <div class="col-12 lg:col-6 xl:col-4">
+                                            <div
+                                                class="card mb-0 viewcard"
+                                                *ngIf="!!progressbar[selectedPid + 'report']?.success"
+                                            >
+                                                <div class="viewmsg">
+                                                    <p><strong>Info</strong></p>
+                                                    <p>
+                                                        {{ progressbar[selectedPid + 'report'].success.length }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                         <!-- TODO -->
+                                        <div class="col-12 lg:col-6 xl:col-6">
+                                            <div
+                                                class="card mb-0 warningbgcolor"
+                                                *ngIf="!!progressbar[selectedPid + 'report']?.warnings"
+                                            >
+                                                <div class="viewmsg">
+                                                    <p><strong>Warning</strong></p>
+                                                    <p>
+                                                        {{ progressbar[selectedPid + 'report'].warnings.length }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 lg:col-6 xl:col-6">
+                                            <div
+                                                class="card mb-0 errorbgcolor"
+                                                *ngIf="!!progressbar[selectedPid + 'report']?.errors"
+                                            >
+                                                <div class="viewmsg">
+                                                    <p><strong>Error</strong></p>
+                                                    <p>
+                                                        {{ progressbar[selectedPid + 'report'].errors.length }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="grid">
+                                            <div class="col-12">
+                                                <div
+                                                    class="infomsg inforeport"
+                                                    *ngIf="!!progressbar[selectedPid + 'report']?.success"
+                                                >
+                                                    <div class="status-msg">
+                                                        <div
+                                                            *ngFor="
+                                                                let info of getProjectStatusInfo(
+                                                                    progressbar[selectedPid + 'report']?.success
+                                                                )?.lengthCalculation
+                                                            "
+                                                        >
+                                                            <p class="m-3" *ngIf="info.count !== 1; else count">
+                                                                The length calculation "{{ info.name }}" referenced by
+                                                                {{ info.count }}
+                                                                textnodes is available
+                                                            </p>
+                                                            <ng-template #count>
+                                                                <p class="m-3">
+                                                                    The length calculation "{{ info.name }}" referenced
+                                                                    by
+                                                                    {{ info.count }}
+                                                                    textnode is available
+                                                                </p>
+                                                            </ng-template>
+                                                        </div>
+                                                        <div
+                                                            *ngFor="
+                                                                let info of getProjectStatusInfo(
+                                                                    progressbar[selectedPid + 'report']?.success
+                                                                )?.fonts
+                                                            "
+                                                        >
+                                                            <p class="m-3">
+                                                                Text Node ID: {{ info.fontDetails?.textNode_id }},
+                                                                <span *ngIf="info.fontDetails?.textNode_variant_no">
+                                                                    Variant ID:
+                                                                    {{ info.fontDetails.textNode_variant_no }},
+                                                                </span>
+                                                                <span *ngIf="info.fontDetails?.textNode_list_index">
+                                                                    Array Index:
+                                                                    {{ info.fontDetails.textNode_list_index }},
+                                                                </span>
+                                                                Font
+                                                                {{ info.name }}
+                                                                {{ info.fontDetails.font_availability }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="warningsmsg warningreport"
+                                                    *ngIf="!!progressbar[selectedPid + 'report']?.warnings"
+                                                >
+                                                    <ng-container
+                                                        *ngFor="
+                                                            let warningsReport of progressbar[selectedPid + 'report']
+                                                                .warnings;
+                                                            let i = index
+                                                        "
+                                                    >
+                                                        <div class="status-msg" *ngIf="i < 5">
+                                                            <i
+                                                                class="pi pi-exclamation-triangle text-orange-300"
+                                                                aria-hidden="true"
+                                                            ></i>
+                                                            <span>
+                                                                <span *ngIf="warningsReport.textNode_id">
+                                                                    Text Node ID: {{ warningsReport.textNode_id }},
+                                                                </span>
+                                                                <span *ngIf="warningsReport.textNode_variant_no">
+                                                                    Variant ID:
+                                                                    {{ warningsReport.textNode_variant_no }},
+                                                                </span>
+                                                                <span *ngIf="warningsReport.textNode_list_index">
+                                                                    Array Index:
+                                                                    {{ warningsReport.textNode_list_index }},
+                                                                </span>
+                                                                Warning: {{ warningsReport?.message }}
+                                                            </span>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                                <div
+                                                    class="errorsmsg errorreport"
+                                                    *ngIf="!!progressbar[selectedPid + 'report']?.errors"
+                                                >
+                                                    <ng-container
+                                                        *ngFor="
+                                                            let errorsReport of progressbar[selectedPid + 'report']
+                                                                .errors;
+                                                            let i = index
+                                                        "
+                                                    >
+                                                        <div class="status-msg" *ngIf="i < 5">
+                                                            <i
+                                                                class="pi pi-times-circle text-red-600"
+                                                                aria-hidden="true"
+                                                            ></i>
+                                                            <span>
+                                                                Text Node ID: {{ errorsReport?.textNode_id }},
+                                                                <span *ngIf="errorsReport.textNode_variant_no">
+                                                                    Variant ID:
+                                                                    {{ errorsReport.textNode_variant_no }},
+                                                                </span>
+                                                                <span *ngIf="errorsReport.textNode_list_index">
+                                                                    Array Index:
+                                                                    {{ errorsReport.textNode_list_index }},
+                                                                </span>
+                                                                {{ errorsReport?.message }}
+                                                            </span>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="grid">
+                                            <div class="col-12 lg:col-12 xl:col-12">
+                                                <p *ngIf="progressbar[selectedPid + 'progress'] > 0">
+                                                    The list of messages is truncated. For detailed view please click
+                                                    the “Download Report” link
+                                                </p>
+                                                <ng-container
+                                                    *ngIf="isScreenshotProgressVisible"
+                                                    [ngTemplateOutlet]="screenshotUploadInprogressMessage"
+                                                ></ng-container>
+                                                <div class="viewbottombtn" style="float: right">
+                                                    <div class="downloadreport">
+                                                        <p-button
+                                                            type="button"
+                                                            label="Download Report"
+                                                            class="p-button-md"
+                                                            icon="pi pi-download"
+                                                            iconPos="right"
+                                                            *ngIf="!isProgressCompleted()"
+                                                        ></p-button>
+                                                        <ng-container *ngIf="isProgressCompleted()">
+                                                            <app-project-creation-report
+                                                                [xlsxdownloadId]="+selectedPid"
+                                                                [selectedProduct]="viewSelectedProject"
+                                                                [status]="progressbar[selectedPid + 'messageType']"
+                                                            ></app-project-creation-report>
+                                                        </ng-container>
+                                                    </div>
+                                                    <p-toast></p-toast>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="forViewStatusOkOrUpdateAvailable">
+                            <app-doughnut-chart
+                                [xlsxdownloadId]="selectedPid"
+                                [editorLanguage]="editorLanguage"
+                            ></app-doughnut-chart>
+                            <ng-container
+                                *ngIf="isScreenshotProgressVisible"
+                                [ngTemplateOutlet]="screenshotUploadInprogressMessage"
+                            ></ng-container>
+                            <div class="col-12 lg:col-12 xl:col-12">
+                                <div class="downloadbtnlink">
+                                    <app-project-creation-report
+                                        [xlsxdownloadId]="selectedPid"
+                                        [recalculateStatus]="recalculateStatus"
+                                        [selectedProduct]="viewSelectedProject"
+                                        [status]="progressbar[selectedPid + 'messageType']"
+                                    ></app-project-creation-report>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-confirmation
+    *ngIf="showConfirmation"
+    (acceptCallback)="onAccept()"
+    (rejectCallback)="onReject()"
+    [confirmationMessage]="confirmationMessage"
+    [confirmationHeader]="confirmationHeader"
+></app-confirmation>
+<ng-template #screenshotUploadInprogressMessage>
+    <div class="col-12">
+        <p-messages severity="info">
+            <ng-template pTemplate>
+                <i class="pi pi-exclamation-circle" style="font-size: 1.5rem; margin-right: 5px"></i>
+                <div class="mr-auto">The screenshots are uploading.</div>
+
+                <div class="flex justify-content-end flex-wrap">
+                    <p-button
+                        styleClass="p-button-warning p-button-sm "
+                        label="Cancel"
+                        icon="pi pi-times"
+                        class="ml-2"
+                        (click)="displayAbortConfirmPopup()"
+                    ></p-button>
+                </div>
+            </ng-template>
+        </p-messages>
+    </div>
+</ng-template>

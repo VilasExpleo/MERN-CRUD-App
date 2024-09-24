@@ -1,0 +1,98 @@
+<div *ngIf="isLoading" class="spinner">
+    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+</div>
+<div class="pb-4">
+    Create a new report by uploading your custom XSL transformation file.You can make it available to other role by
+    adding them to the section. Assign an output format to inform the user of your report and add an description
+    containing a short description about the information your report contains.
+</div>
+<p>XSLT file</p>
+<div class="my-2">
+    <p-fileUpload
+        #fileUpload
+        accept=".xslt"
+        (onRemove)="updateReportFormFileAttributes()"
+        (uploadHandler)="uploadFile($event)"
+        [auto]="true"
+        [customUpload]="true"
+    >
+    </p-fileUpload>
+</div>
+
+<ng-container *ngIf="model$ | async as model">
+    <div *ngIf="!isLoading">
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+            <div class="flex flex-row justify-content-around">
+                <div class="w-full mr-2">
+                    <input type="text" formControlName="name" pInputText placeholder="Enter name for report" />
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)">
+                        <small id="alredy-exist" class="p-error block" *ngIf="isDuplicateName('name')">
+                            Report name is currently in use. Please enter a unique name.
+                        </small>
+                        <small id="required" class="p-error block" *ngIf="isMandatoryField('name')">
+                            Report Name is required
+                        </small>
+                    </div>
+                </div>
+                <div class="w-full mr-2">
+                    <p-multiSelect
+                        defaultLabel="Select a Role"
+                        display="chip"
+                        [options]="model.roles"
+                        formControlName="selectedRole"
+                        optionLabel="role"
+                        styleClass="w-full"
+                    ></p-multiSelect>
+                    <div *ngIf="role.invalid && (role.dirty || role.touched)">
+                        <small id="required" class="p-error block" *ngIf="isMandatoryField('role')">
+                            Role is required
+                        </small>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <p-dropdown
+                        [options]="model.formats"
+                        formControlName="selectedFormat"
+                        optionLabel="format"
+                        [filter]="true"
+                        filterBy="format"
+                        placeholder="Select a format"
+                    ></p-dropdown>
+                    <div *ngIf="format.invalid && (format.dirty || format.touched)">
+                        <small id="required" class="p-error block" *ngIf="isMandatoryField('format')">
+                            File Format is required
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="flex my-2">
+                <textarea
+                    formControlName="description"
+                    placeholder="Enter a description for your Report"
+                    pInputTextarea
+                    [rows]="10"
+                ></textarea>
+            </div>
+
+            <div class="flex flex-row justify-content-between my-2">
+                <p-button
+                    type="button"
+                    label="Database XSD"
+                    class="p-button-md"
+                    icon="pi pi-download"
+                    iconPos="left"
+                    (click)="downloadXSD()"
+                ></p-button>
+
+                <p-button
+                    type="submit"
+                    label="Create Report"
+                    class="p-button-md"
+                    icon="pi pi-plus"
+                    iconPos="left"
+                    [disabled]="!reportForm.valid"
+                ></p-button>
+            </div>
+        </form>
+    </div>
+</ng-container>

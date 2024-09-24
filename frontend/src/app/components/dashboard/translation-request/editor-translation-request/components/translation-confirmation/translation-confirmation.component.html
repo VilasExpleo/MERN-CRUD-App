@@ -1,0 +1,40 @@
+<div class="main-container">
+    <p class="pt-5">All the steps has been processed for translation request.</p>
+    <div class="complete-img pt-3">
+        <img src="../../../../../../assets/images/svg/confirm.svg" alt="confirm" />
+    </div>
+</div>
+<p-toast></p-toast>
+<div class="pt-3 pb-5 left-bottom-btn">
+    <span class="back-btn">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-3 btn-small"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="navigate(6)"
+        ></button>
+    </span>
+    <span class="help-btn">
+        <button
+            pButton
+            type="button"
+            label="Help"
+            class="p-button-help mr-3"
+            icon="pi pi-question"
+            iconPos="left"
+        ></button>
+    </span>
+    <span class="next-btn">
+        <button
+            pButton
+            type="button"
+            icon="pi pi-plus"
+            label="Create Translation Request"
+            class="p-button-primary"
+            (click)="createTranslationRequest()"
+        ></button>
+    </span>
+</div>

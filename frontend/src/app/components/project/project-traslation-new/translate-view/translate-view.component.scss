@@ -1,0 +1,12 @@
+:host {
+    ::ng-deep {
+        .breadcrump {
+            .p-breadcrumb {
+                border-radius: 0px;
+                ul{
+                    flex-wrap: wrap;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,94 @@
+<div class="inner-container">
+    <p-toast></p-toast>
+    <div class="col-12">
+        <p-table
+            [resizableColumns]="true"
+            [value]="mappingService.filterMappingPropData"
+            dataKey="stc_id"
+            [columns]="columsMappingProp"
+            [virtualRowHeight]="50"
+            [reorderableColumns]="true"
+            selectionMode="single"
+            scrollHeight="500px"
+            [virtualRowHeight]="50"
+            [responsive]="true"
+            [loading]="mappingService.loading"
+            id="mappingFilterTabel"
+            [scrollable]="true"
+            [paginator]="true"
+            [rows]="10"
+            [totalRecords]="mappingService.totalRecords"
+            [customSort]="true"
+            (sortFunction)="mappingService.customSort($event)"
+            #mappingFilterTabel
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th
+                        class="tableData"
+                        *ngFor="let col of columsMappingProp"
+                        [pSortableColumn]="col.field"
+                        pResizableColumn
+                        pReorderableColumn
+                    >
+                        <span *ngIf="col.field !== 'brand_id'">{{ col.header }}</span>
+                        <p-columnFilter
+                            *ngIf="col.field !== 'brand_id' && col.field !== 'language_Id'"
+                            [type]="col.type"
+                            [field]="col.field"
+                            display="menu"
+                        ></p-columnFilter>
+                        <p-sortIcon *ngIf="col.field !== 'brand_id'" [type]="col.type" [field]="col.field"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
+                <tr
+                    style="height: 40px"
+                    [pSelectableRowDblClick]="rowData"
+                    (dblclick)="mappingService.rowDbClick(rowData)"
+                >
+                    <td *ngFor="let col of columns" pResizableColumn class="tableData">
+                        <span
+                            class="textWrap"
+                            *ngIf="
+                                col.field !== 'stc_id' &&
+                                col.field !== 'brand_name' &&
+                                col.field !== 'brand_id' &&
+                                col.field !== 'ideal_text' &&
+                                col.field !== 'description' &&
+                                col.field !== 'project'
+                            "
+                        >
+                            {{ rowData[col.field] }}</span
+                        >
+                        <span class="textWrap" *ngIf="col.field === 'ideal_text'" [title]="rowData[col.field]">
+                            {{ rowData[col.field] }}
+                        </span>
+                        <span class="textWrap" *ngIf="col.field === 'description'" [title]="rowData[col.field]">
+                            {{ rowData[col.field] }}
+                        </span>
+                        <span class="textWrap" *ngIf="col.field === 'project'" [title]="rowData[col.field]">
+                            {{ rowData[col.field] }}
+                        </span>
+                        <a
+                            class="stcId"
+                            (click)="sampleTextCatalogPage(rowData[col.field])"
+                            *ngIf="col.field === 'stc_id'"
+                            >{{ rowData[col.field] }}</a
+                        >
+                        <img
+                            *ngIf="col.field === 'brand_name'"
+                            src="{{ mappingService.getBrandLogo(rowData['brand_id']) }}"
+                            alt="{{ mappingService.getAltText(rowData[col.brand_id]) }}"
+                        />
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="col-12" *ngIf="mappingService.itIsMappingSettingDone">
+        <p-messages [(value)]="mappingService.msgs" [enableService]="false" [closable]="false"> </p-messages>
+        <h4 style="color: red"></h4>
+    </div>
+</div>

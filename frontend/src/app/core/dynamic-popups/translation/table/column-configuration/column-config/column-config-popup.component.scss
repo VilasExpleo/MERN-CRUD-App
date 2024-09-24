@@ -1,0 +1,83 @@
+.lang-dropdown {
+    margin-left: 67px;
+    width: 300px;
+}
+.lang-attribute {
+    width: 300px;
+}
+
+.applyBtn {
+    align-self: end;
+    padding-bottom: 0.6rem;
+}
+:host ::ng-deep {
+     .lang-dropdown {
+        .p-multiselect .p-multiselect-label.p-placeholder {
+            width: 233px;
+        }
+        .p-multiselect .p-multiselect-label {
+            width: 233px;
+        }
+    }
+     .ok-btn {
+        .p-button {
+            background: #304cd9;
+        }
+    }
+     .displayInline {
+        .p-dropdown .p-dropdown-label.p-placeholder {
+            width: 250px;
+        }
+        .p-dropdown .p-dropdown-label {
+            width: 250px;
+        }
+    }
+     .lang-attribute {
+        .p-multiselect .p-multiselect-label.p-placeholder {
+            width: 233px;
+        }
+        .p-multiselect .p-multiselect-label {
+            width: 233px;
+        }
+    }
+}
+.config-btn {
+    text-align: end;
+}
+
+.layoutconf {
+    margin: 15px 0px 5px;
+    border-top: 1px solid #d0cdcd;
+    padding: 10px 0px;
+    border-bottom: 1px solid #d0cdcd;
+}
+
+.btnlayout {
+    margin: 1px !important;
+    padding: 0.6rem 1rem !important;
+}
+.btn {
+    padding: 9px;
+    background: transparent;
+    border: 1px solid #1d2e82;
+    margin: 10px 0px;
+    float: right;
+    border-radius: 3px;
+}
+.inputField {
+    width: 100%;
+    height: 40px;
+}
+.displayInline {
+    display: inline-block;
+    padding-right: 0.5rem;
+}
+.label {
+    display: inline-flex;
+    padding-bottom: 10px !important;
+    color: #495057;
+}
+
+.ok-btn {
+    float: right;
+}

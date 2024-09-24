@@ -1,0 +1,102 @@
+.count::before {
+    content: '(';
+}
+.count::after {
+    content: ')';
+}
+.basefile-container {
+    margin-top: 40px;
+}
+.list-container {
+    border: 1px solid #304cd9;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-top: 7px;
+    width: 918px;
+    height: 332px;
+}
+.properties-details {
+    padding: 20px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: rgba(0, 0, 0, 0.74);
+}
+.u-full-width {
+    width: 54%;
+    height: 35px;
+    border: 1px solid #304cd9;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+#browse {
+    width: 100px;
+    height: 35px;
+    background: #304cd9;
+    color: #fff;
+    border: 1px solid #304cd9;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-left: 2%;
+}
+.pro-list {
+    margin-top: 15px;
+}
+.deatils-heading {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0em;
+    text-align: left;
+    margin-bottom: 7px;
+    color: #6c757d;
+}
+.properties-details span {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #000000;
+}
+.select-base {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #174a84;
+}
+.btns-row {
+    float: right;
+    padding: 0px 0px 20px 0px;
+}
+.btn-group {
+    height: 32px;
+}
+::ng-deep span.p-button-label {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+.errormessage p {
+    color: red;
+    font-size: 14px;
+}
+.statusMessage p {
+    color: green;
+    font-size: 14px;
+}
+.headerClass {
+    color: black;
+    font-size: medium;
+}

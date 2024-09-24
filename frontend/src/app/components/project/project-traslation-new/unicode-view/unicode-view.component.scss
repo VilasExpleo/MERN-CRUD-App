@@ -1,0 +1,17 @@
+:host {
+    ::ng-deep .translate-tbl {
+        .p-datatable table {
+            table-layout: fixed !important;
+        }
+    }
+}
+.unicode {
+    border: 1px solid #a5c9ff !important;
+    color: #495057;
+    background-color: #ebf1fc;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 5px !important;
+    max-width: 30px !important;
+    table-layout: fixed;
+}

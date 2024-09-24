@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+
+	<include schemaLocation="Variant.xsd" />
+	<include schemaLocation="Constraint.xsd" />
+	<include schemaLocation="TextNodeRef.xsd" />
+
+	<include schemaLocation="Label.xsd" />
+	<include schemaLocation="Comment.xsd" />
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="TextNodeList">
+		<annotation>
+			<documentation>The list of text nodes how it is used in a project. It
+				can contain an unbounded number of (different) text nodes.
+			</documentation>
+		</annotation>
+		<sequence>
+			<choice minOccurs="0" maxOccurs="unbounded">
+				<element name="TextNode" type="hmi:TextNode" minOccurs="0"
+					maxOccurs="1" />
+				<element name="TextNodeDdb" type="hmi:TextNodeDdb"
+					minOccurs="0" maxOccurs="1" />
+				<element name="TextNodeArray" type="hmi:TextNodeArray"
+					minOccurs="0" maxOccurs="1" />
+				<element name="Metatext" type="hmi:Metatext" minOccurs="0"
+					maxOccurs="1" />
+			</choice>
+		</sequence>
+	</complexType>
+
+	<complexType name="TextNodeBase" abstract="true">
+
+		<annotation>
+			<documentation>This is the (abstract) base class for text nodes.
+			</documentation>
+		</annotation>
+
+		<sequence>
+			<element name="Comments" type="hmi:CommentList" minOccurs="0"
+				maxOccurs="1">
+				<annotation>
+					<documentation>Comments can be attached to text nodes.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="Labels" type="hmi:LabelList" minOccurs="0"
+				maxOccurs="1">
+				<annotation>
+					<documentation>
+						Labels or markers can be attached to text nodes. It
+						should be possible to search and filter text nodes by their
+						labels.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="TextNodeRefs" type="hmi:TextNodeRefList"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>
+						A text node can hold a list of references to other
+						text nodes.
+					</documentation>
+				</annotation>
+			</element>
+
+		</sequence>
+
+		<attribute name="Name" type="string" use="required">
+			<annotation>
+				<documentation>The name of a text node. It can be used for search
+					purposes. It is beneficial to establish a naming schema for the
+					project.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Id" type="hmi:TextNodeId" use="required">
+			<annotation>
+				<documentation>
+					The id of a text node. This is the basic building
+					block of a text-id. Together with the optional attribute VariantId
+					a unique index must be formed.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="VariantId" type="hmi:VariantId" use="optional"
+			default="-1">
+			<annotation>
+				<documentation>
+					The ID of the variant of this text node. Text nodes
+					can exist in different variants and the translational content can
+					differ from variant to variant. But usually the translational
+					content should be related between the variants. If no ID is given,
+					it is assumed that the text node belongs to the standard variant of
+					the project.
+
+					Together with the attributes ID a unique index should
+					be formed.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Type" type="hmi:TextType" use="optional"
+			default="StandardText">
+			<annotation>
+				<documentation>
+					The type of text for this TextNode. It triggers the
+					different translation possibilities, e.g. translating a
+					display-text is very much different from translating a speech text.
+					It will result in different GUI-representations.
+
+					If no type is given
+					this text is considered to be a 'StandardText' and will be
+					presented in this translation view.
+				</documentation>
+			</annotation>
+		</attribute>
+
+	</complexType>
+
+	<complexType name="TextNode">
+
+		<annotation>
+			<documentation>A single text node. It is basically used as a
+				container around translations.
+			</documentation>
+		</annotation>
+
+		<complexContent>
+			<extension base="hmi:TextNodeBase">
+				<sequence>
+					<element name="Constraint" type="hmi:DisplayTextConstraint" minOccurs="0"
+						maxOccurs="1">
+						<annotation>
+							<documentation>A text node can have a constraint. Translations
+								have to respect the constraint as long as the project does not
+								use a translation mode where constraints don't matter. Without
+								constraints the translations can also be done in a unconstrained
+								way.
+							</documentation>
+						</annotation>
+					</element>
+
+				</sequence>
+
+				<attribute name="Source" type="string" use="required">
+					<annotation>
+						<documentation>The text node contains the source text. This is the
+							basic text coming from an external system (like modeling
+							software). This source has to be translated into the different
+							languages of a project. Other names for this text are 'developer
+							text' or 'modeling text'. Changing this text can have a bad
+							influence on all existing translations for this node and is hence
+							a critical operation.
+						</documentation>
+					</annotation>
+				</attribute>
+
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TextNodeDdb">
+		<complexContent>
+			<extension base="hmi:TextNodeBase">
+				<sequence>
+
+					<element name="Constraint" type="hmi:DdbConstraint"
+						minOccurs="0" maxOccurs="1">
+						<annotation>
+							<documentation>A DDB text node can have a constraint for a DDB.
+							</documentation>
+						</annotation>
+					</element>
+
+					<element name="Row" type="hmi:DdbRow" minOccurs="1"
+						maxOccurs="unbounded">
+						<annotation>
+							<documentation>A row of elements of a DDB. The elements of a row
+								can be comboboxes or labels.
+							</documentation>
+						</annotation>
+					</element>
+
+				</sequence>
+				
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="TextNodeArray">
+
+		<annotation>
+			<documentation>This element represents an array of text nodes. The
+				elements inside the array share the same attributes, e.g.
+				constraints so it is sufficient to define these attributes once at
+				this place.
+			</documentation>
+		</annotation>
+
+		<complexContent>
+			<extension base="hmi:TextNodeBase">
+				<sequence>
+					<element name="Constraint" type="hmi:DisplayTextConstraint" minOccurs="0"
+						maxOccurs="1">
+						<annotation>
+							<documentation>An array of text nodes can have a constraint.
+								Translations have to respect the constraint as long as the
+								project does not use a translation mode where constraints don't
+								matter. Without constraints the translations can also be done in
+								a unconstrained way.
+							</documentation>
+						</annotation>
+					</element>
+
+					<element name="Item" type="hmi:TextNodeArrayItem"
+						minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>This is the list of elements of the array.
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TextNodeArrayItem">
+
+		<annotation>
+			<documentation> This is the element-item of a TextNodeArray. It
+				contains the individual data of the elements.
+			</documentation>
+		</annotation>
+
+		<sequence>
+
+			<element name="Comments" type="hmi:CommentList" minOccurs="0"
+				maxOccurs="1">
+				<annotation>
+					<documentation>Comments can be attached to array-items.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="Labels" type="hmi:LabelList" minOccurs="0"
+				maxOccurs="1">
+				<annotation>
+					<documentation>
+						Labels or markers can be attached to array-items. It
+						should be possible to search and filter text nodes by their
+						labels.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="TextNodeRefs" type="hmi:TextNodeRefList"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>
+						An array-item can hold a list of references to other
+						text nodes.
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+
+		<attribute name="Source" type="string" use="required">
+			<annotation>
+				<documentation>The text node contains the source text. This is the
+					basic text coming from an external system (like modeling software).
+					This source has to be translated into the different languages of a
+					project. Other names for this text are 'developer text' or
+					'modeling text'. Changing this text can have a bad influence on all
+					existing translations for this node and is hence a critical
+					operation.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Index" type="int" use="optional" default="-1">
+			<annotation>
+				<documentation> The index of an array-item can be explicitly given.
+					If no value is given a continuous index is assumed (starting with
+					0).
+				</documentation>
+			</annotation>
+		</attribute>
+
+	</complexType>
+
+	<complexType name="Metatext">
+		<annotation>
+			<documentation>This type of text node is only intended for
+				informational purposes. It does not have to be translated. E.g.
+				project name, versions and so on can be given here.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="hmi:TextNodeBase">
+				<attribute name="Info" type="string" use="required">
+					<annotation>
+						<documentation>The (untranslatable) informational content.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+	<simpleType name="TextTypePredefined">
+		<annotation>
+			<documentation>
+				The predefined types for texts. The type of the text
+				which is currently selected in the software influences the
+				representation of the translation-GUI. E.g. the GUI of a display
+				text looks and behaves different from the GUI of a speech text.
+			</documentation>
+		</annotation>
+		<restriction base="string">
+
+			<enumeration value="DisplayText">
+				<annotation>
+					<documentation>Text is a display or GUI text. These texts can be
+						seen in the target system.
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="Ddb">
+				<annotation>
+					<documentation>This text belongs to a DDB (Dynamic Drop Down Box).
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="DdbLabel">
+				<annotation>
+					<documentation>This is a subelement of a Ddb the label. Usually it
+						is displayed on the left side.
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="DdbComboBox">
+				<annotation>
+					<documentation>This is a subelement of a Ddb the combobox
+						containing many values. Usually it is displayed on the right side.
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="ConcatString">
+				<annotation>
+					<documentation>This text belongs to a concatenated string.
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="SdsText">
+				<annotation>
+					<documentation>This Text is used in the SDS context (SDS = Speech
+						Dialog System) but is not a prompt or command.
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="SdsPrompt">
+				<annotation>
+					<documentation>Text is a SDS prompt (speech output).
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="SdsCommand">
+				<annotation>
+					<documentation>Text is a SDS command (speech input).
+					</documentation>
+				</annotation>
+			</enumeration>
+
+			<enumeration value="StandardText">
+				<annotation>
+					<documentation>For this kind of text a very simple GUI for
+						translation purposes should be provided. All unknown text-types
+						will be presented by this GUI.
+					</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="TextTypeUser">
+		<annotation>
+			<documentation>
+				User-defined text-types are allowed too. Every
+				user-defined text will get the behavior of a 'StandardText'.
+			</documentation>
+		</annotation>
+		<restriction base="string" />
+	</simpleType>
+
+	<simpleType name="TextType">
+		<annotation>
+			<documentation>
+				A text can have one of the predefined types in
+				'TextTypePredefined' or a user-defined type 'TextTypeUser'.
+			</documentation>
+		</annotation>
+		<union memberTypes="hmi:TextTypePredefined hmi:TextTypeUser"></union>
+	</simpleType>
+
+</schema>

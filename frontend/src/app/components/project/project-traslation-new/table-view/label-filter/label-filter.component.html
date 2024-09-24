@@ -1,0 +1,14 @@
+<p-multiSelect
+    *ngIf="labels$ | async as labels"
+    [options]="labels"
+    optionLabel="name"
+    optionValue="id"
+    (onChange)="onFilter($event.value)"
+    defaultLabel="Label"
+>
+    <ng-template let-option pTemplate="item">
+        <div class="inline-block vertical-align-middle">
+            <p-chip [icon]="option?.icon" [label]="option?.name" [style]="{ background: option?.color }"></p-chip>
+        </div>
+    </ng-template>
+</p-multiSelect>

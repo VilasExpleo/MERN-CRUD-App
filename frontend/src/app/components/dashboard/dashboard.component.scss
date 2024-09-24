@@ -1,0 +1,91 @@
+.main-dashborad {
+    height: 89vh !important;
+}
+
+.spinnerdashboradpanel {
+    position: absolute;
+    margin-top: 10%;
+    margin-left: 40%;
+    z-index: 99999;
+}
+
+.selectedrow {
+    background-color: #d7e7ff !important;
+}
+
+:host {
+    ::ng-deep {
+        .p-contextmenu {
+            z-index: 999999 !important;
+        }
+        .p-dialog {
+            width: 75%;
+        }
+    }
+    .project-properties .p-dialog .p-dialog-header .p-dialog-title {
+        color: #1ea97c;
+    }
+
+    .create-btn {
+        background: #174a84;
+        border: 1px solid #174a84;
+        margin-left: 0.2em;
+        float: right;
+    }
+
+    .create-btn:hover {
+        background: #2865aa;
+    }
+
+    .project-status {
+        .pi-check-square:before {
+            color: #1ea97c;
+            margin-right: 10px;
+        }
+    }
+
+    .p-progressbar {
+        height: 10px !important;
+        font-size: 10px !important;
+    }
+}
+
+.status-ok {
+    background: #e4f7ef;
+    width: 100%;
+    display: block;
+}
+
+.product-badge {
+    border-radius: 6px !important;
+    padding: 0.25em 0.5rem;
+    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 12px !important;
+    letter-spacing: 0.3px;
+    height: 32px;
+    white-space: nowrap;
+}
+
+.no-button {
+    display: inline;
+}
+
+.yes-button {
+    display: inline;
+}
+
+.title-tr-details {
+    padding: 20px 10px 10px;
+    font-weight: 500;
+    color: #304cd9;
+}
+
+.details-doc {
+    color: #304cd9;
+    padding: 0px 10px 10px;
+}
+
+.btns-row {
+    float: right;
+}

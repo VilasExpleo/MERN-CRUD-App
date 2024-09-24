@@ -1,0 +1,12 @@
+<app-label-grid
+    *ngIf="isGrid"
+    [labels]="labels"
+    [projectId]="projectId"
+    (showLabelFormEvent)="showLabelForm()"
+></app-label-grid>
+<app-label-form
+    *ngIf="!isGrid"
+    [labels]="labels"
+    [projectId]="projectId"
+    (showGridEvent)="showGrid()"
+></app-label-form>

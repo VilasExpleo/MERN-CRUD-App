@@ -1,0 +1,16 @@
+<div class="pb-3">
+    <div class="align-items-center flex pb-3">
+        <span class="mr-3"><i class="pi pi-exclamation-triangle text-3xl"></i></span>
+        <p>{{ phraseForUser() }}</p>
+    </div>
+    <div class="flex gap-3">
+        <p-button
+            class="ml-auto"
+            (click)="delete(false)"
+            label="No"
+            styleClass="p-button-secondary"
+            icon="pi pi-times"
+        ></p-button>
+        <p-button (click)="delete(true)" label="Yes" styleClass="p-button-danger" icon="pi pi-check"></p-button>
+    </div>
+</div>

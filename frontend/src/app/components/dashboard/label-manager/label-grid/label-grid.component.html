@@ -1,0 +1,98 @@
+<p>
+    {{ title }}
+</p>
+<p-table
+    [value]="labels"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    dataKey="id"
+    selectionMode="single"
+    [scrollable]="true"
+    scrollHeight="400px"
+    [(selection)]="selectedLabel"
+>
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+            Label Details
+            <div class="align-items-center flex gap-2 mr-3">
+                <p-button label="Create New" class="py-2" (onClick)="createNew()" icon="pi pi-plus"></p-button>
+                <p-button [disabled]="!selectedLabel" icon="pi pi-pencil" (onClick)="editLabel()"></p-button>
+                <p-button
+                    [disabled]="!selectedLabel"
+                    icon="pi pi-trash"
+                    styleClass="p-button-danger"
+                    (onClick)="deleteLabel()"
+                ></p-button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="name">Label Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="bugFix">Bug fix <p-sortIcon field="bugFix"></p-sortIcon></th>
+            <th pSortableColumn="restriction">Restriction <p-sortIcon field="restriction"></p-sortIcon></th>
+            <th>Attach to</th>
+            <th>Used count</th>
+            <th>Due date</th>
+            <th>Type</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-label>
+        <tr [pSelectableRow]="label">
+            <td>
+                <p-chip [label]="label.name" [icon]="label.icon" [style]="{ backgroundColor: label.color }"></p-chip>
+            </td>
+            <td>
+                {{ label.bugFix }}
+            </td>
+            <td>
+                {{ getRestriction(label) }}
+            </td>
+            <td>
+                {{ label.attachTo }}
+            </td>
+            <td>
+                {{ label.usedCount }}
+            </td>
+            <td>
+                {{ label.date | date : 'yyyy-MM-dd' }}
+            </td>
+            <td>
+                {{ label.type }}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="7">No data found.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-confirmDialog [style]="{ width: '25vw' }"  #cd [baseZIndex]="10000" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="flex align-items-center">
+            <div class="no-button ml-auto">
+                <button
+                    class="p-button-outlined"
+                    type="button"
+                    pButton
+                    label="No"
+                    icon="pi pi-times"
+                    (click)="cd.reject()"
+                ></button>
+            </div>
+            <div class="yes-button">
+                <button
+                    class="p-button-danger"
+                    type="button"
+                    pButton
+                    label="Yes"
+                    icon="pi pi-check"
+                    (click)="cd.accept()"
+                ></button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>

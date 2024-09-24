@@ -1,0 +1,36 @@
+<p-table
+    [value]="characters | chunk : noOfColumns"
+    styleClass="p-datatable-gridlines"
+    [lazy]="true"
+    [totalRecords]="totalRecords"
+    (onLazyLoad)="loadCharactersLazy($event)"
+    [virtualScrollItemSize]="46"
+    [scrollable]="true"
+    scrollHeight="400px"
+    [virtualScroll]="true"
+    responsiveLayout="scroll"
+>
+    <ng-template pTemplate="body" let-rowData>
+        <tr style="height: 46px">
+            <td
+                class="text-center p-2 cursor-pointer border-top-1 border-solid border-grey"
+                [class.bg-blue-100]="char === selectedCharacter"
+                style="font-family: CustomFont"
+                (click)="handleClick(char)"
+                *ngFor="let char of rowData"
+            >
+                {{ char.character }}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<div class="py-5 px-2">
+    <div class="p-inputgroup">
+        <span class="p-inputgroup-addon">Code hex</span>
+        <input type="text" pInputText [value]="selectedCharacter?.characterHexCode" />
+    </div>
+</div>
+<div class="px-2 flex justify-content-end">
+    <p-button class="p-button-primary ml-auto" label="Insert" id="insertSymbol" (onClick)="insertSymbol()"></p-button>
+</div>

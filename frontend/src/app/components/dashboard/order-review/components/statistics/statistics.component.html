@@ -1,0 +1,37 @@
+<p class="mt-5 mb-3">{{ statisticsHeaderText }}</p>
+<p-calendar
+    inputId="icon"
+    dateFormat="yy-mm-dd"
+    aria-label="Due Date"
+    [showIcon]="true"
+    [minDate]="minimumDate"
+    [showIcon]="true"
+    [(ngModel)]="model.dueDate"
+></p-calendar>
+<div *ngIf="isStatisticsLoading || isReviewOrderRequestLoading" class="{{ getLoadingClass() }}">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p-chart type="bar" [data]="model?.statistics?.data" [options]="model?.statistics?.options"></p-chart>
+<div class="col-12">
+    <div class="pt-3 pb-5 flex justify-content-end">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-1"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="navigate(2)"
+        ></button>
+
+        <button
+            pButton
+            type="button"
+            label="Order Review"
+            class="p-button-primary"
+            icon="pi pi-check"
+            iconPos="left"
+            (click)="createReviewOrder()"
+        ></button>
+    </div>
+</div>

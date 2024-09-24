@@ -1,0 +1,102 @@
+.submit-button {
+    display: inline-flex;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+.date {
+    border: 1px solid #304cd9 !important;
+}
+:host {
+    ::ng-deep {
+        #assign-table {
+            table {
+                border-collapse: separate !important;
+                border-spacing: 0;
+            }
+
+            th {
+                border-top: 1px solid #a5c9ff !important;
+                border-bottom: 1px solid #a5c9ff !important;
+                background-color: #ffffff !important;
+                text-align: center !important;
+            }
+
+            td {
+                border-bottom: 1px solid #a5c9ff !important;
+                text-align: center !important;
+            }
+
+            td:first-child,
+            th:first-child {
+                border-left: 1px solid #a5c9ff !important;
+            }
+
+            td:last-child,
+            th:last-child {
+                border-right: 1px solid #a5c9ff !important;
+            }
+
+            th:first-child {
+                border-top-left-radius: 5px !important;
+                -moz-border-top-left-radius: 5px !important;
+                -webkit-border-top-left-radius: 5px;
+            }
+
+            th:last-child {
+                border-top-right-radius: 5px !important;
+                -moz-border-top-right-radius: 5px !important;
+                -webkit-border-top-right-radius: 5px;
+            }
+
+            tr:last-child > td:first-child {
+                border-bottom-left-radius: 5px !important;
+                -moz-border-bottom-left-radius: 5px !important;
+                -webkit-border-bottom-left-radius: 5px !important;
+            }
+
+            tr:last-child > td:last-child {
+                border-bottom-right-radius: 5px !important;
+                -moz-border-bottom-right-radius: 5px !important;
+                -webkit-border-bottom-right-radius: 5px !important;
+            }
+
+            textarea,
+            textarea:focus,
+            textarea:focus-visible {
+                border: 1px solid #a5c9ff !important;
+                resize: none !important;
+                outline: none !important;
+            }
+        }
+        .descp {
+            border: 1px solid #304cd9 !important;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            padding: 5px;
+            font-size: 1rem !important;
+            color: #505051;
+            margin-left: -113px;
+        }
+    }
+}
+.reason-para {
+    margin-left: -120px;
+}
+.err {
+    margin-left: -113px;
+}
+.display-para {
+    margin-left: 3px;
+}
+.display-para1 {
+    margin-left: -4px;
+}

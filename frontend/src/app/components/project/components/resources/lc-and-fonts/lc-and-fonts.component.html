@@ -1,0 +1,66 @@
+<form [formGroup]="metadataOfProjectForm">
+    <div>
+        <div class="input-container">
+            <p>Translation Role <span class="required">*</span></p>
+            <div class="radio-container">
+                <div class="p-field-radiobutton inline p-4" *ngFor="let rol of translationRole">
+                    <p-radioButton
+                        name="translationRole"
+                        [value]="rol.id"
+                        formControlName="translationRole"
+                        [inputId]="rol.id"
+                    >
+                    </p-radioButton>
+                    <label [for]="rol">{{ rol.translation_role }}</label>
+                </div>
+                <div>
+                    <p-message
+                        severity="error"
+                        text="Translation Role is required"
+                        *ngIf="!formControl['translationRole'].valid && formControl['translationRole'].touched"
+                    ></p-message>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-label pt-3">
+        <p>Default Length Calculations of vector fonts</p>
+    </div>
+    <div class="folder-section">
+        <p-multiSelect
+            formControlName="defaultLengthCalculationsOfVectorFonts"
+            [style]="{ width: '100%' }"
+            [options]="lcOption"
+            styleClass="border-1 border-blue-600"
+            display="chip"
+            optionLabel="lc_name"
+            optionValue="id"
+            placeholder="Select Length Calculations"
+            appendTo="body"
+        ></p-multiSelect>
+        <span class="text-orange-400" *ngIf="!isLengthCalculationValid()">Please select valid length calculation</span>
+    </div>
+    <div class="input-label pt-3">
+        <p>Default Font Packages</p>
+    </div>
+    <div class="folder-section">
+        <p-dropdown
+            [autoDisplayFirst]="false"
+            formControlName="defaultFontPackages"
+            [options]="fontOption"
+            optionLabel="font_packagename"
+            optionValue="id"
+            placeholder="Select Font Packages"
+            appendTo="body"
+        ></p-dropdown>
+        <span class="text-orange-400" *ngIf="!isFontSelected">Please select valid font</span>
+    </div>
+</form>
+
+<div class="note">
+    <p>
+        Note : If you change the directory of fonts or length calculation, Please check the alternative language
+        setting.
+    </p>
+</div>

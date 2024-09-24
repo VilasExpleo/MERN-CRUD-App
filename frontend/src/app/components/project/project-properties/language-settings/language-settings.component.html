@@ -1,0 +1,152 @@
+<div class="container">
+    <p>
+        You can review the languages mapped in your project. If required, you can change the mapping of languages here.
+    </p>
+    <div class="grid">
+        <div class="col-5">
+            <p class="text-base font-medium pl-4">languages available in the application</p>
+            <div class="primeng-tree">
+                <p-tree
+                    [value]="availableLanguages"
+                    [draggableNodes]="true"
+                    [droppableNodes]="true"
+                    draggableScope="server2"
+                    droppableScope="server1"
+                    selectable="false"
+                    [validateDrop]="true"
+                    [filter]="true"
+                    filterMode="strict"
+                    (onNodeDrop)="onNodeDropToSource()"
+                >
+                </p-tree>
+            </div>
+        </div>
+        <div class="lg:col-7 md:col-12 sm:col-12">
+            <div class="grid pb-4">
+                <div class="lg:col-6 langFromXml">
+                    <p class="text-base font-medium">Languages available in the XML</p>
+                </div>
+                <div class="lg:col-6 dragDropLang">
+                    <p class="text-base font-medium">User can drag and drop language</p>
+                </div>
+            </div>
+            <div class="languagesFromXML grid">
+                <div class="lg:col-3 md:col-12 sm:col-12 p-0">
+                    <table>
+                        <tbody>
+                            <tr *ngFor="let lang of languagesFromXML; let i = index">
+                                <td>
+                                    <div class="langFromPtree pt-2">
+                                        {{ lang.xml_language }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="lg:col-9 md:col-12 sm:col-12 p-0">
+                    <p-tree
+                        [value]="mappedLanguages"
+                        [draggableNodes]="true"
+                        [droppableNodes]="true"
+                        [validateDrop]="true"
+                        selectable="false"
+                        droppableScope="server2"
+                        draggableScope="server1"
+                        (onNodeDrop)="onNodeDropToDestination($event)"
+                        #mappedLangTree
+                    ></p-tree>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p *ngIf="isMapDone" style="color: red">NOTE: All the languages must be mapped.</p>
+    <div class="pt-3">
+        <form [formGroup]="languageSettingForm">
+            <div class="grid input-container">
+                <div class="col-6">
+                    <p>Editor’s Translation Language<span>*</span></p>
+                    <p-dropdown
+                        placeholder="Select a editor’s language"
+                        [options]="languagesFromXML"
+                        formControlName="translationLanguage"
+                        optionLabel="xml_language"
+                        appendTo="body"
+                        [filter]="true"
+                        filterBy="xml_language"
+                    >
+                    </p-dropdown>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="pt-5 inline-flex btn-container">
+        <button
+            pButton
+            type="button"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            label="Back"
+            iconPos="left"
+            (click)="prevTab()"
+            *ngIf="isRawProject"
+            class="mr-3"
+        ></button>
+        <button
+            pButton
+            type="button"
+            icon="pi pi-times"
+            iconPos="left"
+            label="Cancel"
+            class="p-button-warning mr-3"
+            (click)="closePropertiesDialogOnCancel()"
+        ></button>
+        <button
+            pButton
+            type="button"
+            icon="pi pi-save"
+            iconPos="left"
+            label="Save"
+            iconPos="left"
+            (click)="submitLanguageSettingForm(languageSettingForm.value)"
+            [disabled]="submitBtn"
+            *ngIf="!isRawProject"
+        ></button>
+        <button
+            pButton
+            type="button"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            label="Next"
+            iconPos="right"
+            (click)="nextTab(languageSettingForm.value)"
+            *ngIf="isRawProject"
+            [disabled]="submitBtn"
+        ></button>
+    </div>
+</div>
+
+<p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="yes-button">
+            <button
+                class="p-button-danger"
+                type="button"
+                pButton
+                label="Yes"
+                icon="pi pi-check"
+                (click)="cd.accept()"
+            ></button>
+        </div>
+        <div class="no-button">
+            <button
+                class="p-button-secondary"
+                type="button"
+                pButton
+                label="No"
+                icon="pi pi-times"
+                (click)="cd.reject()"
+            ></button>
+        </div>
+    </ng-template>
+</p-confirmDialog>

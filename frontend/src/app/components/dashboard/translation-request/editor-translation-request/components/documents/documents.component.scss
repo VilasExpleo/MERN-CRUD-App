@@ -1,0 +1,39 @@
+.left-bottom-btn {
+    float: right;
+}
+.next-btn {
+    display: inline;
+}
+:host {
+    ::ng-deep {
+        .next-btn .p-button {
+            background: #304cd9;
+        }
+        .cancel-btn {
+            .pi-exclamation-triangle:before {
+                color: #ffffff;
+            }
+        }
+        .back-btn {
+            .p-button {
+                background: #304cd9;
+            }
+        }
+        .primengUpload {
+            .p-fileupload .p-fileupload-content {
+                border: 1px solid #a5c9ff;
+                position: inherit;
+            }
+        }
+        .p-fileupload .p-fileupload-buttonbar {
+            background: rgba(183, 212, 254, 0.18);
+            border: 1px solid #a5c9ff;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+    }
+}
+.new-docs {
+    margin: 1rem 0 0 0;
+    padding: 1rem;
+}

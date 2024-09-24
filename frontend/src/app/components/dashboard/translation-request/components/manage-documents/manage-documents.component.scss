@@ -1,0 +1,46 @@
+.left-bottom-btn {
+    display: flex;
+    justify-content: flex-end;
+}
+:host {
+    ::ng-deep{
+        .primengUpload {
+            .p-fileupload .p-fileupload-content {
+                border: 1px solid #5897fc;
+                position: inherit;
+            }
+        }
+        .back-btn {
+            .p-button {
+                background: #304cd9;
+            }
+        }
+        .next-btn {
+            display: inline;
+            .p-button {
+                background: #304cd9;
+            }
+        }
+        .p-fileupload .p-fileupload-buttonbar {
+            background: rgba(183, 212, 254, 0.18);
+            border: 1px solid #a5c9ff;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+    } 
+    .existing-docs {
+        margin: 1rem 0 0 0;
+        padding: 1rem;
+
+        .single-doc {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+    .new-docs {
+        margin: 1rem 0 0 0;
+    }
+}

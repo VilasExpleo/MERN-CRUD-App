@@ -1,0 +1,13 @@
+<p-dialog [modal]="true" [(visible)]="isVisible" [closable]="false" header="headerText" [style]="{ width: '25vw' }">
+    <p>{{ dialogBody }}</p>
+    <ng-template pTemplate="footer">
+        <button
+            type="button"
+            pButton
+            icon="pi pi-check"
+            label="buttonText"
+            (click)="toggle()"
+            class="p-button-primary"
+        ></button>
+    </ng-template>
+</p-dialog>

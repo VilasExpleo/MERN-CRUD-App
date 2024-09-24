@@ -1,0 +1,151 @@
+<div class="pb-5 excutionHeading">Choose a XSLT file for export</div>
+<p-fieldset legend="Export File">
+    <p-toast></p-toast>
+    <div class="grid">
+        <div class="col-12">
+            <p-dropdown
+                (onChange)="selectFile($event)"
+                [options]="fileList"
+                [(ngModel)]="selectedFileName"
+                class="mr-2"
+                optionLabel="xslt_name"
+                [filter]="true"
+                filterBy="xslt_name"
+                placeholder="Select a File"
+            >
+                <ng-template pTemplate="selectedItem">
+                    <div *ngIf="selectedFileName">
+                        <div>{{ selectedFileName?.xslt_name }}</div>
+                    </div>
+                </ng-template>
+                <ng-template let-file pTemplate="item">
+                    <div>
+                        <div>{{ file?.xslt_name }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <button
+                label="Delete"
+                icon="pi pi-trash"
+                iconPos="left"
+                pButton
+                pRipple
+                type="button"
+                class="p-button-danger mr-2 mb-2"
+                (click)="deleteXsltFile()"
+            ></button>
+            <button
+                label="Rename"
+                icon="pi pi-pencil"
+                iconPos="left"
+                pButton
+                pRipple
+                type="button"
+                (click)="renameFileName()"
+                class="mr-2 mb-2"
+            ></button>
+            <input
+                *ngIf="renamePanelOpen"
+                type="text"
+                pInputText
+                [(ngModel)]="newRenameFile"
+                placeholder="Enter the new name of XSLT file"
+                class="mr-2 mb-2 mt-2"
+                style="width: 15.5rem"
+            />
+            <button
+                label="Save"
+                *ngIf="renamePanelOpen"
+                [disabled]="newRenameFile.trim() === ''"
+                pButton
+                icon="pi pi-save"
+                iconPos="left"
+                (click)="renameAndSaveFileName()"
+                class="mb-2"
+            ></button>
+        </div>
+        <div class="col-12 mt-2" *ngIf="fileList?.length > 0 && selectedFileName?.description !== ''">
+            <p>Description</p>
+            <p>{{ selectedFileName?.description }}</p>
+        </div>
+        <div class="col-12">
+            <p-message
+                *ngIf="fileNameExsist"
+                severity="warn"
+                text="File name already present please enter another name"
+            >
+            </p-message>
+        </div>
+    </div>
+</p-fieldset>
+
+<div class="grid pt-5">
+    <div class="col-12">
+        <p-accordion (onOpen)="onPreviewOpen()">
+            <div *ngIf="loading" class="spinner chart-spinner">
+                <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+            </div>
+            <p-accordionTab header="Preview" [(selected)]="activePrivewTab">
+                <ng-container *ngFor="let item of xsltLines; let i = index">
+                    <p *ngIf="i > 0">{{ item }}</p>
+                </ng-container>
+                <ng-container *ngIf="xsltLines.length === 0">
+                    <p>No data available for preview</p>
+                </ng-container>
+            </p-accordionTab>
+        </p-accordion>
+    </div>
+    <div class="col-12">
+        <div class="field">
+            <p-checkbox
+                [binary]="true"
+                [(ngModel)]="zipDownload"
+                (onChange)="onCheckBox()"
+                label="Export as Language XML"
+            >
+            </p-checkbox>
+        </div>
+    </div>
+    <div
+        class="col-12 pt-5"
+        *ngIf="projectValidationMessage?.GlobalError > 0 || projectValidationMessage?.Translationrequests === 'pending'"
+    >
+        <div>
+            <i aria-hidden="true" class="pi pi-exclamation-triangle"></i><span class="pl-2 warspan">Warnings !</span>
+        </div>
+        <div class="pt-3" style="color: black">
+            <p class="list" *ngIf="projectValidationMessage?.GlobalError === 1">
+                This project is having {{ projectValidationMessage?.GlobalError }} global Error
+            </p>
+            <p class="list" *ngIf="projectValidationMessage?.GlobalError > 1">
+                This project is having {{ projectValidationMessage?.GlobalError }} global Errors
+            </p>
+            <p class="list" *ngIf="projectValidationMessage?.Translationrequests === 'pending'">
+                Translation request is pending for Project {{ selectedProduct?.title }}
+            </p>
+        </div>
+    </div>
+</div>
+<p-confirmDialog #cr [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="col-12 flex-row-reverse align-items-end">
+            <button
+                class="p-button-danger"
+                type="button"
+                pButton
+                label="Yes"
+                icon="pi pi-check"
+                (click)="cr.accept()"
+            ></button>
+
+            <button
+                class="p-button-secondary"
+                type="button"
+                pButton
+                icon="pi pi-times"
+                label="No"
+                (click)="cr.reject()"
+            ></button>
+        </div>
+    </ng-template>
+</p-confirmDialog>

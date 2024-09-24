@@ -1,0 +1,29 @@
+<div class="grid">
+    <div class="col-12">
+        <form [formGroup]="addForm">
+            <div class="p-inputgroup w-full">
+                <input formControlName="text" type="text" [placeholder]="placeholder" pInputText />
+                <p-button
+                    *ngIf="hidePlusAction"
+                    icon="pi pi-plus"
+                    (onClick)="addText()"
+                    styleClass="p-button-warn z-1"
+                    [disabled]="addForm.invalid"
+                    [label]="buttonLabel"
+                ></p-button>
+            </div>
+            <div *ngIf="text.invalid && (text.dirty || text.touched)">
+                <small id="alredy-exist" class="p-error block" *ngIf="isDuplicate('text')">
+                    {{ attributeName }} is currently in use. Please enter a new {{ attributeName }}.
+                </small>
+                <small id="required" class="p-error block" *ngIf="isMandatoryField('text')">
+                    {{ attributeName }} is required
+                </small>
+                <small id="isNoWhiteSpace" class="p-error block" *ngIf="isNoWhiteSpace('text')"
+                    >The use of blank spaces is not permitted.</small
+                >
+                <small *ngIf="isMaxLength('text')" class="p-error block">Your text should not have more than 500 characters.</small>
+            </div>
+        </form>
+    </div>
+</div>

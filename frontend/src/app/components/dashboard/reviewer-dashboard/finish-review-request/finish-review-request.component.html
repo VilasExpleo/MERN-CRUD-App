@@ -1,0 +1,20 @@
+<p-dialog [header]="headerText" [(visible)]="isVisible" [modal]="true" (onHide)="closeDialog()">
+    <app-help-icon class="absolute mr-6 mt-3 right-0 top-0" [linkId]="'reviewer-finish-order'"></app-help-icon>
+    <p [innerHTML]="getSanityMessage()"></p>
+    <br />
+    <div class="container">
+        <div class="grid">
+            <div class="col-2">{{ sanityMessageModel.dateText }}</div>
+            <div class="col-10">{{ selectedReviewRequest?.dueDate | date : 'yyyy/MM/dd' }}</div>
+            <div class="col-2">{{ sanityMessageModel.sourceLanguageText }}</div>
+            <div class="col-10">{{ selectedReviewRequest?.sourceLanguage }}</div>
+            <div class="col-2">{{ sanityMessageModel.targetLanguageText }}</div>
+            <div class="col-10">{{ targetLanguageRequest?.targetLanguageCode }}</div>
+            <div class="col-2">{{ sanityMessageModel.textNodesText }}</div>
+            <div class="col-10">{{ targetLanguageRequest?.totalTextNodeCount }}</div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Finish Order" icon="pi pi-check" (click)="completeReviewOrder()"></p-button>
+    </ng-template>
+</p-dialog>

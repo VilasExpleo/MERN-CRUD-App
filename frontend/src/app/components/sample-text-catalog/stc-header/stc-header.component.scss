@@ -1,0 +1,32 @@
+.row {
+    display: flex;
+    border-bottom: 1px solid #a5c9ff;
+    -webkit-box-shadow: -2px 5px 22px -14px #a5c9ff;
+    -moz-box-shadow: -2px 5px 22px -14px #a5c9ff;
+    box-shadow: -2px 5px 22px -14px #a5c9ff;
+}
+
+.operationmenu {
+    padding: 0.7rem;
+    color: #304cd9;
+    font-weight: bold;
+}
+
+.operationmenu a {
+    padding: 0.7rem;
+    cursor: pointer;
+}
+:host ::ng-deep {
+    .project-reference {
+        .p-dialog {
+            height: 50%;
+            width: 50%;
+        }
+    }
+    .lock-tbl {
+        .translate-tbl .p-datatable .p-datatable-thead > tr > th {
+            border-radius: 5px !important;
+            vertical-align: middle;
+        }
+    }
+}

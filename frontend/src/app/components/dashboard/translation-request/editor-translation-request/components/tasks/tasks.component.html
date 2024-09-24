@@ -1,0 +1,47 @@
+<div>
+    <p class="mt-4 mb-4">Add tasks details if any.</p>
+    <ng-container>
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 6px">
+            <app-add-text
+                (addEvent)="add($event)"
+                [hidePlusAction]="true"
+                [attributeName]="'Word'"
+                [placeholder]="placeholder"
+                [selectedText]="''"
+                [duplicateValidation]="false"
+                [buttonLabel]="'Add'"
+            ></app-add-text>
+        </div>
+
+        <app-editable-list
+            (addEvent)="add($event)"
+            (editEvent)="edit($event)"
+            [placeholder]="placeholder"
+            (deleteTextEvent)="deleteList($event)"
+            [enableSearch]="false"
+            [duplicateValidation]="false"
+            [list$]="checklist$"
+        ></app-editable-list>
+    </ng-container>
+</div>
+
+<div class="flex justify-content-end mt-5 pb-3">
+    <button
+        pButton
+        type="button"
+        label="Back"
+        class="p-button-primary mr-3 btn-small"
+        icon="pi pi-chevron-left"
+        iconPos="left"
+        (click)="navigate(0)"
+    ></button>
+    <button
+        pButton
+        type="button"
+        label="Next"
+        class="p-button-primary"
+        icon="pi pi-chevron-right"
+        iconPos="right"
+        (click)="navigate(2)"
+    ></button>
+</div>

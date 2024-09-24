@@ -1,0 +1,66 @@
+<div class="grid mt-4">
+    <div class="col-6">
+        <p-panel header="Speech Command">
+            <ng-template pTemplate="icons">
+                <i
+                    class="icon-action-icon-speech-commend"
+                    title="Source Text"
+                    (click)="getSourceText()"
+                    style="font-size: 2rem"
+                    [ngClass]="{ 'text-blue-400': isSource() }"
+                ></i
+                ><i
+                    class="icon-action-icon-translation"
+                    style="font-size: 2rem"
+                    (click)="getTranslationText()"
+                    title="Translation text"
+                    [ngClass]="{ 'text-blue-400': isTranslation() }"
+                ></i>
+            </ng-template>
+
+            <textarea
+                [(ngModel)]="decompressDetailsModel.unCompressText"
+                [rows]="10"
+                [cols]="30"
+                pInputTextarea
+                [autoResize]="true"
+            ></textarea>
+
+            <div class="text-right mt-4">
+                <button
+                    pButton
+                    type="button"
+                    icon="pi pi-refresh"
+                    class="p-button-outlined mr-3 cursor-pointer"
+                    (click)="refresh()"
+                ></button>
+
+                <button
+                    pButton
+                    type="button"
+                    [disabled]="isTranslationBlank()"
+                    (click)="decompress()"
+                    label="Decompress"
+                    class="cursor-pointer"
+                ></button>
+            </div>
+        </p-panel>
+    </div>
+
+    <div class="col-6">
+        <p-panel class="gppanel" header="Speech Command">
+            <div class="gird overflow-hidden md:overflow-auto decompress mb-2">
+                <ng-container *ngFor="let text of decompressDetailsModel.deCompressedText">
+                    <p class="ml-2">{{ text }}</p>
+                </ng-container>
+            </div>
+
+            <p-message
+                severity="error"
+                *ngIf="isError()"
+                summary="Error"
+                text="The decompress function is not possible as the text has a syntax error."
+            ></p-message>
+        </p-panel>
+    </div>
+</div>

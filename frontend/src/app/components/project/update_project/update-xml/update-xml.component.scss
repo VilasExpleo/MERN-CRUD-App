@@ -1,0 +1,101 @@
+// buttons style start
+.left-bottom-btn {
+    float: right;
+}
+.next-btn {
+    display: inline;
+}
+:host ::ng-deep {
+    .next-btn {
+        .p-button {
+            background: #304cd9;
+        }
+    }
+    .back-btn .p-button {
+        background: #304cd9;
+    }
+
+    .cancel-btn {
+        .pi-exclamation-triangle:before {
+            color: #ffffff;
+        }
+    }
+    .primengUpload {
+        .p-button.p-button-icon-only {
+            display: none;
+        }
+        .p-fileupload .p-fileupload-content {
+            background: #c2d6f7;
+            border: 1px solid #5897fc;
+        }
+        .p-progressbar {
+            display: none;
+        }
+    }
+}
+
+.no-button {
+    display: inline;
+}
+.yes-button {
+    display: inline;
+}
+
+// buttons style end
+
+.main-heading p {
+    color: #174a84;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.primengUpload {
+    margin-top: 20px;
+}
+.project-diffrence {
+    margin-top: 30px;
+    border: 1px solid #304cd9;
+    border-radius: 6px;
+}
+.property-header {
+    color: #174a84;
+    font-weight: 500;
+    font-size: 14px;
+}
+hr {
+    border-top: solid 1px #a5c9ff;
+    margin: 0px;
+}
+.language {
+    display: inline;
+}
+.error-list {
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.error-list ul > li {
+    color: red;
+}
+.statusmessage {
+    color: #0a6d3d;
+}
+.spinner {
+    position: absolute;
+}
+
+.sub-heading {
+    font-size: 14px;
+    font-weight: 400;
+    color: #174a84;
+}
+.count::before {
+    content: '(';
+}
+.count::after {
+    content: ')';
+}
+.error-heading {
+    color: red;
+}

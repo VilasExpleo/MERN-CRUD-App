@@ -1,0 +1,86 @@
+<div class="grid border-bottom-1 border-blue-200 mt-0" #menu>
+    <p-toast></p-toast>
+    <div class="flex align-items-center text-primary border-right-1 border-blue-200 p-2">
+        <p class="font-bold pl-2">{{ projectNameWithVersion }}</p>
+    </div>
+    <p-contextMenu [target]="menu" [model]="igniteMenu" appendTo="body"></p-contextMenu>
+    <div class="toolbar-menu p-2">
+        <div class="grid pt-2">
+            <div *ngIf="isEditor || isTranslator">
+                <p-button
+                    icon="pi pi-copy"
+                    pTooltip="Copy"
+                    styleClass="p-button-text"
+                    (click)="copyNode()"
+                    [disabled]="isReferenceLanguage"
+                ></p-button>
+            </div>
+            <div *ngIf="isEditor || isTranslator">
+                <p-button
+                    icon="icon-paste-icon"
+                    pTooltip="Paste"
+                    styleClass="p-button-text"
+                    (click)="pasteNode()"
+                    [disabled]="isReferenceLanguage"
+                ></p-button>
+            </div>
+            <div>
+                <p-button
+                    icon="pi pi-angle-left"
+                    pTooltip="Back"
+                    styleClass="p-button-text mr-2 ml-2"
+                    (click)="navigate(direction.Previous)"
+                ></p-button>
+            </div>
+            <div>
+                <p-dropdown
+                    [options]="navigationOptions"
+                    [(ngModel)]="selectedNavigationType"
+                    optionLabel="displayName"
+                ></p-dropdown>
+            </div>
+
+            <div>
+                <p-button
+                    icon="pi pi-angle-right"
+                    pTooltip="Next"
+                    styleClass="p-button-text ml-2"
+                    (click)="navigate(direction.Next)"
+                ></p-button>
+                <p-button
+                    *ngIf="isEditor || isTranslator"
+                    icon="pi pi-lock"
+                    pTooltip="Lock/Unlock"
+                    styleClass="p-button-text"
+                    (click)="displayLockUnlockDialog()"
+                    [disabled]="isReferenceLanguage"
+                ></p-button>
+                <p-button
+                    icon="icon-window-maximize"
+                    pTooltip="Save configuration"
+                    styleClass="p-button-text"
+                    (click)="displayLayoutConfigDialog()"
+                ></p-button>
+            </div>
+        </div>
+    </div>
+    <p-dialog
+        header="Warning"
+        [(visible)]="isPasteWarningDisplay"
+        [modal]="true"
+        [baseZIndex]="10000"
+        [draggable]="false"
+        [resizable]="false"
+    >
+        <div class="warnig-para">
+            <p>
+                <i class="pi pi-exclamation-triangle"></i> This text node is locked. Please unlock the text node before
+                paste.
+            </p>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-thumbs-up" label="Ok" class="p-button-warning" (click)="confirmToClose()"></p-button>
+        </ng-template>
+    </p-dialog>
+</div>

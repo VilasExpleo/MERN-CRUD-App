@@ -1,0 +1,38 @@
+<div class="translation-import">
+    <p-dialog
+        header="Settings"
+        [(visible)]="viewSetting"
+        [closable]="true"
+        [modal]="true"
+        [resizable]="false"
+        [responsive]="true"
+        styleClass="customDialog"
+        (onMaximize)="onMaximize()"
+        [style]="{ width: '92vw' }"
+    >
+        <ng-template pTemplate="body">
+            <p-tabView>
+                <p-tabPanel header="Spellcheck">
+                    <app-spell-check (hideSettingEvent)="closeSetting()"></app-spell-check>
+                </p-tabPanel>
+                <p-tabPanel header="Mapping">
+                    <app-mapping
+                        (closeSetting)="closeSetting()"
+                        [selectedProject]="selectedProject"
+                        [isMappingAssistent]="isMappingAssistent"
+                    ></app-mapping>
+                </p-tabPanel>
+                <p-tabPanel header="Project Reports" *ngIf="!isMappingAssistent">
+                    <app-project-report [reportData]="getReportData()"></app-project-report>
+                </p-tabPanel>
+                <p-tabPanel [header]="aboutHMILHeaderText">
+                    <app-spellcheck></app-spellcheck>
+                </p-tabPanel>
+                <p-tabPanel [header]="notificationHeaderText" *ngIf="!isReviewer && !isProofreader">
+                    <app-notification (closeSetting)="closeSetting()"></app-notification>
+                </p-tabPanel>
+            </p-tabView>
+        </ng-template>
+        <ng-template pTemplate="footer"> </ng-template>
+    </p-dialog>
+</div>

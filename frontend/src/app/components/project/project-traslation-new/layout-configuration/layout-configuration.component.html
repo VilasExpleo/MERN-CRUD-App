@@ -1,0 +1,70 @@
+<div class="grid">
+    <div class="col-7">
+        <p-dropdown
+            [options]="layoutconfigurationService.savedConfigurations"
+            optionLabel="layout_name"
+            placeholder="Default Configuration"
+            (onChange)="layoutconfigurationService.getLayoutData($event)"
+            appendTo="body"
+        ></p-dropdown>
+    </div>
+    <div class="col-5">
+        <button
+            pButton
+            label="Use Layout"
+            type="submit"
+            icon="pi pi-thumbs-up"
+            iconPos="left"
+            class="p-button-primary inline-block"
+            (click)="layoutconfigurationService.activateLayout()"
+        ></button>
+
+        <button
+            pButton
+            label="Delete"
+            type="submit"
+            icon="pi pi-trash"
+            iconPos="left"
+            class="p-button-danger inline-block ml-3"
+            (click)="layoutconfigurationService.deleteSelectedLayoutConfig()"
+        ></button>
+    </div>
+</div>
+<p>Save Configuration</p>
+<div class="grid">
+    <div class="col-9">
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon"
+                ><p-checkbox value="val1" (onChange)="layoutconfigurationService.enableInput($event)"></p-checkbox
+            ></span>
+            <input
+                type="text"
+                [disabled]="layoutconfigurationService.isInputDisabled"
+                pInputText
+                placeholder="Enter the template name"
+                [(ngModel)]="layoutconfigurationService.layoutName"
+            />
+            <button
+                type="button"
+                label="Save"
+                pButton
+                pRipple
+                icon="pi pi-save"
+                styleClass="p-button-primary"
+                [disabled]="layoutconfigurationService.isInputDisabled"
+                (click)="layoutconfigurationService.createOrUpdateLayoutConfig()"
+            ></button>
+        </div>
+    </div>
+    <div class="col-2">
+        <button
+            pButton
+            label="Cancel"
+            type="submit"
+            icon="pi pi-times"
+            iconPos="left"
+            class="p-button-warning p-button-lg"
+            (click)="closeSaveLayoutDialog()"
+        ></button>
+    </div>
+</div>

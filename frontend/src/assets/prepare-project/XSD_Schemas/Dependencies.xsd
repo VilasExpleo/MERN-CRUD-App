@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<include schemaLocation="TextNodeRef.xsd" />
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="DependencyManager">
+		<annotation>
+			<documentation>
+				The DependencyManager is the managing component of all
+				dependent texts of a project. It holds the list of dependencies.
+
+				Dependencies can be used to express relations of texts which should
+				be handled in a uniform and consistent way. E.g. all confirm-texts
+				of a project can be placed in a DependencyGroup and should be
+				translated the same (e.g. 'Ok'). So other translations are forbidden
+				even though some translations have to be abbreviated.
+			</documentation>
+		</annotation>
+
+
+		<sequence>
+			<element name="Dependencies" type="hmi:Dependencies"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>The list of dependencies.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Dependencies">
+		<sequence>
+			<element name="DependencyGroup" type="hmi:DependencyGroup"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Each Dependency can have an arbitrary number of
+						DependenyGroups.
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="Name" type="string" use="optional">
+			<annotation>
+				<documentation>Each dependency can have a name which is presented to
+					the user.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="DependencyGroup">
+		<annotation>
+			<documentation>A DependencyGroup holds a list of references of
+				dependent TexNodes. All TextNodes of the group influence each other.
+				When a translator works on a TextNode of this group he can see the
+				other elements of the group. They should be handled in a consistent
+				way.
+			</documentation>
+		</annotation>
+
+		<sequence>
+			<element name="TextNodeRef" type="hmi:TextNodeRef" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>The list of TextNodes which should be
+						handled/translated in a consistent way.
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+
+		<attribute name="Name" type="string" use="optional">
+			<annotation>
+				<documentation>Each DependencyGroup can have a name which is
+					presented to the user.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+</schema>

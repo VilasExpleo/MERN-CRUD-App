@@ -1,0 +1,13 @@
+<p-steps [model]="requestSteps" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+<app-language-selection *ngIf="activeIndex === 0" (navigationEvent)="navigate($event)"></app-language-selection>
+<app-tasks *ngIf="activeIndex === 1" (navigationEvent)="navigate($event)"></app-tasks>
+<app-job-details *ngIf="activeIndex === 2" (navigationEvent)="navigate($event)"></app-job-details>
+<app-documents *ngIf="activeIndex === 3" (navigationEvent)="navigate($event)"></app-documents>
+<app-filter-translation *ngIf="activeIndex === 4" (navigationEvent)="navigate($event)"></app-filter-translation>
+<app-statistics *ngIf="activeIndex === 5" (navigationEvent)="navigate($event)"></app-statistics>
+<app-reference-language *ngIf="activeIndex === 6" (navigationEvent)="navigate($event)"></app-reference-language>
+<app-translation-confirmation
+    *ngIf="activeIndex === 7"
+    (navigationEvent)="navigate($event)"
+    (closeDialog)="closeDialog($event)"
+></app-translation-confirmation>

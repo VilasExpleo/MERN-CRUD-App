@@ -1,0 +1,575 @@
+<!-- Table Container Start-->
+<div class="main-dashborad">
+    <div class="main-inner-dashborad">
+        <app-translation-request></app-translation-request>
+        <p-contextMenu #cm [model]="contextMenuItems" appendTo="body"></p-contextMenu>
+        <igc-dockmanager [layout]="IgcDockManagerLayout">
+            <div slot="projectslist" class="dockManagerContent">
+                <div *ngIf="loadingDashboradDetails" class="spinnerdashboradpanel">
+                    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+                </div>
+                <p-table
+                    [value]="products"
+                    dataKey="project_id"
+                    selectionMode="single"
+                    [rows]="viewPageLine"
+                    (onRowSelect)="onRowSelect($event)"
+                    [(contextMenuSelection)]="selectedProduct"
+                    [contextMenu]="cm"
+                    styleClass="myStyle"
+                    styleClass="p-datatable-md"
+                >
+                    <ng-template pTemplate="caption">
+                        <div class="grid">
+                            <div class="flex align-items-center col-2">
+                                <span>Project</span>
+                                <app-help-icon [linkId]="'create-project'"></app-help-icon>
+                            </div>
+                            <div class="col-10">
+                                <button
+                                    pButton
+                                    class="p-button-md create-btn"
+                                    type="button"
+                                    label="Prepare Project"
+                                    (click)="showPrepareDialog()"
+                                ></button>
+                                <button
+                                    pButton
+                                    type="button"
+                                    label="Create Project"
+                                    class="p-button-md create-btn"
+                                    icon="pi pi-plus"
+                                    iconPos="right"
+                                    (click)="showStepsDialog()"
+                                ></button>
+                            </div>
+                            <div class="prepare-project">
+                                <p-dialog
+                                    [modal]="true"
+                                    header="Prepare Project"
+                                    [(visible)]="displayPrepareDialog"
+                                    [closable]="false"
+                                    [resizable]="false"
+                                    [style]="{ width: '50vw' }"
+                                >
+                                    <app-prepare-project></app-prepare-project>
+                                </p-dialog>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pResizableColumn></th>
+                            <th pSortableColumn="title" pResizableColumn>
+                                Name <p-sortIcon field="title"></p-sortIcon>
+                                <p-columnFilter
+                                    type="text"
+                                    field="title"
+                                    display="menu"
+                                    [hideOnClear]="true"
+                                ></p-columnFilter>
+                            </th>
+                            <th pSortableColumn="version_no_sort" pResizableColumn>
+                                Version<p-sortIcon field="version_no_sort"></p-sortIcon>
+                                <p-columnFilter
+                                    type="text"
+                                    field="version_no_sort"
+                                    display="menu"
+                                    [hideOnClear]="true"
+                                ></p-columnFilter>
+                            </th>
+                            <th pSortableColumn="version_name" pResizableColumn>
+                                Version Name<p-sortIcon field="version_name"></p-sortIcon>
+                                <p-columnFilter
+                                    type="text"
+                                    field="version_name"
+                                    display="menu"
+                                    [hideOnClear]="true"
+                                ></p-columnFilter>
+                            </th>
+                            <th pSortableColumn="due_date" pResizableColumn>
+                                Final Delivery
+                                <p-sortIcon field="due_date"></p-sortIcon>
+                                <p-columnFilter
+                                    type="date"
+                                    field="due_date"
+                                    display="menu"
+                                    [hideOnClear]="true"
+                                ></p-columnFilter>
+                            </th>
+                            <th pSortableColumn="category" pResizableColumn>
+                                Editorial <p-sortIcon field="category"></p-sortIcon>
+                                <p-columnFilter
+                                    field="progress"
+                                    matchMode="between"
+                                    display="menu"
+                                    [showMatchModes]="false"
+                                >
+                                    <ng-template pTemplate="filter" let-filter="filterCallback">
+                                        <p-slider
+                                            [ngModel]="activityValues"
+                                            [range]="true"
+                                            (onSlideEnd)="filter($event.values)"
+                                            styleClass="m-3"
+                                        ></p-slider>
+                                        <div class="flex align-items-center justify-content-center px-2">
+                                            <span>{{ activityValues[0] }}</span>
+                                            <span>{{ activityValues[1] }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-columnFilter>
+                            </th>
+                            <th pSortableColumn="status" pResizableColumn>
+                                Status <p-sortIcon field="status"></p-sortIcon>
+                                <p-columnFilter
+                                    type="text"
+                                    field="status"
+                                    display="menu"
+                                    [hideOnClear]="true"
+                                ></p-columnFilter>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-expanded="expanded" let-rowIndex="rowIndex">
+                        <tr
+                            (click)="
+                                displayView(
+                                    product.project_id,
+                                    product.title,
+                                    product.version_no,
+                                    product.status,
+                                    'click',
+                                    product.isRawProject
+                                )
+                            "
+                            [ngClass]="product.project_id === selectedPid ? 'selectedrow' : ''"
+                            [pContextMenuRow]="product"
+                            (contextmenu)="getProject(product.project_id, product)"
+                        >
+                            <td>
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    [pRowToggler]="product"
+                                    class="p-button-text p-button-rounded p-button-plain"
+                                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                ></button>
+                            </td>
+                            <td>{{ product.title }}</td>
+                            <td>{{ prgressbar[product.project_id + 'versionshow'] }}</td>
+                            <td>{{ prgressbar[product.project_id + 'version_name'] }}</td>
+                            <td>
+                                <span
+                                    *ngIf="isCheckNullDate(product.due_date)"
+                                    [ngClass]="isCheckDate(product.due_date) ? 'errRed nowrap' : 'nowrap'"
+                                    >{{ product.due_date | date : 'yyyy-MM-dd' }}
+                                    <i
+                                        class="pi pi-bell ml-2"
+                                        *ngIf="isCheckDate(product.due_date)"
+                                        aria-hidden="true"
+                                    ></i>
+                                </span>
+                            </td>
+                            <td>
+                                <p-progressBar
+                                    [value]="product.editor_language_status"
+                                    [showValue]="true"
+                                    [title]="
+                                        product.editor_language_status !== undefined
+                                            ? product.editor_language_status + '%'
+                                            : 0 + '%'
+                                    "
+                                    minValue="0"
+                                    maxValue="1000"
+                                ></p-progressBar>
+                            </td>
+                            <td>
+                                <div class="status-badge">
+                                    <div>
+                                        <span [class]="'product-badge status-' + product?.status?.toLowerCase()">
+                                            <span class="statusok" *ngIf="product.status === projectStatus.OK">
+                                                <i
+                                                    class="pi pi-check-square"
+                                                    style="font-size: 0.8rem; color: green; padding: 0.5rem"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                {{ prgressbar[product.project_id + 'messageType'] }}
+                                            </span>
+                                            <span class="massopermsg" *ngIf="isOtherThanRawProject(product.status)"
+                                                >{{ prgressbar[product.project_id + 'messageType'] }}
+                                            </span>
+                                            <span
+                                                *ngIf="
+                                                    prgressbar[product.project_id + 'progress'] !== 100 &&
+                                                    prgressbar[product.project_id + 'progress'] !== undefined
+                                                "
+                                            >
+                                                <p-progressBar
+                                                    [value]="prgressbar[product.project_id + 'progress']"
+                                                    [title]="prgressbar[product.project_id + 'progress']"
+                                                ></p-progressBar>
+                                            </span>
+                                            <p-chip
+                                                *ngIf="product.status === projectStatus.UpdateAvailable"
+                                                icon="pi pi-history"
+                                                [label]="product.status"
+                                                styleClass="bg-yellow-100"
+                                            ></p-chip>
+                                            <p-chip
+                                                [label]="product.status"
+                                                styleClass="bg-yellow-100"
+                                                *ngIf="product.status === projectStatus.Prepared"
+                                                icon="pi pi-inbox"
+                                            ></p-chip>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="rowexpansion" let-product>
+                        <tr [ngClass]="product.title === projectTitle ? 'selectedrow' : ''">
+                            <td colspan="7">
+                                <div class="p-p-3">
+                                    <p-table [value]="product.language_prop" dataKey="product.language_prop.id">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th pSortableColumn="mapped_language" style="width: 150px">
+                                                    Languages
+                                                    <p-sortIcon field="mapped_language"></p-sortIcon>
+                                                </th>
+                                                <th pSortableColumn="amount">
+                                                    Translation
+                                                    <p-sortIcon field="amount"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-order>
+                                            <tr>
+                                                <td>{{ order.xml_language }}</td>
+                                                <td>
+                                                    <div class="mt-3" style="width: 30%">
+                                                        <p-progressBar
+                                                            [value]="order.status"
+                                                            [showValue]="true"
+                                                            minValue="0"
+                                                            maxValue="1000"
+                                                        ></p-progressBar>
+                                                    </div>
+                                                    <br />
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="6">There are no languages yet.</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <div class="main-dialog">
+                    <!-- Project Creation Dialoge Start -->
+                    <div *ngIf="displayStepDialoge" class="create-dialog">
+                        <p-dialog
+                            header="New Project"
+                            [modal]="true"
+                            [(visible)]="displayStepDialoge"
+                            class=""
+                            [closable]="false"
+                            [resizable]="false"
+                            [responsive]="true"
+                            [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
+                        >
+                            <p-steps [model]="projectCreationStepitems" [readonly]="true"> </p-steps>
+                            <router-outlet></router-outlet>
+                            <ng-template pTemplate="footer"></ng-template>
+                        </p-dialog>
+                    </div>
+                    <!-- Project Creation Dialoge End -->
+
+                    <!-- Project Update Dialoge Start -->
+                    <div class="project-update-dialog">
+                        <div *ngIf="projectUpdatedDialog">
+                            <p-dialog
+                                header="Update Project"
+                                [modal]="true"
+                                [(visible)]="projectUpdatedDialog"
+                                class=""
+                                [closable]="false"
+                                [resizable]="false"
+                                [responsive]="true"
+                                [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
+                                [style]="{ width: '70vw' }"
+                            >
+                                <p-steps [model]="projectUpdateStepitems" [readonly]="false"> </p-steps>
+                                <router-outlet></router-outlet>
+                                <ng-template pTemplate="footer"></ng-template>
+                            </p-dialog>
+                        </div>
+                        <!-- Project Update Dialoge End -->
+                        <!-- View Properties Of Project  Start -->
+                        <div *ngIf="propertiesOfProject" class="view-properties">
+                            <p-dialog
+                                header="{{ editSetTitle }}"
+                                [(visible)]="propertiesOfProject"
+                                class=""
+                                [modal]="true"
+                                [closable]="false"
+                                [resizable]="false"
+                            >
+                                <router-outlet></router-outlet>
+                                <ng-template pTemplate="footer"></ng-template>
+                            </p-dialog>
+                        </div>
+                        <!-- View Properties Of Project  End -->
+
+                        <!-- Delete Project From View Details Dialoge Start -->
+                        <div class="delete-message">
+                            <p-confirmDialog
+                                #dp
+                                [style]="{ width: '25vw' }"
+                                [baseZIndex]="10000"
+                                class="cancel-dialog"
+                                key="deleteProject"
+                                [closable]="false"
+                            >
+                                <ng-template pTemplate="footer">
+                                    <div class="yes-button">
+                                        <button
+                                            class="p-button-danger"
+                                            type="button"
+                                            pButton
+                                            label="Yes"
+                                            icon="pi pi-check"
+                                            (click)="dp.accept()"
+                                        ></button>
+                                    </div>
+                                    <div class="no-button">
+                                        <button
+                                            class="p-button-secondary"
+                                            type="button"
+                                            pButton
+                                            label="No"
+                                            icon="pi pi-times"
+                                            (click)="dp.reject()"
+                                        ></button>
+                                    </div>
+                                </ng-template>
+                            </p-confirmDialog>
+                        </div>
+                        <!-- Delete Project From View Details Dialoge End -->
+
+                        <!-- Abort Operation From View Details Dialoge End -->
+                        <div class="delete-message">
+                            <p-toast
+                                position="center"
+                                key="abortOperation"
+                                (onClose)="onRejectAbortOperation()"
+                                [baseZIndex]="5000"
+                            >
+                                <ng-template let-message pTemplate="message">
+                                    <div class="p-flex p-flex-column" style="flex: 1">
+                                        <div class="p-text-center">
+                                            <i
+                                                class="pi pi-exclamation-triangle"
+                                                style="font-size: 3rem"
+                                                aria-hidden="true"
+                                            ></i>
+                                            <h4>{{ message.summary }}</h4>
+                                            <p>{{ message.detail }}</p>
+                                        </div>
+                                        <div class="p-grid p-fluid">
+                                            <div class="p-col-6 yes-button">
+                                                <button
+                                                    type="button"
+                                                    pButton
+                                                    (click)="onConfirmAbortOperation()"
+                                                    label="Yes"
+                                                    class="p-button-danger"
+                                                ></button>
+                                            </div>
+                                            <div class="p-col-6 no-button">
+                                                <button
+                                                    type="button"
+                                                    pButton
+                                                    (click)="onRejectAbortOperation()"
+                                                    label="No"
+                                                    class="p-button-secondary"
+                                                ></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-toast>
+                        </div>
+                        <!--Abort Operation From View Details Dialoge End -->
+                    </div>
+                    <div class="create-dialog">
+                        <p-dialog
+                            header="Name of the New Version"
+                            [modal]="true"
+                            [(visible)]="showNewVersion"
+                            class=""
+                            [closable]="false"
+                            [resizable]="false"
+                            [style]="{ width: '40vw' }"
+                        >
+                            <form [formGroup]="newVersionForm">
+                                <div class="input-container">
+                                    <p>Title of the new version name<span class="required">*</span></p>
+                                    <input
+                                        pInputText
+                                        id="float-input"
+                                        class="p-inputtext-md"
+                                        type="text"
+                                        formControlName="versionname"
+                                        required
+                                    />
+                                </div>
+                                <div class="btns-row">
+                                    <button
+                                        pButton
+                                        pRipple
+                                        (click)="showNewVersion = false"
+                                        type="button"
+                                        icon="pi pi-times"
+                                        iconPos="left"
+                                        label="Cancel"
+                                        class="p-button-warning mr-3 mt-3 right"
+                                    ></button>
+                                    <button
+                                        pButton
+                                        type="submit"
+                                        label="Save"
+                                        class="p-button-primary mt-3"
+                                        icon="pi pi-save"
+                                        [disabled]="!this.newVersionForm.valid"
+                                        (click)="submitNewVersion(newVersionForm.value)"
+                                    ></button>
+                                </div>
+                            </form>
+                            <ng-template pTemplate="footer"></ng-template>
+                        </p-dialog>
+                    </div>
+                </div>
+            </div>
+            <div slot="translationrequest" class="dockManagerContent">
+                <app-translation-request-view
+                    (selectProjectTR)="selectProjectTR($event)"
+                    [documentCount]="documentCount"
+                ></app-translation-request-view>
+            </div>
+            <div slot="reviewOrders" class="dockManagerContent">
+                <app-reviewer-requests></app-reviewer-requests>
+            </div>
+
+            <div slot="viewdetails" class="dockManagerContent" style="background-color: #fff">
+                <div *ngIf="isDCProject; else regularProject" class="text-800 p-8 font-normal">
+                    <h4>
+                        {{ isDCProjectStatusWiseMessage }}
+                    </h4>
+                </div>
+                <ng-template #regularProject>
+                    <app-project-details
+                        *ngIf="!isRawProject"
+                        (abortOperation)="abortOperation($event)"
+                    ></app-project-details>
+                </ng-template>
+            </div>
+            <div slot="versionHistory" class="dockManagerContent" style="background-color: #fff">
+                <app-version-history></app-version-history>
+            </div>
+            <div slot="detailstr" class="dockManagerContent" style="background-color: #fff">
+                <div *ngIf="!!selectedProject">
+                    <div class="p-3">
+                        <app-view-documents
+                            [selectedProject]="selectedProject"
+                            [title]="'Translation Request Description'"
+                            role="editor"
+                            [translation_request_id]="selectedProject?.['id']"
+                            (uploadDocumentsEvent)="uploadDocuments($event)"
+                        ></app-view-documents>
+                        <app-checklist
+                            [checklist]="checklist"
+                            [header]="'Translation Checklist'"
+                            [isToggle]="true"
+                            [showCheckbox]="false"
+                        ></app-checklist>
+                    </div>
+                </div>
+            </div>
+        </igc-dockmanager>
+    </div>
+    <div class="mainConatiner-hmi">
+        <!-- Table Container End-->
+
+        <!-- Delete Project From reject popup of Spiltter -->
+        <div class="cancle-message">
+            <p-confirmDialog
+                #cr
+                [style]="{ width: '25vw' }"
+                [baseZIndex]="10000"
+                class="cancel-dialog"
+                key="rejectProject"
+                [closable]="false"
+            >
+                <ng-template pTemplate="footer">
+                    <div class="yes-button">
+                        <button
+                            class="p-button-danger"
+                            type="button"
+                            pButton
+                            label="Yes"
+                            icon="pi pi-check"
+                            (click)="cr.accept()"
+                        ></button>
+                    </div>
+                    <div class="no-button">
+                        <button
+                            class="p-button-secondary"
+                            type="button"
+                            pButton
+                            label="No"
+                            icon="pi pi-times"
+                            (click)="cr.reject()"
+                        ></button>
+                    </div>
+                </ng-template>
+            </p-confirmDialog>
+        </div>
+
+        <!-- Update Project Status From Table Menu Popup Start -->
+        <div class="cancle-message">
+            <p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" [closable]="false" key="infoDialog">
+                <ng-template pTemplate="footer">
+                    <div class="">
+                        <button
+                            class="p-button-primary"
+                            type="button"
+                            pButton
+                            label="Ok"
+                            (click)="cd.reject()"
+                        ></button>
+                    </div>
+                </ng-template>
+            </p-confirmDialog>
+        </div>
+
+        <!-- Delete Project From reject popup of Spiltter End -->
+    </div>
+    <app-settings
+        [viewSetting]="viewSetting"
+        [isMappingAssistent]="isMappingAssistent"
+        [selectedProject]="selectedProduct"
+        [isMappingAssistentStart:start]
+        (hideSetting)="hideSetting()"
+    >
+    </app-settings>
+    <app-export [selectedProduct]="selectedProduct" [export]="export" (hideExport)="hideExport()"></app-export>
+</div>
+<p-toast></p-toast>

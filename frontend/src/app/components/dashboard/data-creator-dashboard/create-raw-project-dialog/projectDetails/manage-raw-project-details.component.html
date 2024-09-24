@@ -1,0 +1,175 @@
+<p class="mt-5 mb-4">
+    Enter the Project Details here. Mandatory inputs are marked with an '*'. Add project variants by adding them to the
+    variant list. One variant has to be selected as default by checking the checkbox next to it's name.
+</p>
+
+<form [formGroup]="formGroup">
+    <div class="grid p-fluid formgrid">
+        <div class="col-4 field">
+            <input
+                pInputText
+                type="text"
+                formControlName="projectName"
+                placeholder="Unique Project Name*"
+                [readonly]="model.useCase === UseCase.Edit"
+            />
+            <div *ngIf="projectName.touched && projectName.invalid">
+                <small id="projectName_mandatory" class="p-error block" *ngIf="projectName.errors?.['required']">
+                    Project name is mandatory
+                </small>
+                <small id="projectName_minlength" class="p-error block" *ngIf="projectName.errors?.['minlength']">
+                    Project name should have at least 3 characters
+                </small>
+                <small id="projectName_pattern" class="p-error block" *ngIf="projectName.errors?.['pattern']">
+                    Project name can contains 0-9, a-z, A-Z and special character '-'
+                </small>
+                <small
+                    id="projectName_already-exist"
+                    class="p-error block"
+                    *ngIf="projectName.errors?.['projectNameAlreadyExists'] && model.useCase === UseCase.Create"
+                >
+                    The Name already exists
+                </small>
+            </div>
+        </div>
+
+        <div class="col-4 field">
+            <input
+                pInputText
+                type="text"
+                formControlName="projectXmlId"
+                placeholder="Unique Project ID*"
+                [readonly]="model.useCase === UseCase.Edit"
+            />
+
+            <div *ngIf="projectXmlId.touched && projectXmlId.invalid">
+                <small id="projectXmlId_mandatory" class="p-error block" *ngIf="projectXmlId.errors?.['required']">
+                    ID is mandatory
+                </small>
+                <small id="projectXmlId_minlength" class="p-error block" *ngIf="projectXmlId.errors?.['minlength']">
+                    ID should have at least 3 characters
+                </small>
+                <small id="projectXmlId_pattern" class="p-error block" *ngIf="projectXmlId.errors?.['pattern']">
+                    ID can contains 0-9, a-z, A-Z and special character '-'
+                </small>
+                <small
+                    id="projectXmlId_already-exist"
+                    class="p-error block"
+                    *ngIf="projectXmlId.errors?.['projectIdAlreadyExists'] && model.useCase === UseCase.Create"
+                >
+                    The ID already exists
+                </small>
+            </div>
+        </div>
+
+        <div class="col-4 field">
+            <p-dropdown
+                [options]="model.availableOptions.projectTypes"
+                placeholder="Select Project Type*"
+                formControlName="projectType"
+                optionLabel="type"
+            ></p-dropdown>
+            <small id="projectTypes-help" class="p-error" *ngIf="projectType.invalid && projectType.touched">
+                You must select a Project Type
+            </small>
+        </div>
+
+        <div class="col-9 field">
+            <label for="description">Description</label>
+            <textarea
+                pInputTextarea
+                id="description"
+                rows="9"
+                formControlName="description"
+                placeholder="Add a Project Description..."
+            ></textarea>
+        </div>
+
+        <div class="col-3">
+            <div class="field">
+                <label for="variant">Project Variants</label>
+                <div class="p-inputgroup mb-2">
+                    <input id="variant" pInputText type="text" placeholder="Add Variant..." #variantInput />
+                    <button
+                        type="button"
+                        pButton
+                        pRipple
+                        icon="pi pi-plus"
+                        styleClass="p-button-warn"
+                        (click)="validateAndAddItem(variantInput.value)"
+                    ></button>
+                </div>
+                <div
+                    formArrayName="variants"
+                    class="text-base text-color p-2 border-1 border-solid surface-border border-round appearance-none outline-none h-10rem overflow-y-auto"
+                >
+                    <ng-container *ngFor="let variant of variantFormControls.controls; let i = index">
+                        <div [formGroupName]="i" class="field-checkbox">
+                            <p-checkbox
+                                id="variantName"
+                                [formControl]="variant['controls']['isDefault']"
+                                [binary]="true"
+                                (click)="showWarningOnVariantToggle()"
+                                (onChange)="variantCheckBoxChange(i)"
+                            ></p-checkbox>
+                            <label class="flex-grow-1">{{ variant.value.name }}</label>
+                            <button
+                                *ngIf="variant.value.canDelete"
+                                pButton
+                                pRipple
+                                type="button"
+                                icon="pi pi-trash"
+                                class="p-button-danger w-2rem h-2rem"
+                                (click)="removeItemByName(variant.value.name)"
+                            ></button>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <ng-container *ngIf="getVariantInputValidationErrors().length > 0">
+                <small *ngFor="let error of getVariantInputValidationErrors()" id="custom-variant" class="p-error">
+                    {{ error }}
+                </small>
+            </ng-container>
+        </div>
+    </div>
+
+    <!--  footer-->
+    <p-divider></p-divider>
+    <div class="flex justify-content-end flex w-full">
+        <p-button
+            *ngIf="stepControl.previousStep !== null"
+            class="p-2"
+            label="Back"
+            icon="pi pi-chevron-left"
+            (click)="previousStep()"
+        >
+        </p-button>
+
+        <p-button
+            *ngIf="stepControl.nextStep"
+            class="p-2"
+            label="Next"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            [disabled]="!formGroup.valid && model.useCase === UseCase.Create"
+            (onClick)="nextStep()"
+        ></p-button>
+        <!-- TODO: Remove this once dialog cancel at header would be applied -->
+        <p-button
+            label="Cancel"
+            class="p-2"
+            icon="pi pi-times"
+            styleClass="p-button-warning"
+            (click)="cancel()"
+        ></p-button>
+        <p-button
+            *ngIf="model.useCase === UseCase.Edit"
+            class="p-2"
+            icon="pi pi-save"
+            label="Save"
+            (onClick)="updateProjectDetails()"
+        ></p-button>
+    </div>
+</form>

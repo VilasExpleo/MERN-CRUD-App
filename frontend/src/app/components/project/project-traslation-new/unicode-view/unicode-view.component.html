@@ -1,0 +1,16 @@
+<div #myIdentifier></div>
+<p-table
+    [columns]="unicodeService.translationTextInEditor"
+    [value]="unicodeService.tabledata"
+    (contextmenu)="textcm.toggle($event)"
+>
+    <ng-template pTemplate="body" let-columns="columns">
+        <tr>
+            <td [pContextMenuRow]="value" *ngFor="let value of columns" class="unicode">
+                <span [innerHTML]="value.htmlchar"></span><br />
+                {{ value.unicode }}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-contextMenu [model]="unicodeService.unicodeActionItems" appendTo="body" #textcm></p-contextMenu>

@@ -1,0 +1,94 @@
+<div class="container">
+    <p>Font Linking</p>
+    <div class="font-linking">
+        <div class="p-field-radiobutton mt-3" *ngFor="let opt of fontLinking">
+            <p-radioButton name="opt" [value]="opt" [inputId]="opt.id" [(ngModel)]="selectedFontLinking">
+            </p-radioButton>
+            <label [for]="opt.id">{{ opt.name }}</label>
+        </div>
+    </div>
+</div>
+<div class="font-container mt-5">
+    <p-table [value]="fontOption" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Language</th>
+                <th>Available Fonts</th>
+                <th>Selected Font</th>
+                <th>Font Type</th>
+                <th>Font status</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-font>
+            <tr>
+                <td>
+                    {{ font.language_name }}
+                </td>
+                <td>
+                    <p-dropdown
+                        [options]="font.available_fonts"
+                        optionLabel="lable"
+                        optionValue=""
+                        placeholder="Select Font"
+                        (onChange)="getSelectedFont($event, font.index, font)"
+                    ></p-dropdown>
+                </td>
+                <td>{{ font.selected_font }}</td>
+                <td>{{ font.font_type }}</td>
+                <td>
+                    <span *ngIf="font.font_status" class="font-available"
+                        ><i class="pi pi-check-circle" aria-hidden="true"></i
+                    ></span>
+                    <span *ngIf="!font.font_status" class="font-available"
+                        ><i class="pi pi-times-circle" aria-hidden="true"></i
+                    ></span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<div class="pt-5 inline-flex btn-container">
+    <button
+        pButton
+        type="button"
+        icon="pi pi-times"
+        iconPos="left"
+        label="Cancel"
+        class="p-button-warning mr-3"
+        (click)="closePropertiesDialogOnCancel()"
+    ></button>
+    <button
+        pButton
+        type="button"
+        icon="pi pi-save"
+        iconPos="left"
+        label="Save"
+        iconPos="left"
+        (click)="postFontDetails()"
+    ></button>
+</div>
+
+<p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="yes-button">
+            <button
+                class="p-button-danger"
+                type="button"
+                pButton
+                label="Yes"
+                icon="pi pi-check"
+                (click)="cd.accept()"
+            ></button>
+        </div>
+        <div class="no-button">
+            <button
+                class="p-button-secondary"
+                type="button"
+                pButton
+                label="No"
+                icon="pi pi-times"
+                (click)="cd.reject()"
+            ></button>
+        </div>
+    </ng-template>
+</p-confirmDialog>

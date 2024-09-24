@@ -1,0 +1,26 @@
+.textWrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+:host {
+    ::ng-deep {
+        .hidearrowicon > button > i {
+            display: none !important;
+        }
+        .hidearrowicon > button {
+            pointer-events: none !important;
+        }
+        .p-treetable .p-treetable-thead > tr > th {
+            border: 1px solid lightgrey;
+            border-width: 0 1px 0px 0;
+        }
+
+        .worstCaseValue {
+            color: #6366F1;
+            text-decoration: underline;
+            font-weight: bolder;
+        }
+    }
+}

@@ -1,0 +1,111 @@
+<div class="col-12">
+    <p>
+        {{ commentHeaderMessage }}
+    </p>
+    <p-table
+        [value]="commentsData?.comments"
+        [lazy]="true"
+        (onLazyLoad)="getComments($event)"
+        dataKey="commentId"
+        [selection]="selectedComments"
+        (selectionChange)="onSelectionChange($event)"
+        (selectAllChange)="onSelectAllChange($event)"
+        [selectAll]="selectAll"
+        [loading]="isLoading"
+        [scrollable]="true"
+        scrollHeight="250px"
+        [rows]="10"
+        [totalRecords]="totalRecords"
+        [paginator]="true"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <p-tableHeaderCheckbox [value]="commentsData?.comments"></p-tableHeaderCheckbox>
+                </th>
+                <th>
+                    Date <p-columnFilter type="date" field="date" display="menu" [hideOnClear]="true"></p-columnFilter>
+                </th>
+                <th>
+                    Creator
+                    <p-columnFilter type="text" field="creator" display="menu" [hideOnClear]="true"></p-columnFilter>
+                </th>
+                <th id="role">
+                    Role
+                    <p-columnFilter field="role" matchMode="equals" display="menu" [hideOnClear]="true">
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                            <p-dropdown
+                                [ngModel]="userRoles[value]"
+                                [options]="getUserRoles()"
+                                (onChange)="filter(userRoles[$event.value])"
+                                placeholder="Role"
+                            >
+                            </p-dropdown>
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </ng-template>
+                    </p-columnFilter>
+                </th>
+                <th>
+                    Comments
+                    <p-columnFilter type="text" field="comment" display="menu" [hideOnClear]="true"></p-columnFilter>
+                </th>
+                <th>
+                    Type
+                    <p-columnFilter field="type" matchMode="equals" display="menu" [hideOnClear]="true">
+                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                            <p-dropdown
+                                [ngModel]="value"
+                                [options]="getCommentFlavor()"
+                                (onChange)="filter($event.value)"
+                                placeholder="Comment Flavor"
+                            >
+                                <ng-template let-option pTemplate="item">
+                                    <span [class]="'customer-badge status-' + option">
+                                        {{ option }}
+                                    </span>
+                                </ng-template>
+                            </p-dropdown>
+                        </ng-template>
+                    </p-columnFilter>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-comment>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="comment"></p-tableCheckbox>
+                </td>
+                <td>{{ comment.date | date : 'yyyy-MM-dd h:mm:ss' }}</td>
+                <td>{{ comment.creator }}</td>
+                <td>{{ comment.role }}</td>
+                <td>{{ comment.comment }}</td>
+                <td>
+                    <span class="border-round-3xl py-1 px-3 white-space-nowrap" [ngClass]="CommentType[comment.type]">
+                        {{ comment.type }}
+                    </span>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="commentsData">No history found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<div class="col-12">
+    <div class="pb-3 flex justify-content-end">
+        <p-button
+            pRipple
+            [label]="getCommentMessage()"
+            icon="pi pi-trash"
+            styleClass="p-button-danger"
+            (click)="deleteComment()"
+            [disabled]="commentsCount === 0"
+        ></p-button>
+    </div>
+</div>

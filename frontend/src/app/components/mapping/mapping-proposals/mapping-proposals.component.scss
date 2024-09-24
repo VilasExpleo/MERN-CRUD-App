@@ -1,0 +1,20 @@
+.stcId {
+    text-decoration: underline;
+    color: #418bfb;
+    cursor: pointer;
+}
+
+:host {
+    ::ng-deep .p-datatable-scrollable > .p-datatable-wrapper > .p-datatable-table > .p-datatable-thead,
+    .p-datatable-scrollable
+        > .p-datatable-wrapper
+        > .p-datatable-virtual-scrollable-body
+        > .cdk-virtual-scroll-content-wrapper
+        > .p-datatable-table
+        > .p-datatable-thead {
+        z-index: 0 !important;
+    }
+}
+.tableData {
+    justify-content: center;
+}

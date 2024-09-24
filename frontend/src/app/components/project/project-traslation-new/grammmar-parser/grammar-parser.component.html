@@ -1,0 +1,29 @@
+<div class="card mt-2">
+    <p-steps [model]="steps" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+    <app-decompress
+        [decompressDetailsModel]="decompressDetailsModel"
+        [selectedNode]="selectedNode"
+        *ngIf="activeIndex === 0"
+        [selectedSource]="selectedSource"
+    ></app-decompress>
+    <app-translate *ngIf="activeIndex === 1"></app-translate>
+    <app-compress *ngIf="activeIndex === 2"></app-compress>
+    <div class="text-center">
+        <button
+            pButton
+            type="button"
+            icon="pi pi-chevron-left"
+            (click)="backStep(activeIndex)"
+            class="p-button-outlined"
+            [disabled]="activeIndex === 0"
+        ></button>
+        <button
+            pButton
+            type="button"
+            icon="pi pi-chevron-right"
+            (click)="nextStep(activeIndex)"
+            class="p-button-outlined ml-4"
+            [disabled]="isDisabled()"
+        ></button>
+    </div>
+</div>

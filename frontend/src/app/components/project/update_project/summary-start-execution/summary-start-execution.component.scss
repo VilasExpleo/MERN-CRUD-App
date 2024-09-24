@@ -1,0 +1,90 @@
+.left-bottom-btn {
+    float: right;
+}
+.next-btn {
+    display: inline;
+}
+.no-button {
+    display: inline;
+}
+.yes-button {
+    display: inline;
+}
+:host ::ng-deep {
+     .no-button {
+        .p-button {
+            margin-top: 20px;
+        }
+        .p-button-label {
+            padding-left: 9px;
+        }
+    }
+     .cancel-dialog {
+        .pi-exclamation-triangle:before {
+            color: black;
+        }
+        .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+            color: black;
+            font-size: 14px;
+        }
+    }
+     .yes-button {
+        .p-button {
+            margin-top: 20px;
+        }
+        .p-button-label {
+            padding-left: 9px;
+        }
+    }
+     .container {
+        .p-calendar {
+            height: 60px;
+            width: 450px;
+            border-radius: 5px;
+        }
+        .p-calendar .p-datepicker {
+            min-width: 100%;
+            padding: 0px;
+        }
+    }
+}
+
+// button style end
+.project-diffrence {
+    margin-top: 30px;
+    border: 1px solid #304cd9;
+    border-radius: 6px;
+}
+.property-header {
+    color: #174a84;
+    font-weight: 500;
+    font-size: 14px;
+}
+hr {
+    border-top: solid 1px #a5c9ff;
+    margin: 0px;
+}
+
+.diffrence {
+    margin-top: 30px;
+    color: #174a84;
+    font-weight: 400;
+    font-size: 14px;
+}
+.sub-heading {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.schedule-header {
+    font-size: 20px;
+    color: #304cd9;
+    margin-bottom: 1%;
+}
+.button-schedule {
+    padding: 1em;
+    float: right;
+}
+.complete-img {
+    text-align: center;
+}

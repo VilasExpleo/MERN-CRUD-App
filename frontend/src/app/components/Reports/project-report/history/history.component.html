@@ -1,0 +1,37 @@
+<div class="pb-4">Generated report has been populated in the list below.</div>
+<div *ngIf="isLoading" class="spinner">
+    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+</div>
+<div class="border-1 border-300">
+    <div class="p-input-icon-left col-12 border-bottom-1 border-300">
+        <i class="pi pi-search ml-2" aria-hidden="true"></i>
+        <input type="text" placeholder="Search by name" [(ngModel)]="searchText" autofocus pInputText />
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <div class="card">
+                <ng-container *ngIf="history$ | async as reports">
+                    <p-dataView
+                        #dv
+                        [value]="reports | reportFilter : searchText"
+                        [rows]="4"
+                        [paginator]="true"
+                        [trackBy]="trackByFn"
+                    >
+                        <ng-template let-report pTemplate="listItem">
+                            <div class="col-12 cursor-pointer" [ngClass]="{ 'bg-blue-100': report.isSelected }">
+                                <app-report-item
+                                    [report]="report"
+                                    [user]="user"
+                                    [tab]="'history'"
+                                    [projectId]="reportData?.projectDetails.project_id"
+                                    (refreshSchedule)="loadReportsHistory()"
+                                ></app-report-item>
+                            </div>
+                        </ng-template>
+                    </p-dataView>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

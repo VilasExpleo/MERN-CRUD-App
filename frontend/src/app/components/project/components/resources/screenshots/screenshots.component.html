@@ -1,0 +1,30 @@
+<p>
+    Upload reference screenshots of the target UI here. If your project supports screenshots, these images can be
+    displayed during translation along with an optional indicator of the text position.
+</p>
+<p-fileUpload
+    accept=".zip"
+    (onSelect)="onScreenshotsSelected($event)"
+    [auto]="true"
+    [customUpload]="true"
+    [chooseLabel]="uploadSettings.chooseLabel"
+    [chooseIcon]="uploadSettings.chooseIcon"
+    [disabled]="fileUploadInProgress"
+>
+    <ng-template pTemplate="content" *ngIf="fileUploaded || fileUploadInProgress">
+        <div
+            class="p-fileupload-row p-flex p-flexboxgrid p-justify-between"
+            *ngIf="fileUploaded || fileUploadInProgress"
+        >
+            <div class="p-fileupload-filename col-3 col-offset-3">
+                <span> {{ screenshotsFile.name }}</span>
+            </div>
+            <div class="p-fileupload-filesize" *ngIf="screenshotsFile.size > 0">
+                <span class="ml-5">{{ getFileSize(screenshotsFile.size) }}</span>
+            </div>
+            <div class="p-fileupload-buttons">
+                <p-button [icon]="uploadSettings.clearIcon" (onClick)="showConfirmation()" [styleClass]="uploadSettings.clearStyleClass"></p-button>
+            </div>
+        </div>
+    </ng-template>
+</p-fileUpload>

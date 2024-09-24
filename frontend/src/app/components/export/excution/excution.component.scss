@@ -1,0 +1,28 @@
+:host {
+    ::ng-deep{
+        .p-accordion .p-accordion-header .p-accordion-header-link {
+            background: #c2d6f7;
+            border-color: #5897fc;
+            color: #343a40;
+        }
+        .p-accordion .p-accordion-header:not(.p-disabled).p-highlight .p-accordion-header-link {
+            background: #c2d6f7;
+            border-color: #5897fc;
+            color: #343a40;
+        }
+        .p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link {
+            background: #c2d6f7;
+            border-color: #5897fc;
+            color: #343a40;
+        }
+        .p-accordion .p-accordion-content {
+            border-color: #5897fc;
+        }
+        .p-dropdown {
+            width: 33% !important;
+        }
+    }
+}
+.excutionHeading {
+    color: #174a84;
+}

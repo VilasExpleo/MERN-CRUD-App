@@ -1,0 +1,8 @@
+<div class="container" id="container">
+    <app-left-side-bar [leftSidebarModel]="leftSidebarStatistics"></app-left-side-bar>
+    <quill-editor #editor [readOnly]="options.readonly" class="w-full h-full" [modules]="quillModule"></quill-editor>
+</div>
+<app-translation-statistics
+    [model]="translationStatistics"
+    (unresolvedSymbolsEvent)="showUnresolvedSymbolDialog()"
+></app-translation-statistics>

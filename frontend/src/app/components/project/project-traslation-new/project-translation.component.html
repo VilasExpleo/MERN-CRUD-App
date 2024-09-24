@@ -1,0 +1,126 @@
+<div class="main-container">
+    <app-header-translation></app-header-translation>
+    <div class="ignitecust">
+        <igc-dockmanager id="dockManager">
+            <div class="overflow-x-hidden" slot="structure">
+                <app-structure-view [excludeMetaTextCount]="excludeMetaTextCount"></app-structure-view>
+            </div>
+            <div class="overflow-x-hidden" slot="table">
+                <app-table-view [totalTextNode]="totalTextNode"></app-table-view>
+            </div>
+            <div class="overflow-x-hidden" slot="translationid">
+                <app-translate-view></app-translate-view>
+            </div>
+            <div class="overflow-x-hidden" slot="properties">
+                <app-properties-view></app-properties-view>
+            </div>
+            <div class="overflow-x-hidden" slot="texthistory">
+                <app-history-view></app-history-view>
+            </div>
+            <div class="overflow-x-hidden" slot="translationhistory">
+                <app-translation-history></app-translation-history>
+            </div>
+            <div class="overflow-x-hidden" slot="unicode">
+                <app-unicode-view></app-unicode-view>
+            </div>
+            <div class="overflow-x-hidden" slot="mappingproposals">
+                <app-mapping-proposal></app-mapping-proposal>
+            </div>
+        </igc-dockmanager>
+    </div>
+</div>
+
+<!-- State change confirmation dialog -->
+<div>
+    <p-dialog
+        header="Checking Translation"
+        [(visible)]="projectTranslationService.displayChangeStateDialog"
+        [modal]="true"
+        [resizable]="false"
+        [closable]="false"
+    >
+        <div class="warnig-para">
+            <p>{{ projectTranslationService.traslateStatus }}</p>
+        </div>
+        <div class="mt-3">
+            <span class="warning-icon">
+                <i class="pi pi-exclamation-triangle inline" aria-hidden="true"></i>
+            </span>
+            <p class="inline ml-2">
+                {{ projectTranslationService.translateWarning }}
+            </p>
+        </div>
+        <div class="lock-btns mt-5 text-right">
+            <button
+                pButton
+                label="Done"
+                type="submit"
+                icon="pi pi-check-square"
+                iconPos="left"
+                class="p-button-success mr-3"
+                (click)="projectTranslationService.changeState(projectTranslationService.state, 1)"
+            ></button>
+            <button
+                pButton
+                type="button"
+                label="Help"
+                class="p-button-help mr-3"
+                icon="pi pi-question"
+                iconPos="left"
+            ></button>
+            <button
+                pButton
+                pRipple
+                icon="pi pi-times"
+                iconPos="left"
+                type="button"
+                label="Cancel"
+                class="p-button-warning mr-3"
+                (click)="closeChangeStateDialog()"
+            ></button>
+        </div>
+        <ng-template pTemplate="footer"></ng-template>
+    </p-dialog>
+</div>
+<!-- Copy Paste -->
+<div>
+    <p-dialog
+        header="Confirm Transalation Paste"
+        [(visible)]="projectTranslationService.openConfirmDialog"
+        [modal]="true"
+        [baseZIndex]="10000"
+        [draggable]="false"
+        [resizable]="false"
+    >
+        <p>
+            Are you sure want to paste the translation?<br />
+
+            It will update the data and not possible to revert!
+        </p>
+
+        <ng-template pTemplate="footer">
+            <p-button
+                icon="pi pi-thumbs-up"
+                label="Ok"
+                class="p-button-text"
+                (click)="projectTranslationService.confirmToSave(true)"
+            ></p-button>
+
+            <button
+                pButton
+                type="button"
+                icon="pi pi-times"
+                label="Cancel"
+                class="p-button-warning"
+                (click)="projectTranslationService.confirmToSave(false)"
+            ></button>
+        </ng-template>
+    </p-dialog>
+   
+</div>
+<p-confirmDialog
+    [closable]="false"
+    header="Confirmation"
+    icon="pi pi-exclamation-triangle"
+    [style]="{ width: '30vw' }"
+></p-confirmDialog>

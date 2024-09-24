@@ -1,0 +1,11 @@
+<p-tabView (onChange)="handleTabViewChange($event)">
+    <p-tabPanel header="Comments ({{ commentCount$ | async }})">
+        <app-comments *ngIf="tabIndex === 0"></app-comments>
+    </p-tabPanel>
+    <p-tabPanel header="References  ({{ referencesCount$ | async }})">
+        <app-references *ngIf="tabIndex === 1"></app-references>
+    </p-tabPanel>
+    <p-tabPanel header="Error Logs">
+        <app-error-logs></app-error-logs>
+    </p-tabPanel>
+</p-tabView>

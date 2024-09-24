@@ -1,0 +1,14 @@
+:host {
+    ::ng-deep .customDialog {
+        background-color: white !important;
+        width: 92vw !important;
+    }
+}
+.title {
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+.pull-right {
+    bottom: 0;
+    float: right;
+}

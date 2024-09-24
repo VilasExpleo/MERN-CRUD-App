@@ -1,0 +1,100 @@
+<div (click)="onClickOutside($event)" [ngClass]="placeholderDialogModel.visible ? 'show' : ''" class="screen-mask">
+    <p-dialog
+        [(visible)]="placeholderDialogModel.visible"
+        [closable]="false"
+        [draggable]="false"
+        [focusTrap]="true"
+        [style]="{ width: '50vw' }"
+        (onShow)="onShowValidation()"
+    >
+        <ng-template pTemplate="header">
+            <div class="flex w-full flex-row justify-content-between">
+                <span class="p-dialog-title">Attributes of {{ placeholderDialogModel?.placeholder.identifier }}</span>
+                <div class="p-dialog-header-icons" style="display: flex">
+                    <button
+                        (click)="onClose()"
+                        class="p-dialog-header-icon p-dialog-header-maximize p-link"
+                        icon="pi pi-times"
+                        pButton
+                    ></button>
+                </div>
+            </div>
+        </ng-template>
+
+        <form name="placeholderForm">
+            <div class="flex py-2">
+                <input
+                    [(ngModel)]="placeholderDialogModel.placeholder.description"
+                    [autofocus]="true"
+                    class="w-full"
+                    name="description"
+                    pInputText
+                    placeholder="description"
+                />
+            </div>
+            <div class="flex py-2 align-content-between">
+                <div class="w-10 flex justify-content-start gap-3">
+                    <div class="w-6">
+                        <p-dropdown
+                            (onChange)="onChangeDataType()"
+                            [(ngModel)]="selectedDataType"
+                            [ngClass]="{ 'ng-invalid ng-dirty': validationResult.field === 'dataType' }"
+                            [options]="dataTypes"
+                            [required]="true"
+                            appendTo="body"
+                            name="dataType"
+                            optionLabel="value"
+                            placeholder="Select a data type"
+                            styleClass="w-full"
+                        ></p-dropdown>
+                    </div>
+
+                    <div class="w-6 flex justify-content-start">
+                        <div class="w-full longest-case-value-wrapper">
+                            <div class="p-inputgroup">
+                                <input
+                                    (keyup)="onChangeDataType()"
+                                    [(ngModel)]="placeholderDialogModel.placeholder.longestCaseValue"
+                                    [ngClass]="{ 'ng-invalid ng-dirty': validationResult.field == 'longestCaseValue' }"
+                                    class="w-full"
+                                    name="longestCaseValue"
+                                    pInputText
+                                    pTooltip="{{ longestCaseValueTooltip }}"
+                                    placeholder="longest case value"
+                                    tooltipPosition="top"
+                                />
+                                <span
+                                    *ngIf="selectedDataType?.key === PlaceholderDataTypeEnum.DynamicText"
+                                    class="p-inputgroup-addon"
+                                    >%</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-2 flex align-items-center justify-content-end gap-1">
+                    <p-checkbox
+                        [(ngModel)]="placeholderDialogModel.placeholder.extraLine"
+                        [binary]="true"
+                        inputId="extraLine"
+                        id="extraLine"
+                        name="extraLine"
+                    ></p-checkbox>
+                    <label for="extraLine">Extra Line</label>
+                </div>
+            </div>
+            <div class="flex py-2 align-content-between">
+                <div class="w-12 flex justify-content-start">
+                    <p-message
+                        *ngIf="validationResult.field != ''"
+                        severity="error"
+                        text="{{ validationResult.message }}"
+                    >
+                    </p-message>
+                </div>
+            </div>
+        </form>
+
+        <ng-template pTemplate="footer"></ng-template>
+    </p-dialog>
+</div>

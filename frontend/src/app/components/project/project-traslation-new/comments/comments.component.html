@@ -1,0 +1,167 @@
+<div class="mb-3 flex justify-content-between" *ngIf="model?.textNode?.languageId">
+    <p-button label="Add Comment" type="button" styleClass="p-button-outlined" (click)="showAddCommentDialog()">
+        <span class="mr-3"><i class="pi pi-comment" aria-hidden="true"></i></span>
+    </p-button>
+    <span class="p-input-icon-left">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input type="text" pInputText placeholder="Search keyword" [(ngModel)]="searchKey" />
+    </span>
+    <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt)"></button>
+</div>
+<p-table
+    #dt
+    [value]="model?.comments | commentFilter : searchKey"
+    [rowHover]="true"
+    [rows]="10"
+    dataKey="id"
+    [loading]="isLoading"
+    [showCurrentPageReport]="true"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th id="first-column"></th>
+            <th id="date" pSortableColumn="createdOn">
+                Date
+                <p-columnFilter type="date" field="createdOn" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th id="creator" pSortableColumn="user">
+                Creator
+                <p-columnFilter type="text" field="user" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th id="role" pSortableColumn="role">
+                Role
+                <p-columnFilter
+                    type="text"
+                    field="role"
+                    matchMode="equals"
+                    [showMatchModes]="false"
+                    [showOperator]="true"
+                    [showAddButton]="true"
+                    display="menu"
+                    [hideOnClear]="true"
+                >
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            class="capitalize"
+                            [ngModel]="value"
+                            [options]="userRoles"
+                            optionLabel="label"
+                            optionValue="value"
+                            (onChange)="filter($event.value)"
+                            placeholder="Role"
+                        >
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th id="visibility" pSortableColumn="isPrivate">
+                Visibility
+                <p-columnFilter
+                    type="text"
+                    field="isPrivate"
+                    matchMode="equals"
+                    [showMatchModes]="false"
+                    [showOperator]="true"
+                    [showAddButton]="true"
+                    display="menu"
+                    [hideOnClear]="true"
+                >
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="['Public', 'Private']"
+                            (onChange)="filter($event.value)"
+                            placeholder="Visibility"
+                        >
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th id="flavour" pSortableColumn="type">
+                Type
+                <p-columnFilter
+                    type="text"
+                    field="type"
+                    display="menu"
+                    matchMode="equals"
+                    [showMatchModes]="false"
+                    [showOperator]="true"
+                    [showAddButton]="true"
+                    [hideOnClear]="true"
+                >
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="commentType"
+                            (onChange)="filter($event.value)"
+                            placeholder="Type"
+                        ></p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th id="action">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-comments let-expanded="expanded">
+        <tr [pSelectableRow]="comments">
+            <td>
+                <button
+                    type="button"
+                    pButton
+                    pRipple
+                    [pRowToggler]="comments"
+                    class="p-button-text p-button-rounded p-button-plain"
+                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                ></button>
+            </td>
+
+            <td>
+                {{ comments.createdOn | date : 'yyyy-MM-dd h:mm:ss' }}
+            </td>
+            <td>
+                {{ comments.user }}
+            </td>
+            <td class="capitalize">
+                {{ comments.role }}
+            </td>
+            <td>
+                <span>
+                    <i
+                        aria-hidden="true"
+                        class="pi mr-2"
+                        [ngClass]="{
+                            'pi-eye-slash': comments.isPrivate === 'Private',
+                            'pi-eye': comments.isPrivate === 'Public'
+                        }"
+                    ></i>
+                    {{ comments.isPrivate }}
+                </span>
+            </td>
+            <td>
+                <span class="border-round-3xl py-2 px-3 white-space-nowrap" [ngClass]="CommentType[comments.type]">
+                    {{ comments.type }}
+                </span>
+            </td>
+            <td>
+                <p-button
+                    [disabled]="!comments.canDelete"
+                    (onClick)="deleteComment(comments?.id, comments?.isSelfComment)"
+                    icon="pi pi-trash"
+                    styleClass="p-button-rounded p-button-danger p-button-text"
+                ></p-button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-comments>
+        <tr>
+            <td colspan="12">
+                <p class="p-3 pl-8">{{ comments.comment }}</p>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="8">No data found.</td>
+        </tr>
+    </ng-template>
+</p-table>

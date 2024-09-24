@@ -1,0 +1,209 @@
+<p-table
+    [columns]="cols"
+    [value]="tablearray"
+    responsiveLayout="scroll"
+    (onLazyLoad)="onLazyFilterTableData($event)"
+    (onRowSelect)="onTableRowSelect($event)"
+    [lazy]="true"
+    [scrollable]="true"
+    [totalRecords]="totalRecords"
+    [virtualRowHeight]="50"
+    [rows]="10"
+    scrollHeight="600px"
+    selectionMode="single"
+    #datatable
+    [loading]="loading"
+>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th pSortableColumn="sequence_no" pResizableColumn style="min-width: 180px">
+                Seq No
+                <p-sortIcon field="sequence_no"></p-sortIcon>
+            </th>
+            <th pSortableColumn="stc_id" pResizableColumn style="min-width: 180px">
+                Sample Text ID
+                <p-sortIcon field="stc_id"></p-sortIcon>
+                <p-columnFilter type="numeric" field="stc_id" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="brand_name" pResizableColumn style="min-width: 180px">
+                Brand
+                <p-sortIcon field="brand_name"></p-sortIcon>
+                <p-columnFilter field="brand_name" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getBrandsName()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-brand pTemplate="item">
+                                <span [class]="'customer-badge status-' + brand">
+                                    {{ brand }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pSortableColumn="path" pResizableColumn style="min-width: 180px">
+                Group Path
+                <p-sortIcon field="path"></p-sortIcon>
+                <p-columnFilter type="text" field="path" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="type_val" pResizableColumn style="min-width: 180px">
+                Type
+                <p-sortIcon field="type_val"></p-sortIcon>
+                <p-columnFilter field="type_val" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getType()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pSortableColumn="ideal_text" pResizableColumn style="min-width: 180px">
+                Ideal Text
+                <p-sortIcon field="ideal_text"></p-sortIcon>
+                <p-columnFilter type="text" field="ideal_text" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="short_form" pResizableColumn style="min-width: 180px">
+                Shortform
+                <p-sortIcon field="short_form"></p-sortIcon>
+                <p-columnFilter type="text" field="short_form" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="gender_val" pResizableColumn style="min-width: 180px">
+                Gender
+                <p-sortIcon field="gender_val"></p-sortIcon>
+                <p-columnFilter field="gender_val" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getGender()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pSortableColumn="numerous_val" pResizableColumn style="min-width: 180px">
+                Numerous
+                <p-sortIcon field="numerous_val"></p-sortIcon>
+                <p-columnFilter field="numerous_val" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getNumerous()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pSortableColumn="description" pResizableColumn style="min-width: 180px">
+                Description
+                <p-sortIcon field="description"></p-sortIcon>
+                <p-columnFilter type="text" field="description" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="mapped" pResizableColumn style="min-width: 180px">
+                Mapped
+                <p-sortIcon field="mapped"></p-sortIcon>
+                <p-columnFilter field="mapped" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getMapped()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData">
+            <td>
+                {{ rowData.sequence_no }}
+            </td>
+            <td>
+                {{ rowData.stc_id }}
+            </td>
+            <td>
+                <span *ngIf="rowData.brand_name === 'PORSCHE'">
+                    <img src="../../../../assets/images/brands/porsche-svg.svg" alt="PORSCHE" />
+                </span>
+                <span *ngIf="rowData.brand_name === 'VW_11'">
+                    <img src="../../../../assets/images/brands/volkswagen.svg" alt="VW" />
+                </span>
+                <span *ngIf="rowData.brand_name === 'SEAT'">
+                    <img src="../../../../assets/images/brands/seat-2.svg" alt="SEAT" />
+                </span>
+                <span *ngIf="rowData.brand_name === 'AUDI'">
+                    <img src="../../../../assets/images/brands/audi.svg" alt="AUDI" />
+                </span>
+                <span *ngIf="rowData.brand_name === 'SKODA'">
+                    <img src="../../../../assets/images/brands/skoda1.svg" alt="SKODA" />
+                </span>
+                <span *ngIf="rowData.brand_name === 'MAN'">
+                    <img src="../../../../assets/images/brands/Man.svg" alt="MAN" />
+                </span>
+            </td>
+            <td>
+                <span class="textWrap" title=" {{ rowData.path }}">{{ rowData.path }}</span>
+            </td>
+            <td>
+                {{ rowData.type_val }}
+            </td>
+            <td>
+                <span class="textWrap" title=" {{ rowData.ideal_text }}">{{ rowData.ideal_text }}</span>
+            </td>
+            <td>
+                <span class="textWrap" title="{{ arrayToStringWithPipe(rowData.short_form) }}">{{
+                    arrayToStringWithPipe(rowData.short_form)
+                }}</span>
+            </td>
+            <td>
+                {{ rowData.gender_val }}
+            </td>
+            <td>
+                {{ rowData.numerous_val }}
+            </td>
+            <td>
+                <span class="textWrap" title="{{ arrayToStringWithPipe(rowData.description) }}">{{
+                    arrayToStringWithPipe(rowData.description)
+                }}</span>
+            </td>
+            <td>
+                {{ rowData.mapped }}
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

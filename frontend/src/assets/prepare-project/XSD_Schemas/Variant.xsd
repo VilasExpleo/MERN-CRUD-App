@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="VariantManager">
+		<annotation>
+			<documentation>The VariantManager is the managing component of all
+				variants of a project. It holds the tree of variants.
+			</documentation>
+		</annotation>
+		
+		<sequence>
+			<element name="Variant" type="hmi:Variant" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>The tree of variants</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		
+		<attribute name="Default" type="hmi:VariantId" use="optional">
+			<annotation>
+				<documentation>One variant can be marked as the default variant.
+					This variant is then used on elements which don't specify a
+					variant. Explicitly specifying a variant is only necessary on
+					elements which don't use the default.
+				</documentation>
+			</annotation>
+		</attribute>
+		
+	</complexType>
+
+	<complexType name="Variant">
+		<annotation>
+			<documentation>A project can be represented in different variants,
+				e.g. a day- and a night-variant. Texts can be different between the
+				variants but usually the bigger part of texts are identical.
+			</documentation>
+		</annotation>
+		
+		<sequence>
+			<element name="Variant" type="hmi:Variant" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>
+						A variant can contain child-variants. A tree of
+						variants can be expressed. Child-variants inherit their texts from
+						parent variants.
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		
+		<attribute name="Name" type="string" use="required">
+			<annotation>
+				<documentation>The name of the variant. It is more for informational
+					purposes.
+				</documentation>
+			</annotation>
+		</attribute>
+		
+		<attribute name="Id" type="hmi:VariantId" use="required">
+			<annotation>
+				<documentation>The ID of a variant. Variants are mainly identified
+					by their ID. It should stay fixed throughout the runtime of a
+					project.
+				</documentation>
+			</annotation>
+		</attribute>
+		
+	</complexType>
+
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+	<simpleType name="VariantId">
+		<annotation>
+			<documentation>Variants have this ID-type. IDs must be unique
+				throughout the project.
+			</documentation>
+		</annotation>
+		<restriction base="long"></restriction>
+	</simpleType>
+
+</schema>

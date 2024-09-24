@@ -1,0 +1,210 @@
+<div class="container">
+    <p-contextMenu appendTo="body" #cm [model]="columnConfigMenu" [styleClass]="isContextMenuVisible ? 'hidden' : ''">
+    </p-contextMenu>
+    <p-table
+        [loading]="tblLoading"
+        id="tr-table"
+        [resizableColumns]="true"
+        [columns]="objTabelService.header.projectTabelColumns"
+        [value]="virtualData"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 305px)"
+        [virtualScrollItemSize]="46"
+        [lazy]="true"
+        (onLazyLoad)="loadTableDataLazy($event)"
+        [reorderableColumns]="true"
+        [contextMenu]="cm"
+        selectionMode="multiple"
+        [metaKeySelection]="true"
+        responsiveLayout="scroll"
+        [(selection)]="selectedTableRow"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [(contextMenuSelection)]="selectedTableRow"
+        [virtualScroll]="false"
+        [customSort]="true"
+        (onFilter)="onFilterApplied($event)"
+        #dataTable
+    >
+        <ng-template pTemplate="caption">
+            <button
+                pButton
+                label="Clear"
+                class="p-button-outlined"
+                icon="pi pi-filter-slash"
+                (click)="clear(dataTable)"
+            ></button>
+            <div style="padding: 10px; display: inline">
+                <button
+                    type="button"
+                    pButton
+                    pRipple
+                    icon="pi pi-file-excel"
+                    (click)="exportDatainExcel()"
+                    class="p-button-success p-mr-2"
+                    pTooltip="XLS"
+                    tooltipPosition="bottom"
+                ></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <ng-container *ngFor="let col of objTabelService.header.projectTabelColumns">
+                    <th
+                        *ngIf="col.display"
+                        [pSortableColumn]="col.field"
+                        pResizableColumn
+                        pReorderableColumn
+                        [pContextMenuRow]="objTabelService.header.projectTabelColumns"
+                        (contextmenu)="this.role !== 'translator' ? setShowHideValue() : ''"
+                    >
+                        {{ col.header }}
+                        <ng-container>
+                            <p-columnFilter
+                                [showMatchModes]="isDefaultFilter(col)"
+                                [showOperator]="true"
+                                [showAddButton]="true"
+                                [type]="col.filterType"
+                                display="menu"
+                                [hideOnClear]="true"
+                                [field]="{ field: col.field, langCode: col.langCode } | json"
+                            >
+                                <ng-template
+                                    *ngIf="isProofReaderOrReviewerStatus(col); else notProofread"
+                                    pTemplate="filter"
+                                    let-value
+                                    let-filter="filterCallback"
+                                >
+                                    <p-dropdown
+                                        [ngModel]="value"
+                                        [options]="proofreadStatus"
+                                        (onChange)="filter($event.value)"
+                                        optionLabel="state"
+                                        placeholder="Status"
+                                    >
+                                        <ng-template let-option pTemplate="item">
+                                            <div class="inline-block vertical-align-middle">
+                                                <p-chip
+                                                    [label]="textnodeStatus[option]"
+                                                    [icon]="getProofReadOrReviewStatusIcon(col.field)"
+                                                    [styleClass]="'text-node-status ' + textnodeStatus[option]"
+                                                ></p-chip>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                </ng-template>
+                                <ng-template
+                                    *ngIf="isStateStatus(col); else notProofread"
+                                    pTemplate="filter"
+                                    let-value
+                                    let-filter="filterCallback"
+                                >
+                                    <p-dropdown
+                                        [ngModel]="value"
+                                        [options]="stateStatus"
+                                        optionLabel="label"
+                                        optionValue="value"
+                                        (onChange)="filter($event.value)"
+                                        placeholder="Status"
+                                    >
+                                        <ng-template let-option pTemplate="item">
+                                            <div class="inline-block vertical-align-middle">
+                                                <p-chip
+                                                    [label]="option.value"
+                                                    icon="icon-pending"
+                                                    [styleClass]="'text-node-status ' + option.value"
+                                                ></p-chip>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                </ng-template>
+                                <ng-template
+                                    *ngIf="isCustomFilter(col); else notProofread"
+                                    pTemplate="filter"
+                                    let-value
+                                    let-filter="filterCallback"
+                                >
+                                    <p-dropdown
+                                        [ngModel]="value"
+                                        [options]="dynamicFilterOptions"
+                                        (onChange)="filter($event.value)"
+                                        (onShow)="getDynamicOptions(col.field)"
+                                        optionLabel="label"
+                                        optionValue="value"
+                                        placeholder="Select option"
+                                    >
+                                    </p-dropdown>
+                                </ng-template>
+                                <ng-template
+                                    *ngIf="isCustomFilter(col); else notProofread"
+                                    pTemplate="filter"
+                                    let-value
+                                    let-filter="filterCallback"
+                                >
+                                    <app-label-filter
+                                        [projectId]="projectId"
+                                        (filter)="filter($event)"
+                                    ></app-label-filter>
+                                </ng-template>
+                            </p-columnFilter>
+                        </ng-container>
+                        <ng-template #notProofread>
+                            <p-columnFilter
+                                [type]="col.filterType"
+                                [field]="{ field: col.field, langCode: col.langCode } | json"
+                                display="menu"
+                                [hideOnClear]="true"
+                            >
+                            </p-columnFilter>
+                        </ng-template>
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                </ng-container>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr
+                style="height: 46px"
+                [pSelectableRow]="rowData"
+                [pSelectableRowIndex]="rowIndex"
+                #rowIndexData
+                [attr.id]="rowIndex"
+                [attr.name]="rowIndex"
+                [pContextMenuRow]="rowData"
+            >
+                <ng-container *ngFor="let col of objTabelService.header.projectTabelColumns">
+                    <td
+                        *ngIf="col.display"
+                        (contextmenu)="getTabelDataRowContextmenu(rowData, col)"
+                        (click)="getRowOnClick(rowData, col, rowIndex)"
+                        (contextmenu)="getRowOnClick(rowData, col, rowIndex)"
+                    >
+                        <ng-container *ngIf="col.field === 'property_name'">
+                            <app-state-icon-button [value]="findValue(rowData, col)"></app-state-icon-button>
+                        </ng-container>
+                        <p-chip
+                            *ngIf="isProofReaderOrReviewerStatus(col)"
+                            [label]="textnodeStatus[findValue(rowData, col)] ?? statusNotAvailable"
+                            [icon]="getProofReadOrReviewStatusIcon(col.field)"
+                            [styleClass]="'text-node-status ' + textnodeStatus[findValue(rowData, col)]"
+                        ></p-chip>
+                        <ng-container *ngIf="isColumnSourceTextOrTextType(col.field)">
+                            <app-state-icon-button
+                                [textNodeType]="col.field"
+                                [mapped]="findValue(rowData, 'mapped') === 'Yes' ? true : false"
+                                [classSpan]="tableStatus[col.field]"
+                                [value]="findValue(rowData, col)"
+                            >
+                            </app-state-icon-button>
+                        </ng-container>
+                        <ng-container *ngIf="isStatusButton(col)">
+                            <app-state-icon-button [value]="findValue(rowData, col)"></app-state-icon-button>
+                        </ng-container>
+                        <ng-container *ngIf="isLabels(col)">
+                            <app-label-icon [labels]="findValue(rowData, col)"></app-label-icon>
+                        </ng-container>
+                    </td>
+                </ng-container>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

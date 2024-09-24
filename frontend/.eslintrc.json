@@ -1,0 +1,72 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "prettier",
+        "plugin:prettier/recommended"
+      ],
+      "plugins": ["unused-imports", "sonarjs"],
+      "rules": {
+        "prettier/prettier": "error",
+        "arrow-body-style": "off",
+        "prefer-arrow-callback": "off",
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "unused-imports/no-unused-imports": "error",
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "sonarjs/no-empty-collection": "error",
+        "sonarjs/no-identical-functions": "error",
+        "sonarjs/no-nested-switch": "error",
+        "sonarjs/no-same-line-conditional": "error",
+        "sonarjs/no-unused-collection": "error",
+        "sonarjs/prefer-object-literal": "error",
+        "sonarjs/prefer-single-boolean-return": "error"
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "prettier",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "prettier/prettier": "error"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+<p-tabView>
+    <p-tabPanel [header]="spellcheckTabText">
+        <p-fieldset [legend]="'Global Spellcheck - ' + spellcheck?.spellchecker">
+            <div class="text-xl">
+                <p>{{ currentVersionText }} {{ spellcheck?.currentVersion }}</p>
+                <p>{{ latestVersionText }} {{ spellcheck?.latestVersion }}</p>
+            </div>
+            <p class="mt-5">{{ displayMessage(spellcheck) }}</p>
+        </p-fieldset>
+    </p-tabPanel>
+</p-tabView>

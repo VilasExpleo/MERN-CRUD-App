@@ -1,0 +1,105 @@
+<p-contextMenu appendTo="body" #cm [model]="columnConfigMenu"> </p-contextMenu>
+<p-table
+    [value]="versionHistoryData"
+    (onLazyLoad)="versionHistoryDataLazy($event)"
+    [lazy]="true"
+    responsiveLayout="scroll"
+    [scrollable]="true"
+    [virtualRowHeight]="50"
+    [rows]="10"
+    scrollHeight="600px"
+    selectionMode="single"
+    #datatable
+    [contextMenu]="cm"
+    [(contextMenuSelection)]="projectVersionHistory"
+>
+    <ng-template pTemplate="header" let-columns>
+        <tr [pContextMenuRow]="projectVersionHistory">
+            <th pSortableColumn="title" pResizableColumn style="min-width: 180px">
+                Project Name
+                <p-sortIcon field="title"></p-sortIcon>
+                <p-columnFilter type="text" field="title" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="version_id" pResizableColumn style="min-width: 150px">
+                Version
+                <p-sortIcon field="version_id"></p-sortIcon>
+                <p-columnFilter type="numeric" field="version_id" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="version_name" pResizableColumn style="min-width: 150px">
+                Version Name
+                <p-sortIcon field="version_name"></p-sortIcon>
+                <p-columnFilter type="text" field="version_name" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="user_name" pResizableColumn style="min-width: 200px">
+                Editor Name
+                <p-sortIcon field="user_name"></p-sortIcon>
+                <p-columnFilter type="text" field="user_name" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="updated_on" pResizableColumn style="min-width: 150px">
+                Date
+                <p-sortIcon field="updated_on"></p-sortIcon>
+                <p-columnFilter type="date" field="updated_on" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="mass_operation_type" pResizableColumn style="min-width: 180px">
+                Description
+                <p-sortIcon field="mass_operation_type"></p-sortIcon>
+                <p-columnFilter field="mass_operation_type" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getMassOperation()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Mass Operation Type"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option">
+                                    {{ option }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th pResizableColumn style="min-width: 180px">Download Report</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex" *ngIf="versionHistoryData">
+        <tr [pSelectableRow]="rowData" [pContextMenuRow]="projectVersionHistory">
+            <td>
+                {{ rowData.title }}
+            </td>
+            <td>
+                {{ rowData.version_id | split : '.' }}
+            </td>
+            <td>
+                {{ rowData.version_name }}
+            </td>
+            <td>
+                {{ rowData.user_name }}
+            </td>
+            <td>
+                {{ rowData.updated_on | date : 'yyyy-MM-dd, hh:mm:ss a' }}
+            </td>
+            <td>
+                {{ rowData.mass_operation_type ? rowData.mass_operation_type : rowData.message }}
+            </td>
+            <td>
+                <span *ngIf="checkReportType(rowData); else noReport">
+                    <i
+                        aria-hidden="true"
+                        style="color: #304cd9"
+                        class="pi pi-download"
+                        (click)="downloadReport(rowData)"
+                    >
+                    </i>
+                </span>
+                <ng-template #noReport>-</ng-template>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="versionHistoryData">No history found.</td>
+        </tr>
+    </ng-template>
+</p-table>

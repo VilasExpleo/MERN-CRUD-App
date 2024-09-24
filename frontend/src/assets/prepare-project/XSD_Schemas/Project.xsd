@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:hmi="urn:translationproject"
+	targetNamespace="urn:translationproject" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<include schemaLocation="Common.xsd" />
+	<include schemaLocation="Dependencies.xsd" />
+	<include schemaLocation="Verification.xsd" />
+	<include schemaLocation="Placeholder.xsd" />
+
+	<include schemaLocation="Language.xsd" />
+	<include schemaLocation="GroupNode.xsd" />
+	<include schemaLocation="TextNode.xsd" />
+
+
+	<!-- *************************** -->
+	<!-- START ELEMENT -->
+	<!-- *************************** -->
+
+	<element name="SupplierXML">
+
+		<complexType>
+			<sequence>
+				<element name="Project" type="hmi:Project" minOccurs="0"
+					maxOccurs="1" />
+			</sequence>
+		</complexType>
+
+	</element>
+
+
+	<!-- *************************** -->
+	<!-- DEFINITION OF COMPLEX-TYPES -->
+	<!-- *************************** -->
+
+	<complexType name="Project">
+
+		<annotation>
+			<documentation>The purpose of the translation process is to translate
+				a "HMI target software" or "the target" to many different languages.
+				The translational content of such a target software is represented
+				by a (translation-)project. A project is the central building block.
+				It contains all translation relevant aspects.
+
+				All elements of the
+				project are described in more detail at the according element.
+			</documentation>
+		</annotation>
+
+		<sequence>
+
+			<element name="LanguageManager" type="hmi:LanguageManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>The languages of the project.</documentation>
+				</annotation>
+
+				<!-- the ID of a LANGUAGE must be unique -->
+				<unique name="unique_Language_id">
+					<selector xpath=".//hmi:Language"></selector>
+					<field xpath="@Id"></field>
+				</unique>
+
+			</element>
+
+			<element name="VariantManager" type="hmi:VariantManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>The variants of the project.</documentation>
+				</annotation>
+
+				<!-- the ID of a Variant must be unique -->
+				<unique name="unique_Variant_id">
+					<selector xpath=".//hmi:Variant"></selector>
+					<field xpath="@Id"></field>
+				</unique>
+
+			</element>
+
+			<element name="VerificationManager" type="hmi:VerificationManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>The managing component of verifications of the
+						project, like length-calculations, speech-checks, and fonts.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="LabelManager" type="hmi:LabelManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>All labels which are used throughout the project.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="PlaceholderManager" type="hmi:PlaceholderManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>The possible placeholders of the project.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="DependencyManager" type="hmi:DependencyManager"
+				minOccurs="0" maxOccurs="1">
+				<annotation>
+					<documentation>Dependent text nodes are maintained by this manager.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="RootNode" type="hmi:GroupNode" minOccurs="0"
+				maxOccurs="1">
+				<annotation>
+					<documentation>The root node is the entry point to the
+						(tree-)structure of the project. From the nodes of the tree the
+						text nodes are referenced. It is possible to omit the structure
+						e.g. for security reasons.
+					</documentation>
+				</annotation>
+			</element>
+
+			<element name="TextNodeList" type="hmi:TextNodeList"
+				minOccurs="1" maxOccurs="1">
+				<annotation>
+					<documentation>All text nodes of the project are contained in this
+						simple flat list.
+					</documentation>
+				</annotation>
+
+
+				<!-- the key of a TextNode must be unique -->
+				<!-- the key can consist of: Id and VariantId -->
+				<unique name="unique_TextNode_id">
+					<selector
+						xpath=".//hmi:TextNode | .//hmi:TextNodeDdb | .//hmi:TextNodeArray | .//hmi:Metatext"></selector>
+					<field xpath="@Id"></field>
+					<field xpath="@VariantId"></field>
+				</unique>
+
+			</element>
+
+		</sequence>
+
+		<attribute name="Name" type="hmi:NonEmptyString" use="required">
+			<annotation>
+				<documentation>The name of the project. The name is intended for the
+					user and has no special requirements apart from being not empty.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Id" type="hmi:ProjectId" use="required">
+			<annotation>
+				<documentation>Unique ID of a project. Projects are identified by
+					their ID. The software should support the creation of new unique
+					IDs, which have not been used so far and which can be used for new
+					projects.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Creator" type="string" use="optional">
+			<annotation>
+				<documentation>A string for the vendor. He can write an
+					informational creator
+					string here, e.g. like 'MyCompany data
+					exporter'.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="DataFormatVersion" type="hmi:DataFormatVersionString"
+			use="optional">
+			<annotation>
+				<documentation>The supplier can write the version of the used
+					XSD-file here. If no value is given then the newest version is
+					assumed.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="DataCreationDate" type="dateTime" use="optional">
+			<annotation>
+				<documentation>The supplier can explicitly specify a date/time when
+					he created the data. If not specified the date/time can be taken
+					from the file.
+				</documentation>
+			</annotation>
+		</attribute>
+
+		<attribute name="Description" type="string" use="optional">
+			<annotation>
+				<documentation>A description of the project. The vendor or the
+					editor can specify some additional project information here.
+				</documentation>
+			</annotation>
+		</attribute>
+
+	</complexType>
+
+
+	<!-- ************************** -->
+	<!-- DEFINITION OF SIMPLE-TYPES -->
+	<!-- ************************** -->
+
+	<simpleType name="ProjectId">
+		<annotation>
+			<documentation>An ID for a project. It is used to uniquely identify
+				projects.
+			</documentation>
+		</annotation>
+		<restriction base="long"></restriction>
+	</simpleType>
+
+	<simpleType name="DataFormatVersionString">
+		<annotation>
+			<documentation>The format of the XML/XSD the vendor uses. It is
+				possible that vendors use old versions.
+			</documentation>
+		</annotation>
+		<restriction base="string"></restriction>
+	</simpleType>
+
+</schema>

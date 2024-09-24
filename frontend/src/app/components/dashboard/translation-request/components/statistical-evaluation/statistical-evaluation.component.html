@@ -1,0 +1,32 @@
+<div class="translation-import">
+    <p-dialog
+        header="Statistical Evaluation"
+        [(visible)]="statisticalEvaluation"
+        [closable]="false"
+        [modal]="true"
+        [resizable]="false"
+        [responsive]="true"
+        styleClass="customDialog"
+        (onMaximize)="onMaximize()"
+    >
+        <div>
+            <div class="rowflex">
+                <div class="col-12 mt-3">
+                    <p-chart type="bar" [data]="statisticsData" height="500" [options]="statisticsOptions"></p-chart>
+                </div>
+            </div>
+            <div class="pt-1 pull-right">
+                <button
+                    pButton
+                    type="button"
+                    label="Cancel"
+                    (click)="statisticalEvaluationData()"
+                    icon="pi pi-times"
+                    iconPos="left"
+                    class="p-button-warning mr-3"
+                ></button>
+            </div>
+        </div>
+        <ng-template pTemplate="footer"></ng-template>
+    </p-dialog>
+</div>

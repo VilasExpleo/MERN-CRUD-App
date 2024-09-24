@@ -1,0 +1,24 @@
+.left-bottom-btn {
+    float: right;
+}
+.next-btn {
+    display: inline;
+}
+:host {
+    ::ng-deep {
+        .next-btn .p-button{
+            background: #304cd9;
+        }
+        .back-btn .p-button {
+            background: #304cd9;
+        }
+        .cancel-btn {
+            .pi-exclamation-triangle:before {
+                color: #ffffff;
+            }
+        }
+    }
+}
+.complete-img {
+    text-align: center;
+}

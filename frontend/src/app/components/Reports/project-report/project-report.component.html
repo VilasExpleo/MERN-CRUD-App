@@ -1,0 +1,14 @@
+<p-tabView>
+    <p-tabPanel [header]="getFirstTabName">
+        <app-generate-report [reportData]="reportData" [user]="user"></app-generate-report>
+    </p-tabPanel>
+    <p-tabPanel header="Create" *ngIf="isEditor">
+        <app-add-report></app-add-report>
+    </p-tabPanel>
+    <p-tabPanel header="Scheduler" *ngIf="isEditor">
+        <app-schedule-report [reportData]="reportData" [user]="user"></app-schedule-report>
+    </p-tabPanel>
+    <p-tabPanel [header]="reportHistoryHeaderText" *ngIf="isEditor">
+        <app-history [reportData]="reportData" [user]="user"></app-history>
+    </p-tabPanel>
+</p-tabView>

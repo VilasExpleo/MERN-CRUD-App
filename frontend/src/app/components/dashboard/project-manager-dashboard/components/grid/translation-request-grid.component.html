@@ -1,0 +1,227 @@
+<p-contextMenu #cm [model]="contextMenus" appendTo="body"></p-contextMenu>
+<p-contextMenu #childCM [model]="childContextMenu" appendTo="body" [style]="{ width: '15vw' }"></p-contextMenu>
+<p-table
+    dataKey="id"
+    selectionMode="single"
+    scrollHeight="flex"
+    [value]="model.projects"
+    [paginator]="true"
+    [rows]="maximumRowsToShow"
+    [contextMenu]="cm"
+    [scrollable]="true"
+    [(selection)]="selectedProject"
+>
+    <ng-template pTemplate="caption">
+        <div class="flex align-items-center">
+            <p class="m-0">Order Overview</p>
+            <app-help-icon [linkId]="'project-manager-dashboard'"></app-help-icon>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pResizableColumn></th>
+            <th style="min-width: 150px" pSortableColumn="projectTitle" pResizableColumn id="name">
+                Project <p-sortIcon field="projectTitle"></p-sortIcon>
+                <p-columnFilter type="text" field="projectTitle" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th style="min-width: 100px" pSortableColumn="version" pResizableColumn id="translationequestId">
+                Version<p-sortIcon field="version"></p-sortIcon>
+                <p-columnFilter type="numeric" field="version" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="brandName" pResizableColumn>
+                Brand
+                <p-sortIcon field="brandName"></p-sortIcon>
+                <p-columnFilter field="brandName" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="getBrandsName()"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-brand pTemplate="item">
+                                <span [class]="'customer-badge status-' + brand">
+                                    {{ brand }}
+                                </span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th style="min-width: 100px" pSortableColumn="editorDueDate" pResizableColumn id="dateEditor">
+                Delivery Date<p-sortIcon field="editorDueDate"></p-sortIcon>
+                <p-columnFilter type="date" field="editorDueDate" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th style="min-width: 100px" pSortableColumn="dueDateToProjectManager" pResizableColumn id="dueDate">
+                Return Due Date <p-sortIcon field="dueDateToProjectManager"></p-sortIcon>
+                <p-columnFilter
+                    type="date"
+                    field="dueDateToProjectManager"
+                    display="menu"
+                    [hideOnClear]="true"
+                ></p-columnFilter>
+            </th>
+            <th style="min-width: 75px" pSortableColumn="proofread" pResizableColumn id="proofRead">
+                Proofread <p-sortIcon field="proofread"></p-sortIcon>
+                <p-columnFilter type="text" field="proofread" display="menu" [hideOnClear]="true"></p-columnFilter>
+            </th>
+            <th pSortableColumn="editorLanguageCode" pResizableColumn id="editorLanguageCode">
+                Source Language <p-sortIcon field="editorLanguageCode"></p-sortIcon>
+                <p-columnFilter
+                    type="text"
+                    field="editorLanguageCode"
+                    display="menu"
+                    [hideOnClear]="true"
+                ></p-columnFilter>
+            </th>
+            <th style="min-width: 75px" pSortableColumn="editorTranslationStatus" pResizableColumn id="status">
+                Order Status
+                <p-columnFilter field="editorTranslationStatus" matchMode="equals" display="menu" [hideOnClear]="true">
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="translationRequestDropdownOptions"
+                            (onChange)="filter($event.value)"
+                            placeholder="Any"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'customer-badge status-' + option.value">{{ option.label }}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+
+            <th
+                style="min-width: 100px"
+                pSortableColumn="translationRequest"
+                pResizableColumn
+                id="returnedTranslations"
+            >
+                Returned
+            </th>
+            <th style="min-width: 100px" pSortableColumn="document" pResizableColumn id="documents">Attachments</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-project let-expanded="expanded" let-rowIndex="rowIndex">
+        <tr
+            (click)="selectProject(project)"
+            (contextmenu)="selectProject(project)"
+            [ngClass]="getCSSClassForSelectedProject(project)"
+            [pContextMenuRow]="project"
+        >
+            <td>
+                <button
+                    type="button"
+                    pButton
+                    pRipple
+                    [pRowToggler]="project"
+                    class="p-button-text p-button-rounded p-button-plain"
+                    [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                ></button>
+            </td>
+
+            <td>{{ project.projectTitle }}</td>
+            <td>{{ project.version | number : '2.0-0' }}</td>
+            <td><img src="{{ getBrandLogo(project.brandId) }}" alt="logo" /></td>
+            <td>
+                <span [ngClass]="getCSSClassForBell(project)">
+                    {{ project.editorDueDate | date : 'yyyy-MM-dd' }}
+                    <i *ngIf="getCSSClassForBell(project) !== 'ok'" class="pi pi-bell ml-2" aria-hidden="true"></i>
+                </span>
+            </td>
+            <td>
+                <span *ngIf="!!project?.dueDateToProjectManager">{{
+                    project?.dueDateToProjectManager | date : 'yyyy-MM-dd'
+                }}</span>
+            </td>
+
+            <td>
+                <span>{{ project.proofread }}</span>
+            </td>
+            <td>{{ project.editorLanguageCode }}</td>
+            <td>
+                <span>
+                    {{ getTranslationRequestStatus(project.editorTranslationStatus) }}
+                    <i
+                        *ngIf="isNewTranslationRequest(project.editorTranslationStatus)"
+                        class="pi pi-star text-green-300"
+                        aria-hidden="true"
+                    ></i>
+                    <p-progressBar *ngIf="getProgress(project)" [value]="project.progress"></p-progressBar>
+                </span>
+            </td>
+            <td>
+                {{ returnedTranslations(project.languages) }}
+            </td>
+            <td>
+                <p-chip
+                    *ngIf="project.document === 'yes'; else no"
+                    icon="pi pi-file"
+                    [label]="project.documentCount"
+                ></p-chip>
+                <ng-template #no>-</ng-template>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="rowexpansion" let-project>
+        <tr [ngClass]="project.title === projectTitle ? 'selected-row' : ''">
+            <td colspan="11">
+                <div class="p-p-3">
+                    <p-table
+                        [value]="project.languages"
+                        dataKey="project.languages.id"
+                        [scrollable]="true"
+                        scrollHeight="600px"
+                        [virtualRowHeight]="50"
+                        [contextMenu]="childCM"
+                    >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th
+                                    *ngFor="let col of model.colsForExpandedRow"
+                                    [pSortableColumn]="col.field"
+                                    id="tableHeader"
+                                >
+                                    {{ col.header }} <p-sortIcon field="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-order>
+                            <tr [pContextMenuRow]="order" (contextmenu)="getSelectedChildRow(order)">
+                                <td>
+                                    <span *ngIf="order.translationManagerEmail === ''">-</span>
+                                    {{ order.translationManagerEmail }}
+                                </td>
+                                <td>
+                                    {{ order.languageCode }}
+                                    <span *ngIf="order.languageCode === ''">-</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="order.returnDate === ''">
+                                        <p-chip
+                                            label="{{ translationRequestsStatusEnum[order.status] }}"
+                                            icon=" {{ translationRequestsStatusIconEnum[order.status] }}"
+                                            [pTooltip]="order.reason"
+                                            [styleClass]="
+                                                'text-node-status ' + translationRequestsStatusEnum[order.status]
+                                            "
+                                            tooltipPosition="left"
+                                        ></p-chip
+                                    ></span>
+                                    {{ order.returnDate | date : 'yyyy-MM-dd' }}
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6">There are no languages yet.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

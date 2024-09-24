@@ -1,0 +1,81 @@
+<div class="main-container container basefile-container">
+    <div class="main-heading">
+        <p>
+            You can group the related project languages together on this page. This will create project language
+            hierarchy of related languages.
+        </p>
+    </div>
+    <p class="header-para">Languages available in XML</p>
+    <div class="main-div">
+        <p-tree
+            [value]="langFromXmlInheritance"
+            [draggableNodes]="true"
+            [droppableNodes]="true"
+            draggableScope="self"
+            droppableScope="self"
+        >
+            <ng-template let-node pTemplate="default">
+                <span class="language"> {{ node.language_name }} </span>
+            </ng-template>
+        </p-tree>
+    </div>
+    <div class="pt-3 pb-5 left-bottom-btn">
+        <p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+            <ng-template pTemplate="footer">
+                <div class="yes-button">
+                    <button
+                        class="p-button-danger"
+                        type="button"
+                        pButton
+                        label="Yes"
+                        icon="pi pi-check"
+                        (click)="cd.accept()"
+                    ></button>
+                </div>
+                <div class="no-button">
+                    <button
+                        class="p-button-secondary"
+                        type="button"
+                        pButton
+                        label="No"
+                        icon="pi pi-times"
+                        (click)="cd.reject()"
+                    ></button>
+                </div>
+            </ng-template>
+        </p-confirmDialog>
+        <span class="back-btn">
+            <button
+                pButton
+                type="button"
+                label="Back"
+                class="p-button-primary mr-3 btn-small"
+                icon="pi pi-chevron-left"
+                iconPos="left"
+                (click)="prevPage()"
+            ></button>
+        </span>
+        <button
+            pButton
+            pRipple
+            (click)="showConfirm()"
+            pButton
+            type="button"
+            icon="pi pi-times"
+            iconPos="left"
+            label="Cancel"
+            class="p-button-warning mr-3"
+        ></button>
+        <div class="next-btn">
+            <button
+                pButton
+                type="button"
+                label="Next"
+                class="p-button-primary"
+                icon="pi pi-chevron-right"
+                iconPos="right"
+                (click)="nextPage()"
+            ></button>
+        </div>
+    </div>
+</div>

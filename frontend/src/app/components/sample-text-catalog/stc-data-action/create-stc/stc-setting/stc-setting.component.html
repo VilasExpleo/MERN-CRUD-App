@@ -1,0 +1,101 @@
+<ng-container *ngIf="ifOtherBrand && stcByMP">
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-circle-fill"
+        style="color: #cd9a23"
+        pTooltip="Set state 'Work in progress'"
+        tooltipPosition="bottom"
+        (click)="changeStatus(1)"
+        *ngIf="sampleTextCatalogService.hideStausButton && sampleTextCatalogService.itsDone"
+    ></button>
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-circle-fill"
+        style="color: #1ea97c"
+        pTooltip="Set state Done"
+        tooltipPosition="bottom"
+        (click)="changeStatus(2)"
+        *ngIf="sampleTextCatalogService.hideStausButton && !sampleTextCatalogService.itsDone"
+    ></button>
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-pencil"
+        pTooltip="Edit"
+        tooltipPosition="bottom"
+        (click)="editStc()"
+    ></button>
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-trash"
+        style="color: red"
+        pTooltip="Delete"
+        tooltipPosition="bottom"
+        (click)="deleteSTC()"
+    ></button>
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-clone"
+        pTooltip="Clone"
+        tooltipPosition="bottom"
+    ></button>
+    <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text pr-2 pt-2"
+        icon="pi pi-exclamation-triangle"
+        tooltipPosition="bottom"
+    ></button>
+</ng-container>
+<ng-container>
+    <button
+        (click)="openProjectRef()"
+        pButton
+        pRipple
+        type="button"
+        pTooltip="Project Reference"
+        class="p-button-text pr-2 pt-2"
+        tooltipPosition="bottom"
+    >
+        <img [src]="baseURL + 'search.svg'" alt="search" class="search" />
+    </button>
+</ng-container>
+<p-confirmDialog #cr [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="col-12 flex-row-reverse align-items-end">
+            <button
+                class="p-button-danger"
+                type="button"
+                pButton
+                label="Yes"
+                icon="pi pi-check"
+                (click)="cr.accept()"
+            ></button>
+
+            <button
+                class="p-button-secondary"
+                type="button"
+                pButton
+                icon="pi pi-times"
+                label="No"
+                (click)="cr.reject()"
+            ></button>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+<p-toast></p-toast>

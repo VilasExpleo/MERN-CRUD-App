@@ -1,0 +1,52 @@
+<div class="">
+    <p-table
+        [columns]="textNodePropertiesService.propertiesTableColumns"
+        [value]="textNodePropertiesService.tableData"
+        [loading]="textNodePropertiesService.loading"
+    >
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th *ngFor="let col of columns">
+                    {{ col.header }}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td class="vertical-align-top">
+                    {{ rowData['name'] }}
+                </td>
+                <td>
+                    <ng-container *ngTemplateOutlet="rowData['name'] !== 'Labels' ? propertiesContent : labelContent">
+                    </ng-container>
+
+                    <ng-template #propertiesContent>
+                        <span> {{ rowData['propValue'] }}<br /> </span>
+                    </ng-template>
+                    <ng-template #labelContent>
+                        <div *ngIf="rowData['propValue']?.length !== 0; else noLabels">
+                            <span *ngFor="let label of rowData['propValue']">
+                                <p-chip
+                                    [icon]="label.icon"
+                                    [label]="label.name"
+                                    [style]="{ background: label.color }"
+                                    styleClass="mr-1"
+                                ></p-chip>
+                            </span>
+                        </div>
+                        <ng-template #noLabels> - </ng-template>
+                    </ng-template>
+                </td>
+                <td *ngIf="rowData['mappingValue']">
+                    <img
+                        *ngIf="rowData['name'] === 'Brand' && rowData['mappingValue']; else elseBlock"
+                        [src]="rowData['mappingValue']"
+                        alt="mapping Value"
+                    />
+
+                    <ng-template #elseBlock> {{ rowData['mappingValue'] || '-' }}</ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

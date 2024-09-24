@@ -1,0 +1,19 @@
+.main-inner-dashborad {
+    border: 1px solid #a5c9ff;
+    height: 100%;
+    border-radius: 5px;
+}
+.spinnerdashboradpanel {
+    position: absolute;
+    margin-top: 10%;
+    margin-left: 40%;
+    z-index: 99999;
+}
+.selectedrow {
+    background-color: #d7e7ff !important;
+}
+.viewpanel {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+}

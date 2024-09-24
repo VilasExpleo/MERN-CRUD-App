@@ -1,0 +1,7 @@
+<p-dialog [header]="headerText" [(visible)]="isVisible" [modal]="true" (onHide)="cancel()" [closable]="true">
+    <p [innerHTML]="getSanityMessage()"></p>
+    <br />
+    <ng-template pTemplate="footer">
+            <p-button label="Finish Order" icon="pi pi-check-square" (click)="completeTranslation()"></p-button>
+    </ng-template>
+</p-dialog>

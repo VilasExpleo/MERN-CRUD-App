@@ -1,0 +1,68 @@
+<div class="file-upload">
+    <div class="upload-placeholder pt-3 pb-3">
+        <p>Upload Documents</p>
+    </div>
+    <div class="primengUpload">
+        <p-fileUpload
+            #fileUpload
+            accept=".jpg,.png,.xls,.xlsx,.doc,.docx,.csv,.pdf"
+            [multiple]="true"
+            [maxFileSize]="5000001"
+            [showUploadButton]="false"
+            [showCancelButton]="false"
+            (onSelect)="selectFile($event)"
+            [files]="selectedFiles"
+        >
+            <ng-template pTemplate="file" let-file>
+                <div class="new-docs grid flex align-content-center">
+                    <div class="col-1 flex align-items-center justify-content-center">
+                        <img [src]="file.name | FileIconImagePipe" alt="File Icon Image Pipe" />
+                    </div>
+                    <div class="col-6 col-offset-1 flex align-items-center justify-content-left">
+                        <span>{{ file.name }}</span>
+                    </div>
+                    <div class="col-3 flex align-items-center justify-content-center">
+                        <span>{{ getFileSize(file.size) }}</span>
+                    </div>
+                    <div class="col-1 flex align-items-center justify-content-center">
+                        <p-button icon="pi pi-times" (click)="removeFile($event, file, fileUpload)"></p-button>
+                    </div>
+                </div>
+            </ng-template>
+        </p-fileUpload>
+    </div>
+</div>
+<div class="mt-5 pb-3 left-bottom-btn">
+    <span class="back-btn">
+        <button
+            pButton
+            type="button"
+            label="Back"
+            class="p-button-primary mr-3 btn-small"
+            icon="pi pi-chevron-left"
+            iconPos="left"
+            (click)="navigate(2)"
+        ></button>
+    </span>
+    <span class="help-btn">
+        <button
+            pButton
+            type="button"
+            label="Help"
+            class="p-button-help mr-3"
+            icon="pi pi-question"
+            iconPos="left"
+        ></button>
+    </span>
+    <span class="next-btn">
+        <button
+            pButton
+            type="button"
+            label="Next"
+            class="p-button-primary"
+            icon="pi pi-chevron-right"
+            iconPos="right"
+            (click)="navigate(4)"
+        ></button>
+    </span>
+</div>

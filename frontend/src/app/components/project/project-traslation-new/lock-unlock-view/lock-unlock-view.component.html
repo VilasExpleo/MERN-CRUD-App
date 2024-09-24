@@ -1,0 +1,80 @@
+<div class="">
+    <button
+        pButton
+        type="button"
+        label="Lock All"
+        icon="pi pi-lock"
+        class="p-button-primary ml-2"
+        (click)="projectTranslationService.checkUncheckAll('Locked')"
+    ></button>
+    <button
+        pButton
+        type="button"
+        label="Unlock All"
+        icon="pi pi-lock-open"
+        class="p-button-primary ml-2"
+        (click)="projectTranslationService.checkUncheckAll('Unlocked')"
+    ></button>
+</div>
+<div class="mt-5">
+    <p-table [value]="projectTranslationService.multipleLock" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Languages</th>
+                <th>Text</th>
+                <th>Status</th>
+                <th>Lock</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-multipleLock>
+            <tr>
+                <td>{{ multipleLock.context }}</td>
+                <td>{{ multipleLock.translation || '-' }}</td>
+                <td>
+                    <span [class]="'text-node-status ' + multipleLock['state']">
+                        <i
+                            [ngStyle]="{
+                                color: statusIcon[multipleLock['state']] || 'transparent'
+                            }"
+                            class="pi pi-circle-fill mr-3"
+                            aria-hidden="true"
+                        ></i>
+                        {{ multipleLock.state }}
+                    </span>
+                </td>
+                <td>
+                    <p-checkbox
+                        name="Unlock"
+                        value="multipleLock"
+                        [value]="multipleLock"
+                        [(ngModel)]="projectTranslationService.checkedLockedValue"
+                        (onChange)="projectTranslationService.getLockedStatusValue(multipleLock)"
+                    ></p-checkbox>
+                    <span class="ml-2">{{ multipleLock.locked }}</span>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<div class="mt-5 text-right">
+    <button
+        pButton
+        label="Ok"
+        type="submit"
+        icon="pi pi-thumbs-up"
+        iconPos="left"
+        class="p-button-primary mr-3"
+        (click)="lockMultipleTextnodes()"
+    ></button>
+    <button pButton type="button" label="Help" class="p-button-help mr-3" icon="pi pi-question" iconPos="left"></button>
+    <button
+        pButton
+        pRipple
+        icon="pi pi-times"
+        iconPos="left"
+        type="button"
+        label="Cancel"
+        class="p-button-warning mr-3"
+        (click)="hideLockUnlockDialog()"
+    ></button>
+</div>

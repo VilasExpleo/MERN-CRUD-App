@@ -1,0 +1,36 @@
+<div *ngIf="isLoading" class="spinner">
+    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+</div>
+<p-steps [model]="steps" [(activeIndex)]="activeIndex" [readonly]="false"></p-steps>
+<app-manage-raw-project-details
+    *ngIf="activeIndex === 0"
+    (navigationEvent)="navigate($event)"
+    (updateEvent)="updateProjectDetails()"
+    (closeEvent)="beforeCloseDialog($event)"
+    (loadingChange)="loadingOnChange($event)"
+>
+</app-manage-raw-project-details>
+<app-manage-raw-project-language
+    *ngIf="activeIndex === 1"
+    (navigationEvent)="navigate($event)"
+    (closeEvent)="beforeCloseDialog($event)"
+    (updateEvent)="updateProjectDetails()"
+    (loadingChange)="loadingOnChange($event)"
+>
+</app-manage-raw-project-language>
+<app-manage-raw-project-verification
+    *ngIf="activeIndex === 2"
+    (navigationEvent)="navigate($event)"
+    (closeEvent)="beforeCloseDialog($event)"
+    (updateEvent)="updateProjectDetails()"
+    (loadingChange)="loadingOnChange($event)"
+>
+</app-manage-raw-project-verification>
+
+<app-confirmation
+    *ngIf="projectCreateCancelConfirmationModel.showConfirmation"
+    [confirmationHeader]="projectCreateCancelConfirmationModel.confirmationHeader"
+    [confirmationMessage]="projectCreateCancelConfirmationModel.confirmationMessage"
+    (acceptCallback)="projectCreateCancelConfirmationModel.onAccept()"
+    (rejectCallback)="projectCreateCancelConfirmationModel.onReject()"
+></app-confirmation>

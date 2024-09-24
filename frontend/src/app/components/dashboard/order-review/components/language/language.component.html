@@ -1,0 +1,77 @@
+<div *ngIf="model">
+    <div class="language-selection">
+        <div>
+            <p class="mt-5 mb-4">{{ headerText }}</p>
+        </div>
+        <div class="grid mb-2">
+            <div class="col-3 mt-3">
+                <p>{{ sourceLanguageText }}</p>
+                <p-dropdown
+                    optionLabel="languageCode"
+                    filterBy="languageCode"
+                    appendTo="body"
+                    [options]="dropDownLanguages"
+                    [filter]="true"
+                    [ngModel]="model.selectedLanguage"
+                    (ngModelChange)="changeEditorLanguage($event)"
+                ></p-dropdown>
+            </div>
+            <div class="col-3 mt-3">
+                <p>{{ reviewTypeText }}<span class="text-red-600">*</span></p>
+                <p-dropdown
+                    [options]="model?.reviewTypes"
+                    appendTo="body"
+                    [(ngModel)]="selectedReviewType"
+                    optionLabel="label"
+                    placeholder="Select review type"
+                ></p-dropdown>
+            </div>
+            <div
+                class="col-12 m-1"
+                *ngIf="model.selectedLanguage.languageId === this.model.supplierLanguage.languageId"
+            >
+                <p>
+                    You have selected the "Dev-Text" language. Hence, only editor language can be selected by default.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12">
+            <p-pickList
+                sourceHeader="{{ sourceHeaderText }}"
+                targetHeader="{{ targetHeaderText }}"
+                filterBy="languageCode"
+                sourceFilterPlaceholder="Search by name"
+                targetFilterPlaceholder="Search by name"
+                appendTo="body"
+                [source]="model?.availableLanguages"
+                [target]="model?.targetLanguages"
+                [dragdrop]="true"
+                [responsive]="true"
+                [sourceStyle]="{ height: '175px' }"
+                [targetStyle]="{ height: '175px' }"
+                [showSourceControls]="false"
+                [showTargetControls]="false"
+            >
+                <ng-template let-language pTemplate="item">
+                    <p>{{ language.languageCode }}</p>
+                </ng-template>
+            </p-pickList>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="pb-3 flex justify-content-end">
+            <button
+                pButton
+                type="button"
+                label="Next"
+                class="p-button-primary"
+                icon="pi pi-chevron-right"
+                iconPos="right"
+                (click)="navigate(1)"
+                [disabled]="!isNextDisabled()"
+            ></button>
+        </div>
+    </div>
+</div>

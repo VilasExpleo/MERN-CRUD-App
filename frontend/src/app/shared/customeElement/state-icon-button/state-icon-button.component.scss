@@ -1,0 +1,85 @@
+.labelHeade {
+    transform: rotate(90deg);
+}
+
+.label {
+    color: #304cd9;
+}
+
+.textWrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.UnresolvedChars {
+    background-color: #ffd9d1;
+    color: #ff5757;
+}
+.text-node-status-table {
+    text-align: left;
+    display: inline-block;
+    border-radius: 15px;
+    padding: 0.5em 0.6rem;
+    &.PlaceholderError,&.Rejected,&.LengthError,&.Unresolvedfont,&.Error {
+        background-color: #ffd9d1;
+        color: #ff5757;
+    }
+    &.Pending {
+        background-color: #e9e9ff;
+        color: #696cff;
+    }
+    &.Approved {
+        color: #1ea97c;
+        background-color: #e4f8f0;
+    }
+    &.Done {
+        background-color: #e4f7ef;
+        color: #1ea97c;
+    }
+
+    &.Workinprogress {
+        background-color: #ffefca;
+        color: #cd9a23;
+    }
+
+    &.Unworked {
+        background-color: #ced4d9;
+        color: #495057;
+    }
+
+    &.Locked {
+        background-color: #02a8cd33;
+    }
+
+    &.ProofReadOK {
+        background-color: #e4f7ef;
+    }
+
+    &.ProofReadNOK {
+        background-color: #ffd9d1;
+    }
+
+    &.ReviewOK {
+        background-color: #e4f7ef;
+    }
+
+    &.ReviewNOK {
+        background-color: #ffd9d1;
+    }
+
+    &.Unlocked {
+        background-color: #02a8cd33;
+    }
+   
+}
+
+:host {
+    ::ng-deep {
+        .worstCaseValue {
+            color: #6366f1;
+            text-decoration: underline;
+            font-weight: bolder;
+        }
+    }
+}

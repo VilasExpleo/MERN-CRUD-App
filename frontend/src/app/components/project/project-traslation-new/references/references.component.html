@@ -1,0 +1,16 @@
+<p-panel [header]="screenshotTitle" class="references">
+    <ng-template pTemplate="icons">
+        <div class="flex justify-content-end">
+            <i class="pi pi-window-maximize" (click)="showScreenshotsDialog()"></i>
+        </div>
+    </ng-template>
+    <app-screenshots
+        (screenshotHeaderEvent)="screenshotHeaderTitle($event)"
+        *ngIf="isScreenshotEmbedded; else screenshotPopOut"
+    ></app-screenshots>
+    <ng-template #screenshotPopOut>
+        <div class="text-center p-5">
+            <p><i class="pi pi-exclamation-triangle"></i> <strong> Pop-out mode activated. </strong></p>
+        </div>
+    </ng-template>
+</p-panel>

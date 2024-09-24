@@ -1,0 +1,11 @@
+<ng-container *ngIf="(errors$ | async)?.length && errors$ | async as errors; else noError">
+    <p-messages
+        [value]="getErrors(errors)"
+        [closable]="false"
+        [showTransitionOptions]="'0ms'"
+        [hideTransitionOptions]="'0ms'"
+    ></p-messages>
+</ng-container>
+<ng-template #noError>
+    <p-message severity="info" text="No Error Found"></p-message>
+</ng-template>

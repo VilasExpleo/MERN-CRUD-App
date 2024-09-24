@@ -1,0 +1,103 @@
+<p-contextMenu #cm [model]="contextMenuItems" appendTo="body"></p-contextMenu>
+<p-table
+    [value]="rawProjects"
+    dataKey="id"
+    selectionMode="single"
+    [rows]="viewPageLine"
+    [(contextMenuSelection)]="selectedRawProject"
+    [contextMenu]="cm"
+    styleClass="p-datatable-md"
+>
+    <ng-template pTemplate="caption">
+        <div class="grid">
+            <div class="flex align-items-center col-2">
+                <span>Project</span>
+                <app-help-icon [linkId]="'raw-project-create'"></app-help-icon>
+            </div>
+            <div class="col-8">
+                <button
+                    pButton
+                    type="button"
+                    label="Create Project"
+                    class="p-button-md create-btn"
+                    icon="pi pi-plus"
+                    iconPos="right"
+                    (click)="createRawProjectDialog()"
+                ></button>
+            </div>
+            <!--      <div class="prepare-project">-->
+            <!--        <p-dialog-->
+            <!--          [modal]="true"-->
+            <!--          header="Prepare Project"-->
+            <!--          [(visible)]="displayPrepareDialog"-->
+            <!--          [closable]="false"-->
+            <!--          [resizable]="false"-->
+            <!--          [style]="{ width: '50vw' }"-->
+            <!--        >-->
+            <!--        </p-dialog>-->
+            <!--      </div>-->
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th id="pResizableColumn" pResizableColumn></th>
+            <th
+                *ngFor="let col of columns"
+                id="{{ col.field }}"
+                pResizableColumn
+                [pSortableColumn]="col.field"
+                style="min-width: 150px"
+            >
+                {{ col.header }}
+                <p-sortIcon *ngIf="col.sort" field="col.field"></p-sortIcon>
+                <p-columnFilter
+                    *ngIf="col.filter"
+                    [type]="col.filter?.['type']"
+                    [field]="col.field"
+                    display="menu"
+                    [hideOnClear]="true"
+                >
+                    <ng-template
+                        *ngIf="col.filter?.['template']"
+                        pTemplate="filter"
+                        let-value
+                        let-filter="filterCallback"
+                    >
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="col.filter?.['template'].statuses"
+                            (onChange)="filter($event.value)"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                <span>{{ option.label }}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rawProject>
+        <tr [pSelectableRow]="rawProject" [pContextMenuRow]="rawProject" (contextmenu)="getRawProjectDetails()">
+            <td></td>
+            <td *ngFor="let col of columns; let i = index" [ngClass]="{ 'p-toggler-column': i === 0 }">
+                {{ rawProject[col.field] }}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="6">There are no projects yet.</td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-toast></p-toast>
+
+<app-confirmation
+    *ngIf="projectDeleteConfirmationModel.showConfirmation"
+    [confirmationHeader]="projectDeleteConfirmationModel.confirmationHeader"
+    [confirmationMessage]="projectDeleteConfirmationModel.confirmationMessage"
+    (acceptCallback)="projectDeleteConfirmationModel.onAccept()"
+    (rejectCallback)="projectDeleteConfirmationModel.onReject()"
+></app-confirmation>

@@ -1,0 +1,90 @@
+<div class="container">
+    <p>
+        You can review the Language Inherited in your project. If required, you can change the Inheritance order here.
+    </p>
+    <p-toast></p-toast>
+    <p class="header-para">Languages available in XML</p>
+    <div class="tree-container">
+        <p-tree
+            [value]="languageInheritance"
+            [draggableNodes]="true"
+            [droppableNodes]="true"
+            draggableScope="self"
+            droppableScope="self"
+            (onNodeDrop)="onNodeDrop()"
+        >
+            <ng-template let-node pTemplate="default">
+                {{ node.language_name }}
+            </ng-template>
+        </p-tree>
+    </div>
+</div>
+
+<div class="pt-5 inline-flex btn-container">
+    <button
+        pButton
+        type="button"
+        icon="pi pi-chevron-left"
+        iconPos="left"
+        label="Back"
+        iconPos="left"
+        (click)="prevTab()"
+        *ngIf="isRawProject"
+        class="mr-3"
+    ></button>
+    <button
+        pButton
+        type="button"
+        icon="pi pi-times"
+        iconPos="left"
+        label="Cancel"
+        class="p-button-warning mr-3"
+        (click)="closePropertiesDialogOnCancel()"
+    ></button>
+    <button
+        pButton
+        type="button"
+        icon="pi pi-save"
+        iconPos="left"
+        label="Save"
+        iconPos="left"
+        (click)="saveLanguageInheritance()"
+        [disabled]="submitBtn"
+        *ngIf="!isRawProject"
+    ></button>
+    <button
+        pButton
+        type="button"
+        icon="pi pi-chevron-right"
+        iconPos="right"
+        label="Next"
+        iconPos="right"
+        (click)="nextTab()"
+        *ngIf="isRawProject"
+    ></button>
+</div>
+
+<p-confirmDialog #cd [style]="{ width: '25vw' }" [baseZIndex]="10000" class="cancel-dialog" [closable]="false">
+    <ng-template pTemplate="footer">
+        <div class="yes-button">
+            <button
+                class="p-button-danger"
+                type="button"
+                pButton
+                label="Yes"
+                icon="pi pi-check"
+                (click)="cd.accept()"
+            ></button>
+        </div>
+        <div class="no-button">
+            <button
+                class="p-button-secondary"
+                type="button"
+                pButton
+                label="No"
+                icon="pi pi-times"
+                (click)="cd.reject()"
+            ></button>
+        </div>
+    </ng-template>
+</p-confirmDialog>

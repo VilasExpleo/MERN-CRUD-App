@@ -1,0 +1,25 @@
+:host {
+    ::ng-deep .form-element {
+        textarea {
+            border: 1px solid #304cd9;
+            resize: vertical;
+        }
+        .p-inputtext {
+            border: 1px solid #304cd9;
+        }
+        .p-fileupload .p-fileupload-content {
+            border: 1px solid #a5c9ff;
+        }
+        .p-fileupload .p-fileupload-buttonbar {
+            border: 1px solid #a5c9ff;
+        }
+    }
+}
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+    z-index: 100000;
+}

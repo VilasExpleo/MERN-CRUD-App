@@ -1,0 +1,119 @@
+<div class="pb-4">{{ pageTitle }}</div>
+<div *ngIf="isLoading" class="spinner">
+    <p-progressSpinner animationDuration="1s"></p-progressSpinner>
+</div>
+<div class="border-1 border-300">
+    <div *ngIf="!isPreview" class="p-input-icon-left col-12 border-bottom-1 border-300">
+        <i class="pi pi-search ml-2" aria-hidden="true"></i>
+        <input type="text" placeholder="Search by name/description" [(ngModel)]="searchText" autofocus pInputText />
+    </div>
+    <div class="grid">
+        <div class="col-12" *ngIf="!isPreview">
+            <div class="card">
+                <ng-container *ngIf="reports$ | async as reports">
+                    <p-dataView
+                        *ngIf="!isPreview"
+                        #dv
+                        [value]="reports | reportFilter : searchText"
+                        [rows]="4"
+                        [paginator]="true"
+                        [trackBy]="trackByFn"
+                    >
+                        <ng-template let-report pTemplate="listItem">
+                            <div
+                                class="col-12 cursor-pointer"
+                                (click)="selectReport(report)"
+                                [ngClass]="{ 'bg-blue-100': report.isSelected }"
+                            >
+                                <app-report-item
+                                    [report]="report"
+                                    [user]="user"
+                                    (refreshReports)="refreshReports($event)"
+                                    [tab]="'generate'"
+                                ></app-report-item>
+                            </div>
+                        </ng-template>
+                    </p-dataView>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12" *ngIf="isPreview">
+            <ng-container>
+                <app-report-preview
+                    [previewExcel]="previewExcel"
+                    [preview]="preview"
+                    [format]="format"
+                    [tableHeaders]="tableHeaders"
+                    [previewError]="previewError"
+                ></app-report-preview>
+            </ng-container>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-12" *ngIf="reportError">
+            <p-message severity="error" [text]="reportError"></p-message>
+        </div>
+    </div>
+</div>
+<div class="grid mt-2" *ngIf="canGenerateReport">
+    <div class="col-12">
+        <div class="flex justify-content-end">
+            <p-button
+                *ngIf="isPreview"
+                type="button"
+                label="Back"
+                styleClass="p-button-md create-btn ml-2"
+                icon="pi pi-angle-left"
+                iconPos="left"
+                (click)="back()"
+            ></p-button>
+
+            <p-button
+                *ngIf="!isPreview"
+                type="button"
+                label="Preview"
+                styleClass="p-button-outlined"
+                icon="pi pi-eye"
+                iconPos="left"
+                (click)="previewReport()"
+                [disabled]="!selectedReport"
+            ></p-button>
+
+            <p-button
+                type="button"
+                label="Generate Report"
+                class="p-button-md create-btn ml-2"
+                icon="pi pi-download"
+                iconPos="left"
+                (click)="generateReport()"
+                [disabled]="!selectedReport"
+            ></p-button>
+        </div>
+    </div>
+</div>
+<div class="flex" *ngIf="!canGenerateReport">
+    <p-button class="mt-4 ml-auto" type="submit" icon="pi pi-check" iconPos="left" label="Apply & Close"></p-button>
+</div>
+<p-confirmDialog #cd [style]="{ width: '50vw' }">
+    <ng-template pTemplate="header">
+        <h3>Warning</h3>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <p-button
+            type="button"
+            styleClass="p-button-secondary p-button-text"
+            icon="pi pi-times"
+            label="No"
+            (click)="cd.reject()"
+        ></p-button>
+        <p-button
+            type="button"
+            styleClass="p-button-danger"
+            icon="pi pi-check"
+            label="Yes"
+            (click)="cd.accept()"
+        ></p-button>
+    </ng-template>
+</p-confirmDialog>
