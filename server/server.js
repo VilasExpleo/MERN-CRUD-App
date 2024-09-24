@@ -2,7 +2,9 @@
 // if (process.env.NODE_ENV != "production") {
 // 	require("dotenv").config
 // }
-require("dotenv").config
+
+//www.youtube.com/watch?v=jK7mcMrYzj8&list=PL-LRDpVN2fZA-1igOQ6PDcqfBjS-vaC7w&index=2
+https: require("dotenv").config
 // import dependencies
 const express = require("express")
 const connectToDb = require("./config/connectToDb")
@@ -32,6 +34,7 @@ app.get("/notes", async (req, res) => {
 
 app.get("/notes/:id", async (req, res) => {
 	//fetch data
+	const nodeiId = req.params.id
 	const notes = await Note.find()
 	//respose data
 	res.json({ data: notes })
